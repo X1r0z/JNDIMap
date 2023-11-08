@@ -6,7 +6,7 @@ JNDI 注入利用工具
 
 - DnsLog
 - 命令执行
-- 反弹 Shell
+- 原生反弹 Shell
 - 加载自定义 Class 字节码
 - Tomcat/Groovy/SnakeYaml 绕过高版本 JDK
 - LDAP 反序列化
