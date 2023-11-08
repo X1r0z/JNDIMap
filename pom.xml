@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>JNDIExploit</artifactId>
+    <artifactId>JNDIMap</artifactId>
     <version>0.0.1</version>
-    <name>JNDIExploit</name>
-    <description>JNDIExploit</description>
+    <name>JNDIMap</name>
+    <description>JNDIMap</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
