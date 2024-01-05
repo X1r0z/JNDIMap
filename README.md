@@ -16,10 +16,10 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u] [-h]
+Help: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u] [-h]
 ````
 
-RMI 和 LDAP 服务器监听地址默认为 `0.0.0.0`
+`-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
 
 `-r`: RMI 服务器监听端口, 默认为 `1099`
 
@@ -29,7 +29,7 @@ RMI 和 LDAP 服务器监听地址默认为 `0.0.0.0`
 
 `-u`: 显示 JNDI URL 信息
 
-`-h`: 显示 Usage 信息
+`-h`: 显示 Help 信息
 
 ## JNDI URL
 
