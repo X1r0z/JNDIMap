@@ -13,6 +13,16 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议
 - NativeLibLoader 加载动态链接库
 - LDAP 反序列化
 
+## Compile
+
+目前 Release 版本暂未发布, 推荐手动编译
+
+```bash
+git clone https://github.com/X1r0z/JNDIMap
+cd JNDIMap
+mvn package -Dmaven.test.skip=true
+```
+
 ## Usage
 
 ```bash
