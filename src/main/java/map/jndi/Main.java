@@ -1,0 +1,52 @@
+package map.jndi;
+
+import map.jndi.server.RMIServer;
+import map.jndi.server.WebServer;
+import map.jndi.server.LDAPServer;
+
+public class Main {
+
+    public static String ip = "127.0.0.1";
+    public static int rmiPort = 1099;
+    public static int ldapPort = 1389;
+    public static int httpPort = 3456;
+    public static String codebase;
+
+    public static void main(String[] args) {
+        // 解析命令行参数
+        for (int i = 0; i < args.length; i ++ ) {
+            switch (args[i]) {
+                case "-h":
+                    System.out.println("Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-h]");
+                    return;
+                case "-i":
+                    ip = args[i + 1];
+                    break;
+                case "-r":
+                    rmiPort = Integer.parseInt(args[i + 1]);
+                    break;
+                case "-l":
+                    ldapPort = Integer.parseInt(args[i + 1]);
+                    break;
+                case "-p":
+                    httpPort = Integer.parseInt(args[i + 1]);
+                    break;
+            }
+        }
+
+        // 设置 codebase
+        codebase = "http://" + ip + ":" + httpPort + "/";
+
+        RMIServer rmiServer = new RMIServer(ip, rmiPort);
+        LDAPServer ldapServer = new LDAPServer(ip, ldapPort);
+        WebServer webServer = new WebServer(ip, httpPort);
+
+        Thread rmiThread = new Thread(rmiServer);
+        Thread ldapThread = new Thread(ldapServer);
+        Thread webThread = new Thread(webServer);
+
+        rmiThread.start();
+        ldapThread.start();
+        webThread.start();
+    }
+}

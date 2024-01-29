@@ -8,7 +8,7 @@
 <!--        <version>2.6.6</version>-->
 <!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 <!--    </parent>-->
-    <groupId>com.example</groupId>
+    <groupId>io.exp10it</groupId>
     <artifactId>JNDIMap</artifactId>
     <version>0.0.1</version>
     <name>JNDIMap</name>
@@ -86,7 +86,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>com.example.exploit.Main</mainClass>
+                                    <mainClass>map.jndi.Main</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>

