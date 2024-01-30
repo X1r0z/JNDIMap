@@ -12,7 +12,7 @@ public class ScriptEngineFactoryTemplate implements ScriptEngineFactory {
         try {
             (new ScriptEngineManager()).getEngineByName("JavaScript").eval(code);
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
     }
 

@@ -14,7 +14,12 @@ public class TomcatDbcp1Controller extends DatabaseController {
         Reference ref = new Reference("javax.sql.DataSource", "org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory", null);
         ref.add(new StringRefAddr("driverClassName", databaseBean.getDriver()));
         ref.add(new StringRefAddr("url", databaseBean.getUrl()));
-        ref.add(new StringRefAddr("initialSize","1"));
+        ref.add(new StringRefAddr("initialSize", "1"));
+
+        if (databaseBean.getSql() != null) {
+            ref.add(new StringRefAddr("connectionInitSqls", databaseBean.getSql()));
+        }
+
         return ref;
     }
 }

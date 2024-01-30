@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class CommonsCollectionsK1 {
     public static byte[] create(TemplatesImpl templatesImpl) throws Exception {
-        InvokerTransformer transformer = new InvokerTransformer("toString",new Class[0], new Object[0]);
+        InvokerTransformer transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
 
         Map innerMap = new HashMap();
         Map m = LazyMap.decorate(innerMap, transformer);

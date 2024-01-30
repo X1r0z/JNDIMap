@@ -13,6 +13,6 @@ public class MiscUtil {
             sb.append(dicts.charAt(index));
         }
 
-        return "Exploit_" + sb.toString();
+        return "Exploit_" + sb;
     }
 }

