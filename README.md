@@ -27,7 +27,7 @@ mvn package -Dmaven.test.skip=true
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-h]
+Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-h]
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -37,6 +37,8 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 `-l`: LDAP 服务器监听端口, 默认为 `1389`
 
 `-p`: HTTP 服务器监听端口, 默认为 `3456`
+
+`-u`: 手动指定路由, 例如 `/Basic/Command/open -a Calculator` (某些场景的 JNDI URL 并不完全可控)
 
 `-h`: 显示 Usage 信息
 

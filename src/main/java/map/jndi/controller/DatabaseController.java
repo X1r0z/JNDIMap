@@ -2,6 +2,7 @@ package map.jndi.controller;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import map.jndi.Config;
 import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
@@ -36,7 +37,7 @@ public class DatabaseController implements Controller {
         WebServer.serveFile( "/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
-        String socketFactoryArg = Main.codebase + fileName;
+        String socketFactoryArg = Config.codebase + fileName;
         String url = "jdbc:postgresql://127.0.0.1:5432/test?socketFactory=" + socketFactory + "&socketFactoryArg=" + socketFactoryArg;
 
         return new DatabaseBean("org.postgresql.Driver", url);
@@ -108,7 +109,7 @@ public class DatabaseController implements Controller {
         WebServer.serveFile("/" + jarName + ".jar", jarBytes);
 
         List<String> list = new ArrayList<>();
-        list.add("CALL SQLJ.INSTALL_JAR('" + Main.codebase + jarName + ".jar', 'APP." + className + "', 0)");
+        list.add("CALL SQLJ.INSTALL_JAR('" + Config.codebase + jarName + ".jar', 'APP." + className + "', 0)");
         list.add("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.classpath', 'APP." + className + "')");
         list.add("CREATE PROCEDURE cmd(IN cmd VARCHAR(255)) PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME '" + className + ".exec'");
         list.add("CREATE PROCEDURE rev(IN host VARCHAR(255), IN port VARCHAR(255)) PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME '" + className + ".rev'");
