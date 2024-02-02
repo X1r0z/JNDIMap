@@ -2,7 +2,6 @@ package map.jndi.server;
 
 import map.jndi.Config;
 import map.jndi.Dispatcher;
-import map.jndi.Main;
 import map.jndi.util.SerializeUtil;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;

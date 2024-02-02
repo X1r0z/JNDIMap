@@ -1,7 +1,6 @@
 package map.jndi.controller;
 
 import map.jndi.Config;
-import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.server.WebServer;

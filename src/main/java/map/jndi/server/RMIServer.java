@@ -2,7 +2,6 @@ package map.jndi.server;
 
 import map.jndi.Config;
 import map.jndi.Dispatcher;
-import map.jndi.Main;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
 import sun.rmi.server.UnicastServerRef;
 import sun.rmi.transport.TransportConstants;
