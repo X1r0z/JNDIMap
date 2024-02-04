@@ -20,8 +20,8 @@ public class NativeLibLoaderController implements Controller {
 
     @JNDIMapping("/{path}")
     public String loadLibrary(String path) {
+        System.out.println("[NativeLibLoader] Library Path: " + path);
         path = new String(Base64.getUrlDecoder().decode(path));
-        System.out.println("NativeLibLoader Path: " + path);
         return path;
     }
 }

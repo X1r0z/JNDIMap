@@ -24,7 +24,7 @@ public class MLetController implements Controller {
 
     @JNDIMapping("/{className}")
     public String detectClass(String className) {
-        System.out.println("MLet detect class: " + className);
+        System.out.println("[MLet] Detect ClassName: " + className);
         return className;
     }
 }

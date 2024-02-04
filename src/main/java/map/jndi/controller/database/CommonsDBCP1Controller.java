@@ -9,10 +9,10 @@ import javax.naming.StringRefAddr;
 import java.util.Properties;
 
 @JNDIController
-@JNDIMapping("/CommonsDbcp2")
-public class CommonsDbcp2Controller extends DatabaseController {
+@JNDIMapping("/CommonsDBCP1")
+public class CommonsDBCP1Controller extends DatabaseController {
     public Object process(Properties props) {
-        Reference ref = new Reference("javax.sql.DataSource", "org.apache.commons.dbcp2.BasicDataSourceFactory", null);
+        Reference ref = new Reference("javax.sql.DataSource", "org.apache.commons.dbcp.BasicDataSourceFactory", null);
         ref.add(new StringRefAddr("driverClassName", props.getProperty("driver")));
         ref.add(new StringRefAddr("url", props.getProperty("url")));
         ref.add(new StringRefAddr("initialSize", "1"));
