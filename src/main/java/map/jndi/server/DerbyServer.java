@@ -36,7 +36,10 @@ public class DerbyServer {
 
         if (gadget != null) {
             // 获取内置 gadget
-            data = (byte[]) Dispatcher.getInstance().service(Paths.get("/Deserialize", gadget).toString());
+            if (gadget.charAt(0) != '/') {
+                gadget = "/" + gadget;
+            }
+            data = (byte[]) Dispatcher.getInstance().service("/Deserialize" + gadget);
         } else if (filePath != null) {
             // 从文件中读取自定义序列化数据
             data = Files.readAllBytes(Paths.get(filePath));

