@@ -229,10 +229,10 @@ ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
 
 Execute SQL statements via the INIT parameter of the H2 JDBC URL
 
-Support three methods: CREATE ALIAS/Groovy/JavaScript
+Support three methods: CREATE ALIAS + Java/Groovy, CREATE TRIGGER + JavaScript
 
 ```bash
-ldap://127.0.0.1:1389/Factory/H2/Alias/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/Java/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/Groovy/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
 ```

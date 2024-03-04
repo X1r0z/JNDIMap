@@ -19,8 +19,8 @@ import javax.net.ssl.SSLSocketFactory;
 import java.net.InetAddress;
 
 public class LDAPServer implements Runnable {
-    private String ip;
-    private int port;
+    public String ip;
+    public int port;
 
     public LDAPServer(String ip, int port) {
         this.ip = ip;

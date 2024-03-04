@@ -19,8 +19,8 @@ import java.util.Arrays;
 
 public class RMIServer implements Runnable {
 
-    private String ip;
-    private int port;
+    public String ip;
+    public int port;
     private ServerSocket ss;
     private Object waitLock = new Object();
     private boolean exit;

