@@ -246,6 +246,7 @@ public class RMIServer implements Runnable {
             Object result;
 
             if (Config.url != null) {
+                System.out.println("[URL] " + Config.url);
                 result = Dispatcher.getInstance().service(Config.url);
             } else {
                 result = Dispatcher.getInstance().service(path);

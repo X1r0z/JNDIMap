@@ -7,13 +7,14 @@ public class Config {
     public static int httpPort = 3456;
     public static String url;
     public static String codebase;
+    public static String file;
 
     public static void parse(String[] args) {
         // 解析命令行参数
         for (int i = 0; i < args.length; i ++ ) {
             switch (args[i]) {
                 case "-h":
-                    System.out.println("Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-h]");
+                    System.out.println("Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-f <file>] [-h]");
                     System.exit(-1);
                 case "-i":
                     ip = args[i + 1];
@@ -29,6 +30,9 @@ public class Config {
                     break;
                 case "-u":
                     url = args[i + 1];
+                    break;
+                case "-f":
+                    file = args[i + 1];
                     break;
             }
         }
