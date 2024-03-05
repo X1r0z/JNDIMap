@@ -1,5 +1,6 @@
 package map.jndi.util;
 
+import java.util.Base64;
 import java.util.Random;
 
 public class MiscUtil {
@@ -14,5 +15,20 @@ public class MiscUtil {
         }
 
         return "Exploit_" + sb;
+    }
+
+    public static String tryBase64UrlDecode(String s) {
+        try {
+            String plainText = new String(Base64.getUrlDecoder().decode(s));
+            String encText = Base64.getUrlEncoder().encodeToString(plainText.getBytes());
+
+            if (encText.equals(s)) {
+                return plainText;
+            } else {
+                return s;
+            }
+        } catch (Exception e) {
+            return s;
+        }
     }
 }

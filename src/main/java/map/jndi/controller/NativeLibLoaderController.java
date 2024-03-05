@@ -2,10 +2,10 @@ package map.jndi.controller;
 
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
+import map.jndi.util.MiscUtil;
 import org.apache.naming.ResourceRef;
 
 import javax.naming.StringRefAddr;
-import java.util.Base64;
 
 @JNDIController
 @JNDIMapping("/NativeLibLoader")
@@ -20,8 +20,8 @@ public class NativeLibLoaderController implements Controller {
 
     @JNDIMapping("/{path}")
     public String loadLibrary(String path) {
+        path = MiscUtil.tryBase64UrlDecode(path);
         System.out.println("[NativeLibLoader] Library Path: " + path);
-        path = new String(Base64.getUrlDecoder().decode(path));
         return path;
     }
 }

