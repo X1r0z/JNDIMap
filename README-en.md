@@ -385,7 +385,7 @@ Start JNDIMap
 java -jar JNDIMap.jar -f /path/to/evil.groovy
 ```
 
-Archive RCE via the following JNDI URL
+Achieve RCE via the following JNDI URL
 
 ```bash
 # supports passing parameters to Groovy scripts manually
