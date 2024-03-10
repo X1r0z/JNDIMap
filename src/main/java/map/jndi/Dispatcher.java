@@ -5,6 +5,7 @@ import ch.qos.logback.classic.Logger;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.Controller;
+import map.jndi.util.MiscUtil;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -82,6 +83,7 @@ public class Dispatcher {
                         int groupIndex = 1;
                         while (nameMatcher.find()) {
                             String value = valueMatcher.group(groupIndex);
+                            value = MiscUtil.tryBase64UrlDecode(value); // 自动对纯文本内容进行 Base64 URL 解码
                             groupIndex ++;
                             params.add(value); // 将参数存入 params 列表
                         }

@@ -58,7 +58,6 @@ public class BasicController implements Controller {
 
     @JNDIMapping("/Command/{cmd}")
     public byte[] command(String cmd) throws Exception {
-        cmd = MiscUtil.tryBase64UrlDecode(cmd);
         System.out.println("[Command] Cmd: " + cmd);
 
         String className = MiscUtil.getRandStr(12);

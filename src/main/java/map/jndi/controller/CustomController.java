@@ -5,7 +5,6 @@ import groovy.util.GroovyScriptEngine;
 import map.jndi.Config;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
-import map.jndi.util.MiscUtil;
 
 import java.io.File;
 
@@ -24,7 +23,6 @@ public class CustomController implements Controller {
 
     @JNDIMapping("/Custom/{args}")
     public String Custom(String args) {
-        args = MiscUtil.tryBase64UrlDecode(args);
         System.out.println("[Custom] File: " + Config.file + " Args: " + args);
         return args;
     }

