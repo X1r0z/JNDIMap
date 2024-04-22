@@ -11,7 +11,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多
 - 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
 - Tomcat/Groovy/SnakeYaml Bypass
-- Commons DBCP/Tomcat DBCP/Alibaba Druid/HikariCP JDBC RCE
+- Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
 - NativeLibLoader 加载动态链接库
 - MLet 探测可用 Class
 - LDAP 反序列化
@@ -158,10 +158,11 @@ gcc -shared -fPIC exp.c -o exp.so
 
 - Commons DBCP
 - Tomcat DBCP
+- Tomcat JDBC
 - Alibaba Druid
 - HikariCP
 
-将 URL 中的 Factory 替换为 CommonsDBCP1/CommonsDBCP2/TomcatDBCP1/TomcatDBCP2/Druid/HikariCP 其中之一
+将 URL 中的 Factory 替换为 CommonsDBCP1/CommonsDBCP2/TomcatDBCP1/TomcatDBCP2/TomcatJDBC/Druid/HikariCP 其中之一
 
 #### MySQL
 

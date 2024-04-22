@@ -9,7 +9,7 @@ Features
 - native reverse shell (Windows supported)
 - load custom class bytecode
 - Tomcat/Groovy/SnakeYaml bypass
-- Commons DBCP/Tomcat DBCP/Alibaba Druid/HikariCP JDBC RCE
+- Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
 - NativeLibLoader (load native library)
 - MLet (detect classes in classpath)
 - LDAP deserialization
@@ -156,10 +156,11 @@ Support JDBC RCE for the following database connection pools
 
 - Commons DBCP
 - Tomcat DBCP
+- Tomcat JDBC
 - Alibaba Druid
 - HikariCP
 
-Replace Factory in the URL with one of CommonsDBCP1/CommonsDBCP2/TomcatDBCP1/TomcatDBCP2/Druid/HikariCP
+Replace Factory in the URL with one of CommonsDBCP1/CommonsDBCP2/TomcatDBCP1/TomcatDBCP2/TomcatJDBC/Druid/HikariCP
 
 #### MySQL
 
