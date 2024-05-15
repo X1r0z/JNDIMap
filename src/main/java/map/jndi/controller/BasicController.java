@@ -83,9 +83,9 @@ public class BasicController implements Controller {
         return byteCode;
     }
 
-    @JNDIMapping("/FromPath/{path}")
-    public byte[] fromPath(String path) throws Exception {
-        System.out.println("[Path] Load custom bytecode data from path: " + path);
+    @JNDIMapping("/FromFile/{path}")
+    public byte[] fromFile(String path) throws Exception {
+        System.out.println("[Path] Load custom bytecode data from file: " + path);
         byte[] byteCode = Files.readAllBytes(Paths.get(path));
         return byteCode;
     }

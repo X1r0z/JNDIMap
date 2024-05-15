@@ -22,9 +22,9 @@ public class DeserializeController implements Controller {
         return Base64.getUrlDecoder().decode(data);
     }
 
-    @JNDIMapping("/FromPath/{path}")
-    public byte[] fromPath(String path) throws Exception {
-        System.out.println("[Deserialize] Load custom serialized data from path: " + path);
+    @JNDIMapping("/FromFile/{path}")
+    public byte[] fromFile(String path) throws Exception {
+        System.out.println("[Deserialize] Load custom serialized data from file: " + path);
         return Files.readAllBytes(Paths.get(path));
     }
 
