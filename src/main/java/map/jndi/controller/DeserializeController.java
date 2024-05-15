@@ -5,6 +5,8 @@ import map.jndi.annotation.JNDIMapping;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import map.jndi.gadget.*;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 @JNDIController
@@ -14,10 +16,16 @@ public class DeserializeController implements Controller {
         return data;
     }
 
-    @JNDIMapping("/{data}")
-    public byte[] deserialize(String data) {
-        System.out.println("[Deserialize] Custom serialized data");
+    @JNDIMapping("/FromUrl/{data}")
+    public byte[] fromUrl(String data) {
+        System.out.println("[Deserialize] Load custom serialized data from url");
         return Base64.getUrlDecoder().decode(data);
+    }
+
+    @JNDIMapping("/FromPath/{path}")
+    public byte[] fromPath(String path) throws Exception {
+        System.out.println("[Deserialize] Load custom serialized data from path: " + path);
+        return Files.readAllBytes(Paths.get(path));
     }
 
     @JNDIMapping("/URLDNS/{url}")

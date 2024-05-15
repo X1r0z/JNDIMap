@@ -42,7 +42,6 @@ public class MiscUtil {
                 }
             } else {
                 // 非 Base64 URL 编码
-                System.out.println("not equals");
                 return encText;
             }
         } catch (Exception e) {

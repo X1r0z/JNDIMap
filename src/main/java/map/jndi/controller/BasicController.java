@@ -76,14 +76,16 @@ public class BasicController implements Controller {
         return clazz.toBytecode();
     }
 
-    @JNDIMapping("/FromCode/{code}")
-    public byte[] fromCode(String code) {
-        byte[] byteCode = Base64.getUrlDecoder().decode(code);
+    @JNDIMapping("/FromUrl/{data}")
+    public byte[] fromUrl(String data) {
+        System.out.println("[Code] Load custom bytecode data from url");
+        byte[] byteCode = Base64.getUrlDecoder().decode(data);
         return byteCode;
     }
 
     @JNDIMapping("/FromPath/{path}")
     public byte[] fromPath(String path) throws Exception {
+        System.out.println("[Path] Load custom bytecode data from path: " + path);
         byte[] byteCode = Files.readAllBytes(Paths.get(path));
         return byteCode;
     }

