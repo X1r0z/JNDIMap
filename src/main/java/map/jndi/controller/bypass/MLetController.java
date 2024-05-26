@@ -1,8 +1,9 @@
-package map.jndi.controller;
+package map.jndi.controller.bypass;
 
 import map.jndi.Config;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
+import map.jndi.controller.Controller;
 import map.jndi.server.WebServer;
 import org.apache.naming.ResourceRef;
 

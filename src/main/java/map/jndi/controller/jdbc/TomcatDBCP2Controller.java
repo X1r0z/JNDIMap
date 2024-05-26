@@ -1,4 +1,4 @@
-package map.jndi.controller.database;
+package map.jndi.controller.jdbc;
 
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
@@ -9,19 +9,18 @@ import javax.naming.StringRefAddr;
 import java.util.Properties;
 
 @JNDIController
-@JNDIMapping("/Druid")
-public class DruidController extends DatabaseController {
+@JNDIMapping("/TomcatDBCP2")
+public class TomcatDBCP2Controller extends DatabaseController {
     public Object process(Properties props) {
-        System.out.println("[Reference] Factory: Druid");
+        System.out.println("[Reference] Factory: TomcatDBCP2");
 
-        Reference ref = new Reference("javax.sql.DataSource", "com.alibaba.druid.pool.DruidDataSourceFactory", null);
+        Reference ref = new Reference("javax.sql.DataSource", "org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory", null);
         ref.add(new StringRefAddr("driverClassName", props.getProperty("driver")));
         ref.add(new StringRefAddr("url", props.getProperty("url")));
         ref.add(new StringRefAddr("initialSize", "1"));
-        ref.add(new StringRefAddr("init", "true"));
 
         if (props.getProperty("sql") != null) {
-            ref.add(new StringRefAddr("initConnectionSqls", props.getProperty("sql")));
+            ref.add(new StringRefAddr("connectionInitSqls", props.getProperty("sql")));
         }
 
         return ref;

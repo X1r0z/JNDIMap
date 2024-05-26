@@ -1,4 +1,4 @@
-package map.jndi.controller.database;
+package map.jndi.controller.jdbc;
 
 import javassist.ClassPool;
 import javassist.CtClass;

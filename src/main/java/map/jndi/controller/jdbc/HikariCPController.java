@@ -1,4 +1,4 @@
-package map.jndi.controller.database;
+package map.jndi.controller.jdbc;
 
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
