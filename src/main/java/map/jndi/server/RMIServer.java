@@ -73,7 +73,7 @@ public class RMIServer implements Runnable {
                     try {
                         s.setSoTimeout(5000);
                         InetSocketAddress remote = (InetSocketAddress) s.getRemoteSocketAddress();
-                        System.out.println("[RMI] Have connection from " + remote);
+                        System.out.println("\n[RMI] Have connection from " + remote);
 
                         InputStream is = s.getInputStream();
                         InputStream bufIn = is.markSupported() ? is : new BufferedInputStream(is);

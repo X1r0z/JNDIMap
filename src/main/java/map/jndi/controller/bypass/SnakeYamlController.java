@@ -22,6 +22,8 @@ import java.util.Base64;
 public class SnakeYamlController extends BasicController {
     @Override
     public Object process(byte[] byteCode) {
+        System.out.println("[Reference] Factory: BeanFactory + SnakeYaml");
+
         String factoryClassName = MiscUtil.getRandStr(12);
         String jarName = MiscUtil.getRandStr(12);
 

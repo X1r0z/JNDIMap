@@ -12,6 +12,8 @@ import java.util.Properties;
 @JNDIMapping("/TomcatJDBC")
 public class TomcatJDBCController extends SingleCommandController {
     public Object process(Properties props) {
+        System.out.println("[Reference] Factory: TomcatJDBC");
+
         Reference ref = new Reference("javax.sql.DataSource", "org.apache.tomcat.jdbc.pool.DataSourceFactory", null);
         ref.add(new StringRefAddr("driverClassName", props.getProperty("driver")));
         ref.add(new StringRefAddr("url", props.getProperty("url")));

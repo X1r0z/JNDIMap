@@ -12,6 +12,8 @@ import java.util.Properties;
 @JNDIMapping("/CommonsDBCP1")
 public class CommonsDBCP1Controller extends DatabaseController {
     public Object process(Properties props) {
+        System.out.println("[Reference] Factory: CommonsDBCP1");
+
         Reference ref = new Reference("javax.sql.DataSource", "org.apache.commons.dbcp.BasicDataSourceFactory", null);
         ref.add(new StringRefAddr("driverClassName", props.getProperty("driver")));
         ref.add(new StringRefAddr("url", props.getProperty("url")));

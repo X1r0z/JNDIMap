@@ -1,5 +1,6 @@
 package map.jndi.controller;
 
+import map.jndi.Config;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.server.WebServer;
@@ -20,6 +21,8 @@ import java.util.Base64;
 @JNDIMapping("/Basic")
 public class BasicController implements Controller {
     public Object process(byte[] byteCode) {
+        System.out.println("[Reference] Remote codebase: " + Config.codebase);
+
         String className;
 
         try {

@@ -12,6 +12,8 @@ import java.util.Properties;
 @JNDIMapping("/TomcatDBCP1")
 public class TomcatDBCP1Controller extends DatabaseController {
     public Object process(Properties props) {
+        System.out.println("[Reference] Factory: TomcatDBCP1");
+
         Reference ref = new Reference("javax.sql.DataSource", "org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory", null);
         ref.add(new StringRefAddr("driverClassName", props.getProperty("driver")));
         ref.add(new StringRefAddr("url", props.getProperty("url")));

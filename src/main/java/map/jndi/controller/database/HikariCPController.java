@@ -11,6 +11,8 @@ import java.util.Properties;
 @JNDIMapping("/HikariCP")
 public class HikariCPController extends SingleCommandController {
     public Object process(Properties props) {
+        System.out.println("[Reference] Factory: HikariCP");
+
         Reference ref = new Reference("javax.sql.DataSource", "com.zaxxer.hikari.HikariJNDIFactory", null);
         ref.add(new StringRefAddr("driverClassName", props.getProperty("driver")));
         ref.add(new StringRefAddr("jdbcUrl", props.getProperty("url")));

