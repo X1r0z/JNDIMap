@@ -32,7 +32,7 @@ public class BasicController implements Controller {
             return null;
         }
 
-        WebServer.getInstance().serveFile("/" + className + ".class", byteCode);
+        WebServer.getInstance().serveFile("/" + className.replace('.', '/') + ".class", byteCode);
         return className;
     }
 

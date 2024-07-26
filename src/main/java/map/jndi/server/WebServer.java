@@ -33,11 +33,6 @@ public class WebServer implements Runnable {
     }
 
     public void serveFile(String path, byte[] data) {
-        httpServer.createContext(path, exchange -> {
-            System.out.println("[HTTP] Receive request: " + exchange.getRequestURI());
-            exchange.sendResponseHeaders(200, data.length);
-            exchange.getResponseBody().write(data);
-            exchange.close();
-        });
+        httpServer.createContext(path, new FileHandler(data));
     }
 }
