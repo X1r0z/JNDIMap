@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.unboundid</groupId>
             <artifactId>unboundid-ldapsdk</artifactId>
-            <version>6.0.7</version>
+            <version>7.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.javassist</groupId>

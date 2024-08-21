@@ -9,7 +9,7 @@ import map.jndi.annotation.JNDIMapping;
 import java.io.File;
 
 @JNDIController
-public class CustomController implements Controller {
+public class ScriptController implements Controller {
     public Object process(String args) throws Exception {
         File file = new File(Config.file);
         String rootPath = file.getParentFile() != null ? file.getParentFile().getCanonicalPath() : new File("").getCanonicalPath();
@@ -21,9 +21,9 @@ public class CustomController implements Controller {
         return result;
     }
 
-    @JNDIMapping("/Custom/{args}")
-    public String Custom(String args) {
-        System.out.println("[Custom] File: " + Config.file + " Args: " + args);
+    @JNDIMapping("/Script/{args}")
+    public String script(String args) {
+        System.out.println("[Script] File: " + Config.file + " Args: " + args);
         return args;
     }
 }
