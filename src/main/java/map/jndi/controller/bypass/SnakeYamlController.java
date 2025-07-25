@@ -42,7 +42,7 @@ public class SnakeYamlController extends BasicController {
             clazz.replaceClassName(clazz.getName(), factoryClassName);
             ReflectUtil.setCtField(clazz, "code", CtField.Initializer.constant(code));
 
-            jarBytes = JarUtil.createWithSPI(factoryClassName, clazz.toBytecode());
+            jarBytes = JarUtil.createWithSPI("javax.script.ScriptEngineFactory", factoryClassName, clazz.toBytecode());
         } catch (Exception e) {
             e.printStackTrace();
         }

