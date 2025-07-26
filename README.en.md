@@ -103,7 +103,7 @@ Use the following methods to bypass higher-version JDK restrictions, support all
 - Groovy ClassLoader/Shell
 - SnakeYaml
 
-All of the above methods rely on BeanFactory, so the Tomcat version must be less than 8.5.79
+All of the above methods rely on BeanFactory, so the Tomcat version must be less than 8.5.79 or 9.0.63
 
 ```bash
 # Tomcat Bypass

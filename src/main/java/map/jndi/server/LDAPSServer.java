@@ -19,7 +19,6 @@ public class LDAPSServer implements Runnable {
     public void run() {
         try {
             if (Config.jksPath == null) {
-                System.out.println("[LDAPS] jks file is not specified, skipping to start LDAPS server");
                 return;
             }
 

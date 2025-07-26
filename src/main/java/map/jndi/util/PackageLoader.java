@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class PackageClassLoader extends ClassLoader {
+public class PackageLoader extends ClassLoader {
     private Map<String, Class> classMap = new HashMap<>();
     private String packageName;
 
-    public PackageClassLoader(String packageName) {
+    public PackageLoader(String packageName) {
         super();
         this.packageName = packageName;
     }

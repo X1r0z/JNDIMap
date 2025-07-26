@@ -1,6 +1,6 @@
 package map.jndi.gadget;
 
-import map.jndi.util.PackageClassLoader;
+import map.jndi.util.PackageLoader;
 import map.jndi.util.ReflectUtil;
 import map.jndi.util.SerializeUtil;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
@@ -11,7 +11,7 @@ import java.util.PriorityQueue;
 
 public class CommonsBeanutils {
     public static byte[] create(TemplatesImpl templatesImpl, String packageName) throws Exception {
-        PackageClassLoader cl = new PackageClassLoader(packageName);
+        PackageLoader cl = new PackageLoader(packageName);
 
         Class clazz = cl.loadClass("org.apache.commons.beanutils.BeanComparator");
 
