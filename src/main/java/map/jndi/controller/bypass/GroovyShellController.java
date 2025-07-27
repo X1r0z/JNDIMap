@@ -21,6 +21,7 @@ public class GroovyShellController extends BasicController {
         ResourceRef ref = new ResourceRef("groovy.lang.GroovyShell", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=evaluate"));
         ref.add(new StringRefAddr("x", script));
+
         return ref;
     }
 }

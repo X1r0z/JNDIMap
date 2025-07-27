@@ -22,6 +22,7 @@ public class MLetController implements Controller {
         ref.add(new StringRefAddr("c", className + "_exists"));
 
         WebServer.getInstance().serveFile("/" + className.replace(".", "/") + "_exists.class", null);
+
         return ref;
     }
 
