@@ -5,7 +5,7 @@ import javax.sound.midi.Patch;
 import javax.sound.midi.Soundbank;
 import javax.sound.midi.SoundbankResource;
 
-public class SoundbankTemplate implements Soundbank {
+public class SoundbankCmd implements Soundbank {
     public static String cmd;
 
     static {
@@ -15,6 +15,7 @@ public class SoundbankTemplate implements Soundbank {
 
         }
     }
+
     @Override
     public String getName() {
         return "";

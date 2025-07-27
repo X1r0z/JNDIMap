@@ -82,14 +82,14 @@ public class BasicController implements Controller {
 
     @JNDIMapping("/FromUrl/{data}")
     public byte[] fromUrl(String data) {
-        System.out.println("[Code] Load custom bytecode data from url");
+        System.out.println("[FromUrl] Load custom bytecode data from url");
         byte[] byteCode = Base64.getUrlDecoder().decode(data);
         return byteCode;
     }
 
     @JNDIMapping("/FromFile/{path}")
     public byte[] fromFile(String path) throws Exception {
-        System.out.println("[Path] Load custom bytecode data from file: " + path);
+        System.out.println("[FromFile] Load custom bytecode data from file: " + path);
         byte[] byteCode = Files.readAllBytes(Paths.get(path));
         return byteCode;
     }
