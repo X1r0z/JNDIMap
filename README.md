@@ -532,3 +532,5 @@ java -jar JNDIMap.jar -useReferenceOnly
 [https://exp10it.io/2025/03/h2-rce-in-jre-17/](https://exp10it.io/2025/03/h2-rce-in-jre-17/)
 
 [https://forum.butian.net/share/4414](https://forum.butian.net/share/4414)
+
+[https://yzddmr6.com/posts/swinglazyvalue-in-webshell/](https://yzddmr6.com/posts/swinglazyvalue-in-webshell/)

