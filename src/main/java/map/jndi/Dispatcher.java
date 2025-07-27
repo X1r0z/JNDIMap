@@ -1,7 +1,5 @@
 package map.jndi;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.Controller;
@@ -9,7 +7,6 @@ import map.jndi.util.MiscUtil;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -25,10 +22,6 @@ public class Dispatcher {
     }
 
     private Dispatcher() {
-        // 关闭 Reflections 包的日志输出
-        Logger root = (Logger) LoggerFactory.getLogger("org.reflections");
-        root.setLevel(Level.OFF);
-
         // 扫描所有使用 JNDIController 注解的类
         Reflections ref = new Reflections("map.jndi.controller",
                 new TypeAnnotationsScanner(), new MethodAnnotationsScanner());
