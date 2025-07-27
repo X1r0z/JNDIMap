@@ -49,4 +49,12 @@ public class MiscUtil {
             return encText;
         }
     }
+
+    public static String encodeUnicode(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : str.toCharArray()) {
+            sb.append("\\u").append(String.format("%04X", (int) c));
+        }
+        return sb.toString();
+    }
 }

