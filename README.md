@@ -8,7 +8,7 @@
 
 简体中文 | [English](README.en.md)
 
-JNDIMap 是一个强大的 JNDI 注入利用框架, 支持 RMI、LDAP 和 LDAP 协议, 包含多种针对高版本 JDK 限制的绕过方法
+JNDIMap 是一个强大的 JNDI 注入利用框架, 支持 RMI、LDAP 和 LDAPS 协议, 包含多种高版本 JDK 绕过方式
 
 目前支持以下功能:
 
