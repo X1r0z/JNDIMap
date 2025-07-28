@@ -1,14 +1,10 @@
 # JNDIMap
 
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/X1r0z/JNDIMap">
-
-<img alt="GitHub forks" src="https://img.shields.io/github/forks/X1r0z/JNDIMap">
-
-<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/X1r0z/JNDIMap/total">
-
-<img alt="GitHub Release" src="https://img.shields.io/github/v/release/X1r0z/JNDIMap">
-
-<img alt="GitHub License" src="https://img.shields.io/github/license/X1r0z/JNDIMap">
+![GitHub Repo stars](https://img.shields.io/github/stars/X1r0z/JNDIMap)
+![GitHub forks](https://img.shields.io/github/forks/X1r0z/JNDIMap)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/X1r0z/JNDIMap/total)
+![GitHub Release](https://img.shields.io/github/v/release/X1r0z/JNDIMap)
+![GitHub License](https://img.shields.io/github/license/X1r0z/JNDIMap)
 
 [简体中文](README.md) | English
 
