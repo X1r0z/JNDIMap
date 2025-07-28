@@ -25,7 +25,7 @@ JNDIMap 是一个强大的 JNDI 注入利用框架, 支持 RMI、LDAP 和 LDAPS 
 java -jar JNDIMap-version.jar -i 10.0.0.1
 ```
 
-📖 [使用文档](USAGE.md)
+📖 [使用指南](USAGE.md)
 
 ## 📦 功能特性
 

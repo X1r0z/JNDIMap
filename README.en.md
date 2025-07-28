@@ -25,7 +25,7 @@ Download JNDIMap from the [Release](https://github.com/X1r0z/JNDIMap/releases) p
 java -jar JNDIMap-version.jar -i 10.0.0.1
 ```
 
-📖 [Documentation](USAGE.md)
+📖 [Documentation](USAGE.en.md)
 
 ## 📦 Features
 
