@@ -1,5 +1,15 @@
 # JNDIMap
 
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/X1r0z/JNDIMap">
+
+<img alt="GitHub forks" src="https://img.shields.io/github/forks/X1r0z/JNDIMap">
+
+<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/X1r0z/JNDIMap/total">
+
+<img alt="GitHub Release" src="https://img.shields.io/github/v/release/X1r0z/JNDIMap">
+
+<img alt="GitHub License" src="https://img.shields.io/github/license/X1r0z/JNDIMap">
+
 [简体中文](README.md) | English
 
 JNDIMap is a JNDI injection exploit tool that supports RMI, LDAP and LDAPS protocols, including a variety of methods to bypass higher-version JDK
@@ -538,3 +548,13 @@ java -jar JNDIMap.jar -useReferenceOnly
 [https://forum.butian.net/share/4414](https://forum.butian.net/share/4414)
 
 [https://yzddmr6.com/posts/swinglazyvalue-in-webshell/](https://yzddmr6.com/posts/swinglazyvalue-in-webshell/)
+
+## Star History
+
+<a href="https://www.star-history.com/#X1r0z/JNDIMap&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=X1r0z/JNDIMap&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=X1r0z/JNDIMap&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=X1r0z/JNDIMap&type=Date" />
+ </picture>
+</a>
