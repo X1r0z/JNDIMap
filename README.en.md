@@ -8,9 +8,9 @@
 
 [简体中文](README.md) | English
 
-JNDIMap is a JNDI injection exploit tool that supports RMI, LDAP and LDAPS protocols, including a variety of methods to bypass higher-version JDK
+JNDIMap is a powerful JNDI injection exploitation framework that supports RMI, LDAP and LDAPS protocols, including various bypass methods for high-version JDK restrictions
 
-Features
+Features:
 
 - DNS Log
 - execute command
