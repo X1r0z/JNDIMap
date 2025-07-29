@@ -30,7 +30,7 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 
 `-h`: 显示 Usage 信息
 
-## JNDI URL 注意事项
+## URL 格式
 
 注意传入的 Base64 均为 **Base64 URL 编码**, 即把 `+` 和 `/` 替换为 `-` 和 `_`
 
@@ -42,7 +42,7 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 
 对于 LDAPS 协议, 只需要将 `ldap://127.0.0.1:1389/` 替换为 `ldaps://127.0.0.1:1636/` 即可
 
-## Basic
+## Basic 功能
 
 直接通过 JNDI Reference 类加载远程 Java 字节码
 

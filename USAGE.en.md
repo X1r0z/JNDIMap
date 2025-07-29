@@ -30,7 +30,7 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 
 `-h`: show usage
 
-## Notes on JNDI URL
+## URL Format
 
 Please note that all the Base64 passed in is **Base64 URL encoded**, i.e. replace `+` and `/` with `-` and `_`
 
@@ -42,7 +42,7 @@ For the RMI protocol, simply replace `ldap://127.0.0.1:1389/` with `rmi://127.0.
 
 For the LDAPS protocol, simply replace `ldap://127.0.0.1:1389/` with `ldaps://127.0.0.1:1636/` in the payload url
 
-## Basic
+## Basic Functions
 
 Directly load remote Java bytecode via JNDI Reference class 
 
