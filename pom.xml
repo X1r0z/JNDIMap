@@ -6,7 +6,7 @@
     <artifactId>JNDIMap</artifactId>
     <version>0.0.2</version>
     <name>JNDIMap</name>
-    <description>JNDIMap</description>
+    <description>JNDIMap is a powerful JNDI injection exploitation framework that supports RMI, LDAP and LDAPS protocols, including various bypass methods for high-version JDK restrictions</description>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

