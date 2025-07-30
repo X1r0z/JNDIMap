@@ -27,11 +27,11 @@ public class XStreamController extends BasicController {
         ClassFile classFile = new ClassFile(new DataInputStream(new ByteArrayInputStream(byteCode)));
         String className = classFile.getName();
 
-        String fileName =  MiscUtil.getRandStr(12);
+        String fileName =  MiscUtil.getRandStr(8);
         String xsltPath = "/tmp/" + fileName + ".lock";
         String classPath = "/tmp/" + fileName + ".class";
 
-        String helperClassName = MiscUtil.getRandStr(12);
+        String helperClassName = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
         CtClass helperClazz = pool.get(XsltHelper.class.getName());
         helperClazz.replaceClassName(helperClazz.getName(), helperClassName);

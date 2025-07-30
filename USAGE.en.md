@@ -5,7 +5,7 @@
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-h]
+Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-fakeClassName] [-h]
 ````
 
 `-i`: IP address to listen on (i.e. the codebase, must be specified as an IP that can be reached by the target, e.g. `192.168.1.100`, note that `0.0.0.0` is not available)
@@ -27,6 +27,8 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 `-f`: path to the JS script, used to write custom JNDI payloads
 
 `-useReferenceOnly`: only applicable to LDAP protocol, directly returns Reference object through LDAP related parameters, used to bypass `com.sun.jndi.ldap.object.trustSerialData`
+
+`-fakeClassName`: use random fake class names when generating malicious Java classes, which are highly similar to real projects
 
 `-h`: show usage
 
@@ -546,3 +548,15 @@ Just specify the `-useReferenceOnly` parameter when using it
 ```bash
 java -jar JNDIMap.jar -useReferenceOnly
 ```
+
+## fakeClassName
+
+The [classNames](src/main/resources/classNames) directory of JNDIMap contains some fake class names that are highly similar to real projects. These class names are generated based on the [ClassNameObfuscator](https://github.com/X1r0z/ClassNameObfuscator) project and can be used in scenarios related to generating malicious Java classes in JNDI injection
+
+Just specify the `-fakeClassName` parameter when using it
+
+```bash
+java -jar JNDIMap.jar -fakeClassName
+```
+
+When the `-fakeClassName` parameter is not specified, JNDIMap generates a random string in the format `[A-Z]{1}[A-Za-z0-9]{7}` as the malicious class name

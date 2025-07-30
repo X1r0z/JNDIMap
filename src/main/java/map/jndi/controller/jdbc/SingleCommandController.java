@@ -14,7 +14,7 @@ import map.jndi.util.MiscUtil;
 import java.util.Properties;
 
 public abstract class SingleCommandController extends DatabaseController {
-    private static final String className = MiscUtil.getRandStr(12);
+    private static final String className = MiscUtil.getClassName();
 
     @JNDIMapping("/Derby/Install/{database}")
     public Properties derbyInstall(String database) {

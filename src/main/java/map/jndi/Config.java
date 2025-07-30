@@ -12,13 +12,14 @@ public class Config {
     public static String jksPin;
     public static String file;
     public static boolean useReferenceOnly = false;
+    public static boolean fakeClassName = false;
 
     public static void parse(String[] args) {
         // 解析命令行参数
         for (int i = 0; i < args.length; i ++ ) {
             switch (args[i]) {
                 case "-h":
-                    System.out.println("Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-h]");
+                    System.out.println("Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-fakeClassName] [-h]");
                     System.exit(-1);
                 case "-i":
                     ip = args[i + 1];
@@ -49,6 +50,9 @@ public class Config {
                     break;
                 case "-useReferenceOnly":
                     useReferenceOnly = true;
+                    break;
+                case "-fakeClassName":
+                    fakeClassName = true;
                     break;
             }
         }

