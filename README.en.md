@@ -114,6 +114,8 @@ mvn package -Dmaven.test.skip=true
 
 [https://yzddmr6.com/posts/swinglazyvalue-in-webshell/](https://yzddmr6.com/posts/swinglazyvalue-in-webshell/)
 
+[https://mogwailabs.de/en/blog/2024/12/jndi-mind-tricks/](https://mogwailabs.de/en/blog/2024/12/jndi-mind-tricks/)
+
 ## 🌟 Star History
 
 <a href="https://www.star-history.com/#X1r0z/JNDIMap&Date">

