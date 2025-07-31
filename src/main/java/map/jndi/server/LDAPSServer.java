@@ -4,7 +4,7 @@ import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import com.unboundid.util.ssl.*;
-import map.jndi.Config;
+import map.jndi.Main;
 
 public class LDAPSServer implements Runnable {
     public String ip;
@@ -18,12 +18,12 @@ public class LDAPSServer implements Runnable {
     @Override
     public void run() {
         try {
-            if (Config.jksPath == null) {
+            if (Main.config.jksPath == null) {
                 return;
             }
 
             SSLUtil serverSSLUtil = new SSLUtil(
-                    new KeyStoreKeyManager(Config.jksPath, Config.jksPin != null ? Config.jksPin.toCharArray() : null),
+                    new KeyStoreKeyManager(Main.config.jksPath, Main.config.jksPin != null ? Main.config.jksPin.toCharArray() : null),
                     new TrustAllTrustManager()
             );
             SSLUtil clientSSLUtil = new SSLUtil(new TrustAllTrustManager());

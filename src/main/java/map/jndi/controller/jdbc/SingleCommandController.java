@@ -3,7 +3,7 @@ package map.jndi.controller.jdbc;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
-import map.jndi.Config;
+import map.jndi.Main;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.DatabaseController;
 import map.jndi.server.WebServer;
@@ -41,7 +41,7 @@ public abstract class SingleCommandController extends DatabaseController {
         byte[] jarBytes = JarUtil.create(className, clazz.toBytecode());
         WebServer.getInstance().serveFile("/" + className + ".jar", jarBytes);
 
-        String sql = "CALL SQLJ.INSTALL_JAR('" + Config.codebase + className + ".jar', 'APP." + className + "', 0)";
+        String sql = "CALL SQLJ.INSTALL_JAR('" + Main.config.codebase + className + ".jar', 'APP." + className + "', 0)";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.apache.derby.jdbc.EmbeddedDriver");

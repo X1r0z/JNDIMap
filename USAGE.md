@@ -5,7 +5,31 @@
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-fakeClassName] [-h]
+Usage: JNDIMap.jar [-hV] [-fakeClassName] [-useReferenceOnly] [-f=<file>]
+                   [-i=<ip>] [-j=<jksPath>] [-k=<jksPin>] [-l=<ldapPort>]
+                   [-p=<httpPort>] [-r=<rmiPort>] [-s=<ldapsPort>] [-u=<url>]
+JNDI injection exploitation framework
+  -i, --ip=<ip>             IP address (codebase) to listen on
+                              Default: 127.0.0.1
+  -r, --rmiPort=<rmiPort>   RMI server bind port
+                              Default: 1099
+  -l, --ldapPort=<ldapPort> LDAP server bind port
+                              Default: 1389
+  -s, --ldapsPort=<ldapsPort>
+                            LDAPS server bind port
+                              Default: 1636
+  -p, --httpPort=<httpPort> HTTP server bind port
+                              Default: 3456
+  -u, --url=<url>           specify the JNDI route
+  -j, --jksPath=<jksPath>   path to the JKS cert
+  -k, --jksPin=<jksPin>     pin of the JKS cert
+  -f, --file=<file>         path to the custom JS script
+      -useReferenceOnly     directly returns Reference object through LDAP
+                              related parameters
+      -fakeClassName        use random fake class names when generating
+                              malicious Java classes
+  -h, --help                Show this help message and exit.
+  -V, --version             Print version information and exit.
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -24,13 +48,13 @@ Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldaps
 
 `-u`: 手动指定 JNDI 路由, 例如 `/Basic/Command/open -a Calculator` (某些场景的 JNDI URL 并不完全可控)
 
-`-f`: JS 脚本路径, 用于编写自定义 JNDI Payload
+`-f`: 自定义 JS 脚本路径, 用于编写自定义 JNDI Payload
 
 `-useReferenceOnly`: 仅适用于 LDAP 协议, 通过 LDAP 相关参数直接返回 Reference 对象, 用于绕过 `com.sun.jndi.ldap.object.trustSerialData`
 
 `-fakeClassName`: 在生成恶意 Java 类时使用随机虚假类名, 该类名与真实项目高度相似
 
-`-h`: 显示 Usage 信息
+`-h`: 显示帮助信息
 
 ## URL 格式
 

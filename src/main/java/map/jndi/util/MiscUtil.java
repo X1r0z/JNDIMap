@@ -1,6 +1,6 @@
 package map.jndi.util;
 
-import map.jndi.Config;
+import map.jndi.Main;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -45,7 +45,7 @@ public class MiscUtil {
     }
 
     public static String getClassName() {
-        if (Config.fakeClassName) {
+        if (Main.config.fakeClassName) {
             return getRandClassName();
         } else {
             return getRandStr(8);

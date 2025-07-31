@@ -5,7 +5,7 @@ import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
-import map.jndi.Config;
+import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.server.WebServer;
@@ -27,7 +27,7 @@ import java.util.Base64;
 @JNDIMapping("/Basic")
 public class BasicController implements Controller {
     public Object process(byte[] byteCode) throws Exception {
-        System.out.println("[Reference] Remote codebase: " + Config.codebase);
+        System.out.println("[Reference] Remote codebase: " + Main.config.codebase);
 
         ClassFile classFile = new ClassFile(new DataInputStream(new ByteArrayInputStream(byteCode)));
         String className = classFile.getName();

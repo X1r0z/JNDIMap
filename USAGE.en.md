@@ -5,32 +5,56 @@
 ## Usage
 
 ```bash
-Usage: java -jar JNDIMap.jar [-i <ip>] [-r <rmiPort>] [-l <ldapPort>] [-s <ldapsPort>] [-p <httpPort>] [-j <jksPath>] [-k <jksPin>] [-u <url>] [-f <file>] [-useReferenceOnly] [-fakeClassName] [-h]
-````
+Usage: JNDIMap.jar [-hV] [-fakeClassName] [-useReferenceOnly] [-f=<file>]
+                   [-i=<ip>] [-j=<jksPath>] [-k=<jksPin>] [-l=<ldapPort>]
+                   [-p=<httpPort>] [-r=<rmiPort>] [-s=<ldapsPort>] [-u=<url>]
+JNDI injection exploitation framework
+  -i, --ip=<ip>             IP address (codebase) to listen on
+                              Default: 127.0.0.1
+  -r, --rmiPort=<rmiPort>   RMI server bind port
+                              Default: 1099
+  -l, --ldapPort=<ldapPort> LDAP server bind port
+                              Default: 1389
+  -s, --ldapsPort=<ldapsPort>
+                            LDAPS server bind port
+                              Default: 1636
+  -p, --httpPort=<httpPort> HTTP server bind port
+                              Default: 3456
+  -u, --url=<url>           specify the JNDI route
+  -j, --jksPath=<jksPath>   path to the JKS cert
+  -k, --jksPin=<jksPin>     pin of the JKS cert
+  -f, --file=<file>         path to the custom JS script
+      -useReferenceOnly     directly returns Reference object through LDAP
+                              related parameters
+      -fakeClassName        use random fake class names when generating
+                              malicious Java classes
+  -h, --help                Show this help message and exit.
+  -V, --version             Print version information and exit.
+```
 
 `-i`: IP address to listen on (i.e. the codebase, must be specified as an IP that can be reached by the target, e.g. `192.168.1.100`, note that `0.0.0.0` is not available)
 
-`-r`: RMI server listening port, default is `1099`
+`-r`: RMI server bind port, default is `1099`
 
-`-l`: LDAP server listening port, default is `1389`
+`-l`: LDAP server bind port, default is `1389`
 
-`-s`: LDAPS server listening port, default is `1636`
+`-s`: LDAPS server bind port, default is `1636`
 
-`-p`: HTTP server listening port, default is `3456`
+`-p`: HTTP server bind port, default is `3456`
 
-`-j`: path to the JKS file, used to configure the LDAPS server
+`-j`: path to the JKS cert, used to configure the LDAPS server
 
-`-k`: JKS password, no password if not specified
+`-k`: pin of the JKS cert, no pin if not specified
 
-`-u`: specify the JNDI route manually, e.g. `/Basic/Command/open -a Calculator` (The JNDI URL is not completely controllable in some cases)
+`-u`: specify the JNDI route, e.g. `/Basic/Command/open -a Calculator` (The JNDI URL is not completely controllable in some cases)
 
-`-f`: path to the JS script, used to write custom JNDI payloads
+`-f`: path to the custom JS script, used to write custom JNDI payloads
 
 `-useReferenceOnly`: only applicable to LDAP protocol, directly returns Reference object through LDAP related parameters, used to bypass `com.sun.jndi.ldap.object.trustSerialData`
 
 `-fakeClassName`: use random fake class names when generating malicious Java classes, which are highly similar to real projects
 
-`-h`: show usage
+`-h`: show help message
 
 ## URL Format
 
