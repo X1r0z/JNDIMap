@@ -653,10 +653,12 @@ When the `--confusing-class-name` parameter is not specified, JNDIMap generates 
 
 Executes scripts using JShell (instead of the Nashorn JS Engine), available for JDK >= 15
 
-Currently, supports TomcatBypass/TomcatJakartaBypass/Groovy routes
+Currently, supports Tomcat/Groovy/BeanShell/MVEL routes
 
 Just specify the `--jshell` parameter when using it
 
 ```bash
 java -jar JNDIMap.jar --jshell
 ```
+
+*JShell starts a new process when running, so it is not possible to inject memory into it under this condition*

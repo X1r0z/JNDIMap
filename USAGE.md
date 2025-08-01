@@ -653,10 +653,12 @@ java -jar JNDIMap.jar --confusing-class-name
 
 通过 JShell 执行脚本 (替代 Nashorn JS Engine), 可用于 JDK >= 15 版本
 
-目前支持 TomcatBypass/TomcatJakartaBypass/Groovy 路由
+目前支持 Tomcat/Groovy/BeanShell/MVEL 路由
 
 使用时指定 `--jshell` 参数即可
 
 ```bash
 java -jar JNDIMap.jar --jshell
 ```
+
+*JShell 在运行时会启动新进程, 在这种条件下无法注入内存马*
