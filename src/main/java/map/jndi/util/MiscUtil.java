@@ -23,7 +23,6 @@ public class MiscUtil {
                 e.printStackTrace();
             }
         }
-
     }
 
     public static void initClassNames() throws Exception {

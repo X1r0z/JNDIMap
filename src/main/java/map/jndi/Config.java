@@ -45,5 +45,8 @@ public class Config {
     @Option(names = {"--confusing-class-name"}, description = "use confusing class names when generating malicious Java classes")
     public boolean confusingClassName = false;
 
+    @Option(names = {"--jshell"}, description = "use JShell to execute the payload instead of Nashorn JS engine")
+    public boolean jshell = false;
+
     public String codebase;
 }

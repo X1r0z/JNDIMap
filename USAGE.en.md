@@ -5,10 +5,10 @@
 ## Usage
 
 ```bash
-Usage: JNDIMap.jar [-hV] [--confusing-class-name] [--use-reference-only]
-                   [-f=<file>] [-i=<ip>] [-j=<jks-path>] [-k=<jks-pin>]
-                   [-l=<ldap-port>] [-p=<http-port>] [-r=<rmi-port>]
-                   [-s=<ldaps-port>] [-u=<url>]
+Usage: JNDIMap.jar [-hV] [--confusing-class-name] [--jshell]
+                   [--use-reference-only] [-f=<file>] [-i=<ip>] [-j=<jks-path>]
+                   [-k=<jks-pin>] [-l=<ldap-port>] [-p=<http-port>]
+                   [-r=<rmi-port>] [-s=<ldaps-port>] [-u=<url>]
 JNDI injection exploitation framework
   -i, --ip=<ip>              IP address (codebase) to listen on
                                Default: 127.0.0.1
@@ -31,6 +31,8 @@ JNDI injection exploitation framework
                                related parameters
       --confusing-class-name use confusing class names when generating
                                malicious Java classes
+      --jshell               use JShell to execute the payload instead of
+                               Nashorn JS engine
   -h, --help                 Show this help message and exit.
   -V, --version              Print version information and exit.
 ```
@@ -646,3 +648,15 @@ java -jar JNDIMap.jar --confusing-class-name
 ```
 
 When the `--confusing-class-name` parameter is not specified, JNDIMap generates a random string in the format `[A-Z]{1}[A-Za-z0-9]{7}` as the malicious class name
+
+### JShell Payload
+
+Executes scripts using JShell (instead of the Nashorn JS Engine), available for JDK >= 15
+
+Currently, supports TomcatBypass/TomcatJakartaBypass/Groovy routes
+
+Just specify the `--jshell` parameter when using it
+
+```bash
+java -jar JNDIMap.jar --jshell
+```

