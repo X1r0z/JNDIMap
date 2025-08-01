@@ -43,7 +43,7 @@ public class Config {
     public boolean useReferenceOnly = false;
 
     @Option(names = {"--confusing-class-name"}, description = "use confusing class names when generating malicious Java classes")
-    public boolean fakeClassName = false;
+    public boolean confusingClassName = false;
 
     public String codebase;
 }

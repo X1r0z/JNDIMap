@@ -6,46 +6,56 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URLDecoder;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public class MiscUtil {
     private static final Map<String, Set<String>> fileToClassNames = new HashMap<>();
 
     static {
-        try {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            URL resource = classLoader.getResource("classNames");
-            Path dirPath = Paths.get(resource.toURI());
+        if (Main.config.confusingClassName) {
+            try {
+                initClassNames();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath, "*.txt")) {
-                for (Path filePath : stream) {
-                    String fileName = filePath.getFileName().toString();
+    }
+
+    public static void initClassNames() throws Exception {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL resource = classLoader.getResource("classNames");
+        String jarPath = resource.getPath().substring(5, resource.getPath().indexOf("!"));
+
+        try (JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"))) {
+            Enumeration<JarEntry> entries = jar.entries();
+
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String name = entry.getName();
+
+                if (name.startsWith("classNames/") && name.endsWith(".txt")) {
+                    String fileName = name.substring(name.lastIndexOf("/") + 1);
                     String key = fileName.substring(0, fileName.lastIndexOf('.'));
-
-                    try (InputStream is = classLoader.getResourceAsStream("classNames/" + fileName);
+                    try (InputStream is = classLoader.getResourceAsStream(name);
                          BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-
                         Set<String> classNames = reader.lines()
                                 .map(String::trim)
                                 .filter(line -> !line.isEmpty())
                                 .collect(Collectors.toSet());
-
                         fileToClassNames.put(key, classNames);
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
     public static String getClassName() {
-        if (Main.config.fakeClassName) {
+        if (Main.config.confusingClassName) {
             return getRandClassName();
         } else {
             return getRandStr(8);
