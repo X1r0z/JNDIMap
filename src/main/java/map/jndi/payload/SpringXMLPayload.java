@@ -2,7 +2,7 @@ package map.jndi.payload;
 
 import java.util.Base64;
 
-public class SpringXmlPayload {
+public class SpringXMLPayload {
     public static String command(String cmd) {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
                 "<beans xmlns=\"http://www.springframework.org/schema/beans\"" +

