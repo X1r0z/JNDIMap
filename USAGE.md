@@ -285,6 +285,8 @@ gcc -shared -fPIC exp.c -o exp.so
 - Druid
 - HikariCP
 
+*因为 Alibaba Druid 的 DruidDataSourceFactory 并不支持配置 breakAfterAcquireFailure 和 connectionErrorRetryAttempts 参数, 在默认情况下, 如果 JDBC 连接失败, 则会在创建的新线程中陷入无限重试, 这可能会使得控制台死循环不断输出报错信息, 导致日志爆炸等问题, 非必要条件不建议使用. 参考: [https://github.com/alibaba/druid/issues/3772](https://github.com/alibaba/druid/issues/3772)*
+
 ### MySQL
 
 #### MySQL JDBC 反序列化 RCE

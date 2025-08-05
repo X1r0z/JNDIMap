@@ -285,6 +285,8 @@ Replace the `Factory` in the URL with one of the following:
 - Druid
 - HikariCP
 
+Because Alibaba Druid's DruidDataSourceFactory doesn't support the breakAfterAcquireFailure and connectionErrorRetryAttempts parameters, by default, if the JDBC connection fails, an infinite retry cycle will occur in the newly created thread. This can cause the console to continuously output error messages and lead to log explosion and other problems. Using this feature is not recommended unless necessary. Reference: [https://github.com/alibaba/druid/issues/3772](https://github.com/alibaba/druid/issues/3772)*
+
 ### MySQL
 
 #### MySQL JDBC Deserialization RCE
