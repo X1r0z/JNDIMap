@@ -5,8 +5,7 @@ import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.Controller;
 import map.jndi.util.MiscUtil;
 import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.scanners.Scanners;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -14,8 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Dispatcher {
-    private static Dispatcher INSTANCE = new Dispatcher();
-    private Map<Class<?>, Controller> controllersMap = new HashMap<>();
+    private static final Dispatcher INSTANCE = new Dispatcher();
+    private final Map<Class<?>, Controller> controllersMap = new HashMap<>();
 
     public static Dispatcher getInstance() {
         return INSTANCE;
@@ -24,7 +23,7 @@ public class Dispatcher {
     private Dispatcher() {
         // 扫描所有使用 JNDIController 注解的类
         Reflections ref = new Reflections("map.jndi.controller",
-                new TypeAnnotationsScanner(), new MethodAnnotationsScanner());
+                Scanners.TypesAnnotated, Scanners.MethodsAnnotated);
         Set<Class<?>> controllerClasses = ref.getTypesAnnotatedWith(JNDIController.class);
 
         // 初始化 controllersMap
@@ -64,14 +63,14 @@ public class Dispatcher {
                 // 匹配路由
                 if (methodMapping != null) {
                     String mappingPath = basePath + methodMapping.value();
-                    String regex = mappingPath.replaceAll("\\{.*?\\}", "([^/]+)");
+                    String regex = mappingPath.replaceAll("\\{.*?}", "([^/]+)");
                     Pattern valuePattern = Pattern.compile("^" + regex + "$");
                     Matcher valueMatcher = valuePattern.matcher(path); // 提取参数值
 
                     if (valueMatcher.matches()) {
-                        Pattern namePattern = Pattern.compile("\\{(.*?)\\}");
+                        Pattern namePattern = Pattern.compile("\\{(.*?)}");
                         Matcher nameMatcher = namePattern.matcher(mappingPath); // 提取参数名
-                        List params = new ArrayList(); // 存放匹配的参数值
+                        List<String> params = new ArrayList<>(); // 存放匹配的参数值
 
                         int groupIndex = 1;
                         while (nameMatcher.find()) {

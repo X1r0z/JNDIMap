@@ -15,7 +15,7 @@ import javax.naming.StringRefAddr;
 import java.util.Enumeration;
 
 public class OperationInterceptor extends InMemoryOperationInterceptor {
-    private String protocol;
+    private final String protocol;
 
     public OperationInterceptor(String protocol) {
         this.protocol = protocol;

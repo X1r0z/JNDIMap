@@ -22,7 +22,7 @@ public class RMIServer implements Runnable {
     public String ip;
     public int port;
     private ServerSocket ss;
-    private Object waitLock = new Object();
+    private final Object waitLock = new Object();
     private boolean exit;
     private boolean hadConnection;
 

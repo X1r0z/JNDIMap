@@ -19,9 +19,8 @@ public class MemShellPayload {
                 .build();
         InjectorConfig injectorConfig = InjectorConfig.builder().build();
         GodzillaConfig godzillaConfig = GodzillaConfig.builder().build();
-        GenerateResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
 
-        return result;
+        return MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
     }
     public static void printInfo(GenerateResult result) {
         System.out.println();

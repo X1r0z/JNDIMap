@@ -10,7 +10,7 @@ import map.jndi.server.LDAPServer;
 public class Main {
     public static Config config;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         // 解析配置参数
         config = new Config();
         CommandLine cmd = new CommandLine(config);

@@ -5,7 +5,7 @@ import picocli.CommandLine.Option;
 
 @Command(
         name = "JNDIMap.jar",
-        version = "0.0.2",
+        version = "0.0.3",
         description = "JNDI injection exploitation framework",
         mixinStandardHelpOptions = true,
         sortOptions = false,

@@ -11,8 +11,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class PackageLoader extends ClassLoader {
-    private Map<String, Class> classMap = new HashMap<>();
-    private String packageName;
+    private final Map<String, Class<?>> classMap = new HashMap<>();
+    private final String packageName;
 
     public PackageLoader(String packageName) {
         super();
@@ -21,7 +21,7 @@ public class PackageLoader extends ClassLoader {
 
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        Class clazz = classMap.get(name);
+        Class<?> clazz = classMap.get(name);
 
         if (clazz != null) {
             return clazz;

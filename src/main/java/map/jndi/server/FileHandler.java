@@ -6,7 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 
 class FileHandler implements HttpHandler {
-    private byte[] data;
+    private final byte[] data;
 
     public FileHandler(byte[] data) {
         this.data = data;

