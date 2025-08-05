@@ -120,7 +120,7 @@ public class BasicController implements Controller {
 
     @JNDIMapping("/MemShell/{server}/{tool}/{type}")
     public byte[] memShell(String server, String tool, String type) {
-        System.out.println("[MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+        System.out.println("[MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
         GenerateResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);

