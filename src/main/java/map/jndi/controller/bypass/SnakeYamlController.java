@@ -5,7 +5,7 @@ import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
 import map.jndi.controller.BasicController;
 import map.jndi.server.WebServer;
-import map.jndi.template.ClassHelper;
+import map.jndi.template.ClassDefiner;
 import map.jndi.util.JarUtil;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
@@ -35,7 +35,7 @@ public class SnakeYamlController extends BasicController {
                 "]";
 
         ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(ClassHelper.class.getName());
+        CtClass clazz = pool.get(ClassDefiner.class.getName());
         CtClass superClazz = pool.get("javax.script.ScriptEngineFactory");
         clazz.replaceClassName(clazz.getName(), factoryClassName);
         clazz.setInterfaces(new CtClass[]{superClazz});

