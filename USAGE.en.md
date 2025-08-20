@@ -6,9 +6,9 @@
 
 ```bash
 Usage: JNDIMap.jar [-hV] [--confusing-class-name] [--jshell]
-                   [--use-reference-only] [-f=<file>] [-i=<ip>] [-j=<jks-path>]
-                   [-k=<jks-pin>] [-l=<ldap-port>] [-p=<http-port>]
-                   [-r=<rmi-port>] [-s=<ldaps-port>] [-u=<url>]
+                   [--overlong-encoding] [--use-reference-only] [-f=<file>]
+                   [-i=<ip>] [-j=<jks-path>] [-k=<jks-pin>] [-l=<ldap-port>]
+                   [-p=<http-port>] [-r=<rmi-port>] [-s=<ldaps-port>] [-u=<url>]
 JNDI injection exploitation framework
   -i, --ip=<ip>              IP address (codebase) to listen on
                                Default: 127.0.0.1
@@ -33,8 +33,9 @@ JNDI injection exploitation framework
                                malicious Java classes
       --jshell               use JShell to execute the payload instead of
                                Nashorn JS engine
+      --overlong-encoding    use UTF-8 Overlong Encoding to bypass WAF
   -h, --help                 Show this help message and exit.
-  -V, --version              Print version information and exit.
+  -V, --version              Print version information and exit
 ```
 
 `-i`: IP address to listen on (i.e. the codebase, must be specified as an IP that can be reached by the target, e.g. `192.168.1.100`, note that `0.0.0.0` is not available)
@@ -58,6 +59,10 @@ JNDI injection exploitation framework
 `--use-reference-only`: only applicable to LDAP protocol, directly returns Reference object through LDAP related parameters, used to bypass `com.sun.jndi.ldap.object.trustSerialData`
 
 `--confusing-class-name`: use random fake class names when generating malicious Java classes, which are highly similar to real projects
+
+`--jshell`: use JShell to execute the relevant payload (instead of the Nashorn JS Engine), supporting JDK 9+
+
+`--overlong-encoding`: use UTF-8 Overlong Encoding to obfuscate the serialized data returned by the LDAP protocol, thereby bypassing some WAFs
 
 `-h`: show help message
 
@@ -664,3 +669,15 @@ java -jar JNDIMap.jar --jshell
 ```
 
 *JShell starts a new process when running, so it is not possible to inject memory into it under this condition*
+
+### UTF-8 Overlong Encoding
+
+Use UTF-8 Overlong Encoding to obfuscate serialized data returned by the LDAP protocol, thereby bypassing some WAFs
+
+Supports all LDAP routes (including Deserialize routes)
+
+Just specify the `--overlong-encoding` parameter when using it
+
+```bash
+java -jar JNDIMap.jar --overlong-encoding
+```

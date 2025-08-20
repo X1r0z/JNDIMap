@@ -6,9 +6,9 @@
 
 ```bash
 Usage: JNDIMap.jar [-hV] [--confusing-class-name] [--jshell]
-                   [--use-reference-only] [-f=<file>] [-i=<ip>] [-j=<jks-path>]
-                   [-k=<jks-pin>] [-l=<ldap-port>] [-p=<http-port>]
-                   [-r=<rmi-port>] [-s=<ldaps-port>] [-u=<url>]
+                   [--overlong-encoding] [--use-reference-only] [-f=<file>]
+                   [-i=<ip>] [-j=<jks-path>] [-k=<jks-pin>] [-l=<ldap-port>]
+                   [-p=<http-port>] [-r=<rmi-port>] [-s=<ldaps-port>] [-u=<url>]
 JNDI injection exploitation framework
   -i, --ip=<ip>              IP address (codebase) to listen on
                                Default: 127.0.0.1
@@ -33,8 +33,9 @@ JNDI injection exploitation framework
                                malicious Java classes
       --jshell               use JShell to execute the payload instead of
                                Nashorn JS engine
+      --overlong-encoding    use UTF-8 Overlong Encoding to bypass WAF
   -h, --help                 Show this help message and exit.
-  -V, --version              Print version information and exit.
+  -V, --version              Print version information and exit
 ````
 
 `-i`: 服务器监听 IP (即 codebase, 必须指定为一个目标可访问到的 IP, 例如 `192.168.1.100`, 不能用 `0.0.0.0`)
@@ -58,6 +59,10 @@ JNDI injection exploitation framework
 `--use-reference-only`: 仅适用于 LDAP 协议, 通过 LDAP 相关参数直接返回 Reference 对象, 用于绕过 `com.sun.jndi.ldap.object.trustSerialData`
 
 `--confusing-class-name`: 在生成恶意 Java 类时使用随机虚假类名, 该类名与真实项目高度相似
+
+`--jshell`: 使用 JShell 执行相关 Payload (替代 Nashorn JS Engine), 支持 JDK 9+
+
+`--overlong-encoding`: 使用 UTF-8 Overlong Encoding 混淆 LDAP 协议返回的序列化数据, 以此绕过部分 WAF
 
 `-h`: 显示帮助信息
 
@@ -653,7 +658,7 @@ java -jar JNDIMap.jar --confusing-class-name
 
 ### JShell Payload
 
-通过 JShell 执行脚本 (替代 Nashorn JS Engine), 可用于 JDK >= 15 版本
+通过 JShell 执行脚本 (替代 Nashorn JS Engine), 可用于 JDK >= 9 版本
 
 目前支持 Tomcat/Groovy/BeanShell/MVEL 路由
 
@@ -664,3 +669,15 @@ java -jar JNDIMap.jar --jshell
 ```
 
 *JShell 在运行时会启动新进程, 在这种条件下无法注入内存马*
+
+### UTF-8 Overlong Encoding
+
+使用 UTF-8 Overlong Encoding 混淆 LDAP 协议返回的序列化数据, 以此绕过部分 WAF
+
+支持所有 LDAP 路由 (包括 Deserialize 路由)
+
+使用时指定 `--overlong-encoding` 参数即可
+
+```bash
+java -jar JNDIMap.jar --overlong-encoding
+```

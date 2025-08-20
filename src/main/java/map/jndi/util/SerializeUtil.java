@@ -1,5 +1,7 @@
 package map.jndi.util;
 
+import map.jndi.Main;
+
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 
@@ -11,6 +13,11 @@ public class SerializeUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return arr.toByteArray();
+
+        if (Main.config.overlongEncoding) {
+            return new UTF8BytesMix(arr.toByteArray()).mix();
+        } else {
+            return arr.toByteArray();
+        }
     }
 }

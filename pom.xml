@@ -95,6 +95,10 @@
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>io.github.reajason</groupId>
+                    <artifactId>deserialize</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>

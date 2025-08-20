@@ -48,5 +48,8 @@ public class Config {
     @Option(names = {"--jshell"}, description = "use JShell to execute the payload instead of Nashorn JS engine")
     public boolean jshell = false;
 
+    @Option(names = {"--overlong-encoding"}, description = "use UTF-8 Overlong Encoding to bypass WAF")
+    public boolean overlongEncoding = false;
+
     public String codebase;
 }
