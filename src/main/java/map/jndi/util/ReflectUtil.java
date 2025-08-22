@@ -6,16 +6,6 @@ import javassist.CtField;
 import java.lang.reflect.Field;
 
 public class ReflectUtil {
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        return getFieldValue(obj.getClass(), obj, name);
-    }
-
-    public static Object getFieldValue(Class clazz, Object obj, String name) throws Exception {
-        Field f = clazz.getDeclaredField(name);
-        f.setAccessible(true);
-        return f.get(obj);
-    }
-
     public static void setFieldValue(Object obj, String name, Object val) throws Exception {
         Field f = obj.getClass().getDeclaredField(name);
         f.setAccessible(true);

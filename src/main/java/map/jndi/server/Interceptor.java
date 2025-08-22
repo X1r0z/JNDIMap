@@ -14,19 +14,19 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import java.util.Enumeration;
 
-public class OperationInterceptor extends InMemoryOperationInterceptor {
+public class Interceptor extends InMemoryOperationInterceptor {
     private final String protocol;
 
-    public OperationInterceptor(String protocol) {
+    public Interceptor(String protocol) {
         this.protocol = protocol;
     }
+
     @Override
     public void processSearchResult(InMemoryInterceptedSearchResult searchResult) {
         String base = searchResult.getRequest().getBaseDN();
         Entry e = new Entry(base);
 
         String path = "/" + base.split(",")[0]; // 获取路由
-
         System.out.println("\n[" + protocol + "] Received query: " + path);
 
         // 路由分发, 为其匹配对应的 Controller 和方法

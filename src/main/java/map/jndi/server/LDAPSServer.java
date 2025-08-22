@@ -36,7 +36,7 @@ public class LDAPSServer implements Runnable {
                     serverSSLUtil.createSSLServerSocketFactory(),
                     clientSSLUtil.createSSLSocketFactory()
             ));
-            config.addInMemoryOperationInterceptor(new OperationInterceptor("LDAPS"));
+            config.addInMemoryOperationInterceptor(new Interceptor("LDAPS"));
 
             InMemoryDirectoryServer ds = new InMemoryDirectoryServer(config);
             ds.startListening();

@@ -18,13 +18,9 @@ import java.rmi.server.UID;
 import java.util.Arrays;
 
 public class RMIServer implements Runnable {
-
     public String ip;
     public int port;
     private ServerSocket ss;
-    private final Object waitLock = new Object();
-    private boolean exit;
-    private boolean hadConnection;
 
     public RMIServer(String ip, int port) {
         try {
@@ -36,40 +32,13 @@ public class RMIServer implements Runnable {
         }
     }
 
-    public boolean waitFor(int i) {
-        try {
-            if (this.hadConnection) {
-                return true;
-            }
-            System.out.println("[RMI] Waiting for connection");
-            synchronized (this.waitLock) {
-                this.waitLock.wait(i);
-            }
-            return this.hadConnection;
-        }
-        catch (InterruptedException e) {
-            return false;
-        }
-    }
-
-    public void close() {
-        this.exit = true;
-        try {
-            this.ss.close();
-        }
-        catch (IOException e) {}
-        synchronized (this.waitLock) {
-            this.waitLock.notify();
-        }
-    }
-
     @Override
     public void run() {
         System.out.println("[RMI] Listening on " + this.ip + ":" + this.port);
         try {
             Socket s = null;
             try {
-                while (!this.exit && (s = this.ss.accept()) != null) {
+                while ((s = this.ss.accept()) != null) {
                     try {
                         s.setSoTimeout(5000);
                         InetSocketAddress remote = (InetSocketAddress) s.getRemoteSocketAddress();
@@ -92,15 +61,14 @@ public class RMIServer implements Runnable {
                             OutputStream sockOut = s.getOutputStream();
                             BufferedOutputStream bufOut = new BufferedOutputStream(sockOut);
                             try (DataOutputStream out = new DataOutputStream(bufOut)) {
-
                                 byte protocol = in.readByte();
+
                                 switch (protocol) {
                                     case TransportConstants.StreamProtocol:
                                         out.writeByte(TransportConstants.ProtocolAck);
                                         if (remote.getHostName() != null) {
                                             out.writeUTF(remote.getHostName());
-                                        }
-                                        else {
+                                        } else {
                                             out.writeUTF(remote.getAddress().toString());
                                         }
                                         out.writeInt(remote.getPort());
@@ -121,20 +89,16 @@ public class RMIServer implements Runnable {
                                 out.flush();
                             }
                         }
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         return;
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace(System.err);
-                    }
-                    finally {
+                    } finally {
                         System.out.println("[RMI] Closing connection");
                         s.close();
                     }
                 }
-            }
-            finally {
+            } finally {
                 if (s != null) {
                     s.close();
                 }
@@ -142,18 +106,15 @@ public class RMIServer implements Runnable {
                     this.ss.close();
                 }
             }
-        }
-        catch (SocketException e) {
-            return;
-        }
-        catch (Exception e) {
+        } catch (SocketException ignored) {
+
+        } catch (Exception e) {
             e.printStackTrace(System.err);
         }
     }
 
     private void doMessage(Socket s, DataInputStream in, DataOutputStream out) throws Exception {
         System.out.println("[RMI] Reading message...");
-
         int op = in.read();
 
         switch (op) {
@@ -161,16 +122,13 @@ public class RMIServer implements Runnable {
                 // service incoming RMI call
                 doCall(s, in, out);
                 break;
-
             case TransportConstants.Ping:
                 // send ack for ping
                 out.writeByte(TransportConstants.PingAck);
                 break;
-
             case TransportConstants.DGCAck:
                 UID.read(in);
                 break;
-
             default:
                 throw new IOException("unknown transport op " + op);
         }
@@ -184,14 +142,11 @@ public class RMIServer implements Runnable {
             protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException {
                 if ("[Ljava.rmi.server.ObjID;".equals(desc.getName())) {
                     return ObjID[].class;
-                }
-                else if ("java.rmi.server.ObjID".equals(desc.getName())) {
+                } else if ("java.rmi.server.ObjID".equals(desc.getName())) {
                     return ObjID.class;
-                }
-                else if ("java.rmi.server.UID".equals(desc.getName())) {
+                } else if ("java.rmi.server.UID".equals(desc.getName())) {
                     return UID.class;
-                }
-                else if ("java.lang.String".equals(desc.getName())) {
+                } else if ("java.lang.String".equals(desc.getName())) {
                     return String.class;
                 }
                 throw new IOException("Not allowed to read object");
@@ -201,32 +156,24 @@ public class RMIServer implements Runnable {
         ObjID read;
         try {
             read = ObjID.read(ois);
-        }
-        catch (java.io.IOException e) {
+        } catch (java.io.IOException e) {
             throw new MarshalException("unable to read objID", e);
         }
 
         if (read.hashCode() == 2) {
             // DGC
             handleDGC(ois);
-        }
-        else if (read.hashCode() == 0) {
-            if (handleRMI(s, ois, out)) {
-                this.hadConnection = true;
-                synchronized (this.waitLock) {
-                    this.waitLock.notifyAll();
-                }
-                return;
-            }
+        } else if (read.hashCode() == 0) {
+            handleRMI(ois, out);
         }
     }
 
-    private boolean handleRMI(Socket s, ObjectInputStream ois, DataOutputStream out) throws Exception {
+    private void handleRMI(ObjectInputStream ois, DataOutputStream out) throws Exception {
         int method = ois.readInt(); // method
         ois.readLong(); // hash
 
         if (method != 2) { // lookup
-            return false;
+            return;
         }
 
         String object = (String) ois.readObject();
@@ -234,12 +181,10 @@ public class RMIServer implements Runnable {
 
         out.writeByte(TransportConstants.Return);// transport op
         try (ObjectOutputStream oos = new MarshalOutputStream(out, Main.config.codebase)) {
-
             oos.writeByte(TransportConstants.NormalReturn);
             new UID().write(oos);
 
             String path = "/" + object; // 获取路由
-
             System.out.println("[RMI] Send result for " + path);
 
             // 路由分发, 为其匹配对应的 Controller 和方法
@@ -271,7 +216,6 @@ public class RMIServer implements Runnable {
             oos.flush();
             out.flush();
         }
-        return true;
     }
 
     private static void handleDGC(ObjectInputStream ois) throws IOException, ClassNotFoundException {
@@ -281,34 +225,26 @@ public class RMIServer implements Runnable {
     }
 
     static final class MarshalOutputStream extends ObjectOutputStream {
-
-        private String sendUrl;
+        private final String sendUrl;
 
         public MarshalOutputStream(OutputStream out, String u) throws IOException {
             super(out);
             this.sendUrl = u;
         }
 
-        MarshalOutputStream(OutputStream out) throws IOException {
-            super(out);
-        }
-
         @Override
         protected void annotateClass(Class<?> cl) throws IOException {
             if (this.sendUrl != null) {
                 writeObject(this.sendUrl);
-            }
-            else if (!(cl.getClassLoader() instanceof URLClassLoader)) {
+            } else if (!(cl.getClassLoader() instanceof URLClassLoader)) {
                 writeObject(null);
-            }
-            else {
+            } else {
                 URL[] us = ((URLClassLoader) cl.getClassLoader()).getURLs();
-                String cb = "";
-
+                StringBuilder cb = new StringBuilder();
                 for (URL u : us) {
-                    cb += u.toString();
+                    cb.append(u.toString());
                 }
-                writeObject(cb);
+                writeObject(cb.toString());
             }
         }
 

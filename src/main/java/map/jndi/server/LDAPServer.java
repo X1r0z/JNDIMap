@@ -18,7 +18,7 @@ public class LDAPServer implements Runnable {
         try {
             InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
             config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("listen-ldap", this.port));
-            config.addInMemoryOperationInterceptor(new OperationInterceptor("LDAP"));
+            config.addInMemoryOperationInterceptor(new Interceptor("LDAP"));
 
             InMemoryDirectoryServer ds = new InMemoryDirectoryServer(config);
             ds.startListening();

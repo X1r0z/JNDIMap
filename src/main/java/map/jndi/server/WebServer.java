@@ -8,9 +8,11 @@ public class WebServer implements Runnable {
     public int port;
     private HttpServer httpServer;
     private static WebServer INSTANCE;
+
     public static WebServer getInstance() {
         return INSTANCE;
     }
+
     public WebServer(String ip, int port) {
         this.ip = ip;
         this.port = port;
