@@ -135,3 +135,9 @@ mvn package -Dmaven.test.skip=true
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=X1r0z/JNDIMap&type=Date" />
  </picture>
 </a>
+
+## 404 星链计划
+
+<img src="https://github.com/knownsec/404StarLink/raw/master/Images/logo.png" width="30%">
+
+JNDIMap 现已加入 [404 星链计划](https://github.com/knownsec/404StarLink)
