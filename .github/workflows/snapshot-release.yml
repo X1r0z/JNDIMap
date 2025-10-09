@@ -1,0 +1,74 @@
+name: Snapshot Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Get commit info
+        id: commit
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "build_time=$(date)" >> $GITHUB_OUTPUT
+
+      - name: Delete previous pre-releases
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const releases = await github.rest.repos.listReleases({ owner, repo });
+            for (const rel of releases.data) {
+              if (rel.prerelease && rel.tag_name.startsWith("snapshot-")) {
+                console.log(`Deleting old pre-release: ${rel.tag_name}`);
+                try {
+                  await github.rest.repos.deleteRelease({ owner, repo, release_id: rel.id });
+                } catch (e) {
+                  console.warn(`Failed to delete release ${rel.tag_name}:`, e.message);
+                }
+                try {
+                  await github.rest.git.deleteRef({ owner, repo, ref: `tags/${rel.tag_name}` });
+                } catch (e) {
+                  console.warn(`Failed to delete tag ${rel.tag_name}:`, e.message);
+                }
+              }
+            }
+
+      - name: Rename artifact
+        run: |
+          mkdir -p dist
+          SRC_JAR=$(ls target/*.jar | head -n 1)
+          NEW_JAR="dist/JNDIMap-snapshot-${{ steps.commit.outputs.sha_short }}.jar"
+          cp "$SRC_JAR" "$NEW_JAR"
+          echo "Renamed artifact to $NEW_JAR"
+
+      - name: Create Pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: snapshot-${{ steps.commit.outputs.sha_short }}
+          name: snapshot-${{ steps.commit.outputs.sha_short }}
+          body: |
+            Release created at ${{ steps.commit.outputs.build_time }}.
+            Latest snapshot build of **JNDIMap** on *main* branch.
+          prerelease: true
+          make_latest: true
+          files: |
+            dist/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

