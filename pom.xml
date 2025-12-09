@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.exp10it</groupId>
     <artifactId>JNDIMap</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>JNDIMap</name>
     <description>JNDIMap is a powerful JNDI injection exploitation framework that supports RMI, LDAP and LDAPS protocols, including various bypass methods for high-version JDK restrictions</description>
     <properties>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>io.github.reajason</groupId>
             <artifactId>generator</artifactId>
-            <version>1.7.0</version>
+            <version>2.3.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
@@ -98,6 +98,10 @@
                 <exclusion>
                     <groupId>io.github.reajason</groupId>
                     <artifactId>deserialize</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.github.reajason</groupId>
+                    <artifactId>packer</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

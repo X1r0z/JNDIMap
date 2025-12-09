@@ -1,6 +1,6 @@
 package map.jndi.controller;
 
-import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.MemShellResult;
 import map.jndi.Main;
 import map.jndi.annotation.JNDIController;
 import map.jndi.annotation.JNDIMapping;
@@ -139,7 +139,7 @@ public class BasicController implements Controller {
     public byte[] memShell(String server, String tool, String type) {
         System.out.println("[MemShell] Server: " + server + " Tool: " + tool + " Type: " + type);
 
-        GenerateResult result = MemShellPayload.generate(server, tool, type);
+        MemShellResult result = MemShellPayload.generate(server, tool, type);
         MemShellPayload.printInfo(result);
 
         return result.getInjectorBytes();

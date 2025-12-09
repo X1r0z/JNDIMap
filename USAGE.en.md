@@ -140,9 +140,15 @@ ldap://127.0.0.1:1389/Basic/MemShell/Tomcat/Godzilla/Filter
 ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/Interceptor
 # Spring Web MVC Behinder Controller
 ldap://127.0.0.1:1389/Basic/MemShell/SpringWebMvc/Behinder/ControllerHandler
-
-# For more information on memory management types, see the MemShellParty README
 ```
+
+The server, tool, and type parameters refer to the following code
+
+[https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ServerType.java](https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ServerType.java)
+
+[https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ShellTool.java](https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ShellTool.java)
+
+[https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ShellType.java](https://github.com/ReaJason/MemShellParty/blob/master/generator/src/main/java/com/reajason/javaweb/memshell/ShellType.java)
 
 ## BeanFactory Bypass
 

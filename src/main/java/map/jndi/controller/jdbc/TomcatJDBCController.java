@@ -7,7 +7,6 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import java.util.Properties;
 
-
 @JNDIController
 @JNDIMapping("/TomcatJDBC")
 public class TomcatJDBCController extends SingleCommandController {

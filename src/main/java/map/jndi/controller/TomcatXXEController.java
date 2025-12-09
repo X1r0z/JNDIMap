@@ -10,6 +10,7 @@ import org.apache.naming.ResourceRef;
 import javax.naming.StringRefAddr;
 
 @JNDIController
+@JNDIMapping("/TomcatXXE")
 public class TomcatXXEController implements Controller {
     public Object process(String path) {
         String oobName = MiscUtil.getRandStr(8);
@@ -36,7 +37,7 @@ public class TomcatXXEController implements Controller {
         return ref;
     }
 
-    @JNDIMapping("/TomcatXXE/{path}")
+    @JNDIMapping("/{path}")
     public String tomcatXXE(String path) {
         System.out.println("[TomcatXXE] Path: " + path);
         return path;
