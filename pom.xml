@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.exp10it</groupId>
     <artifactId>JNDIMap</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <name>JNDIMap</name>
     <description>JNDIMap is a powerful JNDI injection exploitation framework that supports RMI, LDAP and LDAPS protocols, including various bypass methods for high-version JDK restrictions</description>
     <properties>
@@ -81,6 +81,11 @@
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
             <version>2.0.26</version>
+        </dependency>
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>4.0.66</version>
         </dependency>
         <dependency>
             <groupId>io.github.reajason</groupId>

